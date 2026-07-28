@@ -3,31 +3,32 @@ import json
 import requests
 from datetime import datetime
 
-# 1. Получаем секреты из настроек репозитория
-ACCESS_TOKEN = os.getenv("FB_ACCESS_TOKEN")
+# 1. Забираем секреты из настроек репозитория
+RAW_TOKEN = os.getenv("FB_ACCESS_TOKEN")
 RAW_ACCOUNT_ID = os.getenv("FB_AD_ACCOUNT_ID")
 
-if not ACCESS_TOKEN or not RAW_ACCOUNT_ID:
+if not RAW_TOKEN or not RAW_ACCOUNT_ID:
     raise ValueError("Ошибка: Проверьте FB_ACCESS_TOKEN и FB_AD_ACCOUNT_ID в GitHub Secrets!")
 
-# Защита от опечаток: очищаем ID от пробелов и дубликатов приставки "act_"
-clean_id = str(RAW_ACCOUNT_ID).strip().replace('act_', '')
+# Принудительно очищаем токен и ID от пробелов, переносов строк и мусора
+ACCESS_TOKEN = str(RAW_TOKEN).strip()
+clean_id = ''.join(filter(str.isdigit, str(RAW_ACCOUNT_ID)))
 AD_ACCOUNT_ID = f"act_{clean_id}"
 
-# Строго проверяем структуру ссылки, чтобы адрес не склеивался
-url = f"https://facebook.com{AD_ACCOUNT_ID}/insights"
+# ЖЕСТКАЯ ССЫЛКА БЕЗ ДИНАМИЧЕСКОЙ СБОРКИ СТРОК
+url = "https://facebook.com" + AD_ACCOUNT_ID + "/insights"
 
 # 2. Настраиваем временной диапазон (с 9 марта по сегодняшний день)
 today_str = datetime.now().strftime('%Y-%m-%d')
 time_range = {'since': '2026-03-09', 'until': today_str}
 
-# 3. Параметры запроса для получения точных цифр по дням
+# 3. Параметры запроса к API Meta
 params = {
     'access_token': ACCESS_TOKEN,
     'level': 'campaign',
     'fields': 'campaign_id,campaign_name,spend,impressions,inline_link_clicks,actions,date_start',
     'time_range': json.dumps(time_range),
-    'time_increment': 1,  # Включаем разбивку по дням для календаря на фронтенде
+    'time_increment': 1,
     'filtering': json.dumps([
         {'field': 'campaign.delivery_info', 'operator': 'IN', 'value': ['active', 'scheduled', 'paused']}
     ]),
@@ -35,20 +36,18 @@ params = {
 }
 
 try:
-    print(f"Отправка запроса к Meta API для аккаунта: {AD_ACCOUNT_ID}...")
+    print(f"Запрос отправляется строго по адресу: {url}")
     response = requests.get(url, params=params)
     response.raise_for_status()
     raw_data = response.json().get('data', [])
     
     processed_data = []
     
-    # 4. Обрабатываем полученные строки данных
+    # 4. Собираем массив статистики по дням
     for item in raw_data:
         actions = item.get('actions', [])
         
-        # Считаем лиды (Lead Ads + Пиксель на сайте)
         leads = sum(int(a.get('value', 0)) for a in actions if a.get('action_type') in ['lead', 'offsite_conversion.fb_pixel_lead', 'onsite_conversion.lead_grouped'])
-        # Считаем покупки
         purchases = sum(int(a.get('value', 0)) for a in actions if a.get('action_type') in ['purchase', 'offsite_conversion.fb_pixel_purchase'])
 
         processed_data.append({
@@ -62,16 +61,16 @@ try:
             'purchases': purchases
         })
 
-    # 5. Создаем папку и сохраняем чистый JSON файл для вашего index.html
+    # 5. Записываем чистый файл для интерактивного календаря на фронтенде
     os.makedirs('data', exist_ok=True)
     with open('data/report.json', 'w', encoding='utf-8') as f:
         json.dump(processed_data, f, ensure_ascii=False, indent=4)
         
-    print(f"Успех! Скрипт выгрузил {len(processed_data)} строк статистики.")
+    print(f"Данные успешно обновлены! Строк обработано: {len(processed_data)}")
 
 except requests.exceptions.HTTPError as err:
-    print(f"Ошибка со стороны API Facebook: {err.response.text}")
+    print(f"Facebook отклонил запрос. Ответ сервера: {err.response.text}")
     exit(1)
 except Exception as e:
-    print(f"Непредвиденная ошибка в коде: {e}")
+    print(f"Системная ошибка: {e}")
     exit(1)

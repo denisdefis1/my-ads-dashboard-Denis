@@ -1,0 +1,1187 @@
+{
+    "last_updated": "28.07.2026, 08:31",
+    "period": {
+        "since": "2026-06-28",
+        "until": "2026-07-28"
+    },
+    "plan": {
+        "monthly_budget": 7500,
+        "monthly_leads": 400,
+        "target_cpl": 18.75
+    },
+    "totals": {
+        "spend": 6789.96,
+        "leads": 430,
+        "clicks": 8279,
+        "impressions": 485442,
+        "cpl": 15.79,
+        "cpm": 13.99,
+        "cpc": 0.82,
+        "ctr": 1.71
+    },
+    "daily": [
+        {
+            "date": "2026-06-28",
+            "spend": 73.03,
+            "leads": 5,
+            "clicks": 104,
+            "impressions": 4809,
+            "cpl": 14.61,
+            "ctr": 2.16
+        },
+        {
+            "date": "2026-06-29",
+            "spend": 334.71,
+            "leads": 19,
+            "clicks": 637,
+            "impressions": 42951,
+            "cpl": 17.62,
+            "ctr": 1.48
+        },
+        {
+            "date": "2026-06-30",
+            "spend": 418.67,
+            "leads": 19,
+            "clicks": 671,
+            "impressions": 41161,
+            "cpl": 22.04,
+            "ctr": 1.63
+        },
+        {
+            "date": "2026-07-01",
+            "spend": 387.26,
+            "leads": 36,
+            "clicks": 741,
+            "impressions": 37370,
+            "cpl": 10.76,
+            "ctr": 1.98
+        },
+        {
+            "date": "2026-07-02",
+            "spend": 373.53,
+            "leads": 26,
+            "clicks": 538,
+            "impressions": 32324,
+            "cpl": 14.37,
+            "ctr": 1.66
+        },
+        {
+            "date": "2026-07-03",
+            "spend": 355.77,
+            "leads": 36,
+            "clicks": 430,
+            "impressions": 26087,
+            "cpl": 9.88,
+            "ctr": 1.65
+        },
+        {
+            "date": "2026-07-04",
+            "spend": 331.6,
+            "leads": 32,
+            "clicks": 376,
+            "impressions": 18605,
+            "cpl": 10.36,
+            "ctr": 2.02
+        },
+        {
+            "date": "2026-07-05",
+            "spend": 215.91,
+            "leads": 15,
+            "clicks": 224,
+            "impressions": 11992,
+            "cpl": 14.39,
+            "ctr": 1.87
+        },
+        {
+            "date": "2026-07-06",
+            "spend": 172.92,
+            "leads": 11,
+            "clicks": 219,
+            "impressions": 12422,
+            "cpl": 15.72,
+            "ctr": 1.76
+        },
+        {
+            "date": "2026-07-07",
+            "spend": 176.98,
+            "leads": 11,
+            "clicks": 179,
+            "impressions": 9540,
+            "cpl": 16.09,
+            "ctr": 1.88
+        },
+        {
+            "date": "2026-07-08",
+            "spend": 136.85,
+            "leads": 15,
+            "clicks": 168,
+            "impressions": 8342,
+            "cpl": 9.12,
+            "ctr": 2.01
+        },
+        {
+            "date": "2026-07-09",
+            "spend": 124.08,
+            "leads": 16,
+            "clicks": 210,
+            "impressions": 11043,
+            "cpl": 7.75,
+            "ctr": 1.9
+        },
+        {
+            "date": "2026-07-10",
+            "spend": 266.22,
+            "leads": 16,
+            "clicks": 364,
+            "impressions": 20033,
+            "cpl": 16.64,
+            "ctr": 1.82
+        },
+        {
+            "date": "2026-07-11",
+            "spend": 218.59,
+            "leads": 13,
+            "clicks": 305,
+            "impressions": 17727,
+            "cpl": 16.81,
+            "ctr": 1.72
+        },
+        {
+            "date": "2026-07-12",
+            "spend": 249.5,
+            "leads": 16,
+            "clicks": 438,
+            "impressions": 20486,
+            "cpl": 15.59,
+            "ctr": 2.14
+        },
+        {
+            "date": "2026-07-13",
+            "spend": 225.61,
+            "leads": 6,
+            "clicks": 343,
+            "impressions": 16729,
+            "cpl": 37.6,
+            "ctr": 2.05
+        },
+        {
+            "date": "2026-07-14",
+            "spend": 199.93,
+            "leads": 12,
+            "clicks": 283,
+            "impressions": 13708,
+            "cpl": 16.66,
+            "ctr": 2.06
+        },
+        {
+            "date": "2026-07-15",
+            "spend": 193.23,
+            "leads": 12,
+            "clicks": 321,
+            "impressions": 15454,
+            "cpl": 16.1,
+            "ctr": 2.08
+        },
+        {
+            "date": "2026-07-16",
+            "spend": 182.73,
+            "leads": 10,
+            "clicks": 232,
+            "impressions": 13078,
+            "cpl": 18.27,
+            "ctr": 1.77
+        },
+        {
+            "date": "2026-07-17",
+            "spend": 97.33,
+            "leads": 4,
+            "clicks": 123,
+            "impressions": 7064,
+            "cpl": 24.33,
+            "ctr": 1.74
+        },
+        {
+            "date": "2026-07-18",
+            "spend": 179.47,
+            "leads": 10,
+            "clicks": 186,
+            "impressions": 11977,
+            "cpl": 17.95,
+            "ctr": 1.55
+        },
+        {
+            "date": "2026-07-19",
+            "spend": 144.16,
+            "leads": 5,
+            "clicks": 125,
+            "impressions": 8445,
+            "cpl": 28.83,
+            "ctr": 1.48
+        },
+        {
+            "date": "2026-07-20",
+            "spend": 130.74,
+            "leads": 6,
+            "clicks": 92,
+            "impressions": 5474,
+            "cpl": 21.79,
+            "ctr": 1.68
+        },
+        {
+            "date": "2026-07-21",
+            "spend": 150.43,
+            "leads": 7,
+            "clicks": 90,
+            "impressions": 7172,
+            "cpl": 21.49,
+            "ctr": 1.25
+        },
+        {
+            "date": "2026-07-22",
+            "spend": 230.87,
+            "leads": 7,
+            "clicks": 132,
+            "impressions": 11261,
+            "cpl": 32.98,
+            "ctr": 1.17
+        },
+        {
+            "date": "2026-07-23",
+            "spend": 322.68,
+            "leads": 16,
+            "clicks": 195,
+            "impressions": 17287,
+            "cpl": 20.17,
+            "ctr": 1.13
+        },
+        {
+            "date": "2026-07-24",
+            "spend": 270.92,
+            "leads": 12,
+            "clicks": 154,
+            "impressions": 13479,
+            "cpl": 22.58,
+            "ctr": 1.14
+        },
+        {
+            "date": "2026-07-25",
+            "spend": 157.13,
+            "leads": 8,
+            "clicks": 103,
+            "impressions": 8563,
+            "cpl": 19.64,
+            "ctr": 1.2
+        },
+        {
+            "date": "2026-07-26",
+            "spend": 205.34,
+            "leads": 11,
+            "clicks": 133,
+            "impressions": 9454,
+            "cpl": 18.67,
+            "ctr": 1.41
+        },
+        {
+            "date": "2026-07-27",
+            "spend": 191.99,
+            "leads": 13,
+            "clicks": 118,
+            "impressions": 8568,
+            "cpl": 14.77,
+            "ctr": 1.38
+        },
+        {
+            "date": "2026-07-28",
+            "spend": 71.78,
+            "leads": 5,
+            "clicks": 45,
+            "impressions": 2837,
+            "cpl": 14.36,
+            "ctr": 1.59
+        }
+    ],
+    "campaigns": [
+        {
+            "name": "европа | израиль | - интересы -  новый квиз — 09.06",
+            "language": "RU",
+            "spend": 1533.31,
+            "leads": 89,
+            "clicks": 3257,
+            "impressions": 103755,
+            "cpl": 17.23,
+            "ctr": 3.14
+        },
+        {
+            "name": "европа | израиль | - категория - лидформа — 04.06",
+            "language": "RU",
+            "spend": 1156.43,
+            "leads": 42,
+            "clicks": 803,
+            "impressions": 47606,
+            "cpl": 27.53,
+            "ctr": 1.69
+        },
+        {
+            "name": "Лиды сайт | ENG | Европа, Израиль, ОАЭ",
+            "language": "RU",
+            "spend": 1091.41,
+            "leads": 112,
+            "clicks": 1243,
+            "impressions": 103110,
+            "cpl": 9.74,
+            "ctr": 1.21
+        },
+        {
+            "name": "европа  | - интересы -  сайт — 14.06",
+            "language": "RU",
+            "spend": 1046.54,
+            "leads": 96,
+            "clicks": 1073,
+            "impressions": 67321,
+            "cpl": 10.9,
+            "ctr": 1.59
+        },
+        {
+            "name": "СНГ | Украина | - категория - лидформа — 04.06",
+            "language": "RU",
+            "spend": 760.78,
+            "leads": 29,
+            "clicks": 835,
+            "impressions": 70689,
+            "cpl": 26.23,
+            "ctr": 1.18
+        },
+        {
+            "name": "СНГ  | - категория - лидформа — 14.06",
+            "language": "RU",
+            "spend": 683.53,
+            "leads": 40,
+            "clicks": 679,
+            "impressions": 61830,
+            "cpl": 17.09,
+            "ctr": 1.1
+        },
+        {
+            "name": "лиды | новые крео | РУ",
+            "language": "RU",
+            "spend": 275.44,
+            "leads": 18,
+            "clicks": 182,
+            "impressions": 13406,
+            "cpl": 15.3,
+            "ctr": 1.36
+        },
+        {
+            "name": "европа | израиль | - интересы -  новый квиз — 26.06",
+            "language": "RU",
+            "spend": 123.13,
+            "leads": 2,
+            "clicks": 146,
+            "impressions": 10261,
+            "cpl": 61.56,
+            "ctr": 1.42
+        },
+        {
+            "name": "лиды | новые крео | РУ",
+            "language": "RU",
+            "spend": 116.71,
+            "leads": 2,
+            "clicks": 58,
+            "impressions": 7217,
+            "cpl": 58.35,
+            "ctr": 0.8
+        },
+        {
+            "name": "европа | израиль | - категория - лидформа — 16.05",
+            "language": "RU",
+            "spend": 2.68,
+            "leads": 0,
+            "clicks": 3,
+            "impressions": 247,
+            "cpl": null,
+            "ctr": 1.21
+        }
+    ],
+    "creatives": [
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGl2dmg6GYtkDdiqGLMpLmBVqOofVIjMbY1FXih45gBKza2JQUeGcI3OwQ3nBbNMGdb2nj0u2RxbA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCv5Eg8l6mD235yZ0no0sVy4cCv_1OU9Tsin--OCryJbQ&oe=6A6E3C9E",
+            "spend": 701.61,
+            "leads": 64,
+            "clicks": 722,
+            "impressions": 44214,
+            "cpl": 10.96,
+            "ctr": 1.63
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHpKdCOCGLHicWkcnWen4t9W_PiaWR00Pr5nUjx8uWMaSEQvfK6wLdlph8HGenAOY_-DUsfxlm17A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQC09gndrn2MSOQPzB9AwH7Rn25uc0TC5vj6JZg48ZqUDg&oe=6A6E221D",
+            "spend": 908.57,
+            "leads": 54,
+            "clicks": 2783,
+            "impressions": 81399,
+            "cpl": 16.83,
+            "ctr": 3.42
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGZfSW5FY8fRAvaXkuTgc9zlX1HyeVlJAP-mq99TCEzlpdbU0PnQS3S3Vgz5mNG-LfK5IT_spNZBw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDw2oQzMcwpUXESQXbM1TznolbIxjlb5UqrlMNtxxHVzA&oe=6A6E49B1",
+            "spend": 604.93,
+            "leads": 37,
+            "clicks": 630,
+            "impressions": 57060,
+            "cpl": 16.35,
+            "ctr": 1.1
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t45.1600-4/679647766_947284731489993_186966299021384976_n.png?_nc_cat=106&ccb=1-7&_nc_ohc=b8G0uqFEDbgQ7kNvwH6ylJG&_nc_oc=AdpMG5SB6rTA8yxrKBXRqs7YSzPwiA0RaQQmpMeBL1aPeTgS5XjxAICzjWGZYArzQW8&_nc_zt=1&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQFiFu_8KSMY1vBXb_saRb_Rs3cMRwJICdV_NmacUNUABPqrBkyXwjlUIpEG5POmBKmt-LkCMIuQBQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQBUseLygcg6pezZ57Qbf1zjsTlcRtzZ3UBkf9hYyY73Bg&oe=6A6E425A",
+            "spend": 317.67,
+            "leads": 34,
+            "clicks": 294,
+            "impressions": 41491,
+            "cpl": 9.34,
+            "ctr": 0.71
+        },
+        {
+            "name": "видео",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/676523749_1224582062851777_3840859057172465271_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=LT8XjVtrEYgQ7kNvwEkmQ3b&_nc_oc=AdoaCQguZedTBtVJ2nXil4czMgZl8nw5d7tPAzWsXwtZgPE1aUx6rfTZWEwdFN6hPeU&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQHGjSztsIb4Iq5FPX90RydI1L64tk4eFgakGQP1FUyi7a-MMCGOOXrZZImxYO3Xb1Ne5jcApf88aw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQBe5McqNXix1dDFVD_sXPGXgcvtcMryp7AdV6nPfHSMEg&oe=6A6E2586",
+            "spend": 337.46,
+            "leads": 32,
+            "clicks": 477,
+            "impressions": 30579,
+            "cpl": 10.55,
+            "ctr": 1.56
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQF6Avzp-RGXuB6ok2-w7EyqEm_7I_64deOAGRXSt-FIMyom7py1ADC1oIja-iTiQktfqbvOoNz3CQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAToHoRAvgQ4tdFOBJsCtc9_zmwoHSecpINeasYuJImLw&oe=6A6E49B1",
+            "spend": 859.37,
+            "leads": 31,
+            "clicks": 668,
+            "impressions": 40415,
+            "cpl": 27.72,
+            "ctr": 1.65
+        },
+        {
+            "name": "видео",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/676523749_1224582062851777_3840859057172465271_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=LT8XjVtrEYgQ7kNvwEkmQ3b&_nc_oc=AdoaCQguZedTBtVJ2nXil4czMgZl8nw5d7tPAzWsXwtZgPE1aUx6rfTZWEwdFN6hPeU&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQFr5GAJI1vfGLBRQYZGtNEClX_vxeZIuQ0LuOAawSaFVXQsecmQ7aUjAz8axxxiFF2yF7NJCZXO_w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCylcqRf3jLRCcImOOpa6V5TLvUQ4iNPjIqK6jaGcDrmA&oe=6A6E2586",
+            "spend": 216.31,
+            "leads": 24,
+            "clicks": 248,
+            "impressions": 11632,
+            "cpl": 9.01,
+            "ctr": 2.13
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG0FYmtzsFiC0k1LLBcBh1eNjddbqbMEwtny_3iARNdzJTMVW-glNKwU4zFupgBKwDIr8ktjSz_Jg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDc5qaCBwUCqyrb1NTyJ6TsbPKVv2MGFSNZ537o8rlZ1A&oe=6A6E3C9E",
+            "spend": 256.48,
+            "leads": 24,
+            "clicks": 227,
+            "impressions": 7971,
+            "cpl": 10.69,
+            "ctr": 2.85
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQElfkC7RDg2xS9eJTl24lsL2M5CLhVmMH74yS5VMPOj7S624K9-BQcz86OKryPJ5YoAPO_XvaMd4w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQC691vVw6Bk-nVdpNDebO6tq0p1g-uq6tr2U-Gc-0E42Q&oe=6A6E221D",
+            "spend": 133.79,
+            "leads": 18,
+            "clicks": 105,
+            "impressions": 5743,
+            "cpl": 7.43,
+            "ctr": 1.83
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin2-1.xx.fbcdn.net/v/t45.1600-4/683092737_947284628156670_1885383856369733079_n.png?_nc_cat=100&ccb=1-7&_nc_ohc=tKqd_wlzRLkQ7kNvwEt75YD&_nc_oc=AdrEqgFu0zvsnhZf--4j9Lhahw6taNta3wJO4c6_klgHQD2Vna_NgZGigH1ybeH67lQ&_nc_zt=1&_nc_ht=scontent-sin2-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQF8cnRd-65mBH5M8c8AxKNZ872S_oOw8YeTjX9DubDEVgwuaBLfD5uzVGAheUYlrwIQ6Luxa9_t_w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQAROhZajnzADgrYZXY4L_AD5cHRnpamo2SVC-yTN_3ong&oe=6A6E37B1",
+            "spend": 151.89,
+            "leads": 16,
+            "clicks": 163,
+            "impressions": 14789,
+            "cpl": 9.49,
+            "ctr": 1.1
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFu8NG3jo4x055rdiW4dT7tnWZtmhCbOFIqua0MkWJjh1S7Brp1XtBiLo3xUGDZiZvkkaBjshFX6w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDexhxgZIMMwdAQvspcaT20C9nrpR3tX9--HNoMGEy0Cg&oe=6A6E49B1",
+            "spend": 418.27,
+            "leads": 16,
+            "clicks": 543,
+            "impressions": 41833,
+            "cpl": 26.14,
+            "ctr": 1.3
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFYUsT1EOTJgWLTtpQtzFG6WpgnjUZRzsOBNJDtDuR0KtdfaPv-knGXQhs0cf_EwaM3m83MoY24ag&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAcKrqUkmuoHPdKr1jvLZMunDYQBJvAuPSA_HyRtyBuxA&oe=6A6E49B1",
+            "spend": 211.14,
+            "leads": 14,
+            "clicks": 246,
+            "impressions": 17364,
+            "cpl": 15.08,
+            "ctr": 1.42
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGN9jK8v3QIcEadt6QbZvkrNtzLR3fGBmYPXsaPGYbzuAdGYSWqEizWbbbKNUP2RX8y6hQNf9QMwg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCGcIReHRiJ1SZ4Ougrgc1_tfi5RA1SIqMg6wmyApUgnA&oe=6A6E3C9E",
+            "spend": 225.73,
+            "leads": 12,
+            "clicks": 236,
+            "impressions": 19880,
+            "cpl": 18.81,
+            "ctr": 1.19
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin2-2.xx.fbcdn.net/v/t15.5256-10/752410107_1788314155715382_5893110477165220661_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=9slDvqRp-7EQ7kNvwGLIJET&_nc_oc=AdrcqB2497m4QVSUhIbiqANCfkQ8V1vp86_0gS8Y8FXnXfEw-Mfpn9SfV1z51OHusR0&_nc_zt=23&_nc_ht=scontent-sin2-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGIpwJ-zGfjKk9RmfZVJwwToQoovNWSyJ5ugdb9d1YCigMROGSLVWddhz3mZhX35r1gzKP5yyEhww&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQDiPhh7pNfCuULWlQAdQ6aivmzTjcjZcboAxmDSvsH52w&oe=6A6E52B0",
+            "spend": 101.8,
+            "leads": 6,
+            "clicks": 64,
+            "impressions": 4751,
+            "cpl": 16.97,
+            "ctr": 1.35
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHw9SB8BNv7S5BlstodA4PcuPeaN_1moz1Oj9LudqWspAybavIz7Zie411fb2jLTfYKlFNW0_3O4w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQC2MKXhUrd5yspBzxhdpJs6aiIr__lZKXmPLYSFtK3k4Q&oe=6A6E49B1",
+            "spend": 172.29,
+            "leads": 5,
+            "clicks": 71,
+            "impressions": 3939,
+            "cpl": 34.46,
+            "ctr": 1.8
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t45.1600-4/679647766_947284731489993_186966299021384976_n.png?_nc_cat=106&ccb=1-7&_nc_ohc=b8G0uqFEDbgQ7kNvwH6ylJG&_nc_oc=AdpMG5SB6rTA8yxrKBXRqs7YSzPwiA0RaQQmpMeBL1aPeTgS5XjxAICzjWGZYArzQW8&_nc_zt=1&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQGmWN95oUJfNjugePLrDfTD65xzIP9Fti7XTyDG5P8g22yVr08V_ID3NtF4FeGl-QXi5f6hWcsA9A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQDniewNQzoQUYzXtYJTFFE3yHkGIwfsf7LFXqqveGoI4g&oe=6A6E425A",
+            "spend": 38.71,
+            "leads": 4,
+            "clicks": 40,
+            "impressions": 2786,
+            "cpl": 9.68,
+            "ctr": 1.44
+        },
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHFogqlpN6i3jaT2-xqNgq3SnY1DUY13neouyeExwIQ-UbW1wAStyPwllosWPq16_VswPGon3ejrg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAONJIoZxkG4HZ8oA2e4abcRAeXsnazmhIzy0qOhSnxpQ&oe=6A6E3C9E",
+            "spend": 194.0,
+            "leads": 4,
+            "clicks": 144,
+            "impressions": 8624,
+            "cpl": 48.5,
+            "ctr": 1.67
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG6Nh6FVjnugWs9BmIvXqxMVgUVCZIw1nQPsOof7F3L84sS-MwLygagYW1G265la6NU7xa8uLr7sQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAcQkeAQqJrNt6p4W3iosmDgQtwkMfkqqiiKBqiqoB4NA&oe=6A6E221D",
+            "spend": 56.65,
+            "leads": 4,
+            "clicks": 20,
+            "impressions": 1413,
+            "cpl": 14.16,
+            "ctr": 1.42
+        },
+        {
+            "name": "2 — Копия — Копия",
+            "thumbnail_url": "https://scontent-sin2-2.xx.fbcdn.net/v/t15.5256-10/752410107_1788314155715382_5893110477165220661_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=9slDvqRp-7EQ7kNvwGLIJET&_nc_oc=AdrcqB2497m4QVSUhIbiqANCfkQ8V1vp86_0gS8Y8FXnXfEw-Mfpn9SfV1z51OHusR0&_nc_zt=23&_nc_ht=scontent-sin2-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGjf9ZJvWtzafkwZZAgw-MV4qEdKJBTseR5dcssqI2VOVEZ0kvYcAEkdNCd_NbUxRzUjQkmgjuUGw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQAXfSkRf9G84E95B2V50zkitHK5N0Wq4p_YonkHSXVMww&oe=6A6E52B0",
+            "spend": 28.05,
+            "leads": 4,
+            "clicks": 20,
+            "impressions": 896,
+            "cpl": 7.01,
+            "ctr": 2.23
+        },
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFXu5BZqwGaHFZhr_IQ6slJn3LVBnkMTDHIqBSdOxTiZgxFDJyo1_8Dcov3aKWbojkxPKyroPewzQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAANyep-BbxdRpDYMc-JfKWNwVE--ln64oBz-iPmgLFSA&oe=6A6E3C9E",
+            "spend": 66.49,
+            "leads": 3,
+            "clicks": 42,
+            "impressions": 1966,
+            "cpl": 22.16,
+            "ctr": 2.14
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGM0sQPAiWlOlG495C7n6LCQ-6vLaxXW77ufdr399SLFcQcP6HwFgNi3dZgQm3PCT8okR3fzXMQ2A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCMt8EQlzbcsyk7GZ3nMniqrqvOFWIPiLVY1VMlwGd6Sw&oe=6A6E49B1",
+            "spend": 78.2,
+            "leads": 3,
+            "clicks": 62,
+            "impressions": 2663,
+            "cpl": 26.07,
+            "ctr": 2.33
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin2-1.xx.fbcdn.net/v/t45.1600-4/683092737_947284628156670_1885383856369733079_n.png?_nc_cat=100&ccb=1-7&_nc_ohc=tKqd_wlzRLkQ7kNvwEt75YD&_nc_oc=AdrEqgFu0zvsnhZf--4j9Lhahw6taNta3wJO4c6_klgHQD2Vna_NgZGigH1ybeH67lQ&_nc_zt=1&_nc_ht=scontent-sin2-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQG-SD-BRp8EG6Ap1kJtJO5fcXkRfkzOZ6EqEfnc_jeppzhg_Lf334H8AFoVjrXlHu_OeEyEaG90Fg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQDbR1iIKv0a5GyvnM3VSm5ObEOTxkUndDJKUPWYppuRXA&oe=6A6E37B1",
+            "spend": 21.61,
+            "leads": 2,
+            "clicks": 18,
+            "impressions": 1423,
+            "cpl": 10.8,
+            "ctr": 1.26
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQECgPErU87D3AOL0Nenyzg6AUQYmr2QNgVXy7dSPBRKJBgdUE0kIRecWZFSLwBM9Tixi9k2O7NZZw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAmYrEPspR3niAw2sVNjue7FXaYmOU7NCFQSUTGSFIYgA&oe=6A6E221D",
+            "spend": 16.77,
+            "leads": 2,
+            "clicks": 12,
+            "impressions": 522,
+            "cpl": 8.38,
+            "ctr": 2.3
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHst8FK6ucxGXIBRHN3Mel1hQ2MpJPy0_izhmiceie0NfTji2lo3OFrHoT1MstR1qbIViw1zPs5ng&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQASYrrq-Dyr6gJw33Uy4MegKAvrtUbDvtX6Qwrxlhm9Bg&oe=6A6E3C9E",
+            "spend": 71.04,
+            "leads": 2,
+            "clicks": 37,
+            "impressions": 4165,
+            "cpl": 35.52,
+            "ctr": 0.89
+        },
+        {
+            "name": "6",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t15.5256-10/752674257_1378041004257522_2018752790553977468_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=VwhtGf5dPVcQ7kNvwHkJZ8-&_nc_oc=AdrXA35KX5G9tixx7xAHu9pxR5TiizPY4WVKbv_0O8-KU4CaEZTk5Ua2GA1mddHE_z0&_nc_zt=23&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFENM6kxLDjOwXpNZlI9C6j5BAIu1eK-F3grH5Jk6JEQyjgwix4Z9iGEnIFLZ-RSvjsXS8HGFsJHw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBITlwZ1pgmRh3S29G-x7Bum2HgvPRqWU6nbtOjS6g3VA&oe=6A6E4F25",
+            "spend": 69.95,
+            "leads": 2,
+            "clicks": 39,
+            "impressions": 3472,
+            "cpl": 34.98,
+            "ctr": 1.12
+        },
+        {
+            "name": "5 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGm_Lv_TxatcSau_AmeFcPEuvwgFbgTSe_MYb9EiRI1Ki9IU0SKWBaooT-hIxGiUd3datbI5awoJQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQB5qxSYag-69UQACQlEQLZX3H7-wLNmeoHJu5LePtsMNw&oe=6A6E265C",
+            "spend": 3.01,
+            "leads": 2,
+            "clicks": 7,
+            "impressions": 124,
+            "cpl": 1.5,
+            "ctr": 5.65
+        },
+        {
+            "name": "7 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEKSQXyDGQnVlJXP6AA-tFC2iqS5cZQUpIiM__fNrK0KtU_8EJKn1I0WHkvuATy32jK8m6Gd-f_hQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCkmbbh_uBkIQlwUu6sfiSqBvP7CiK7f7qr4Okp_aw9Gw&oe=6A6E3C9E",
+            "spend": 10.65,
+            "leads": 2,
+            "clicks": 12,
+            "impressions": 783,
+            "cpl": 5.33,
+            "ctr": 1.53
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFAWNs68yx9XYqDe_eTPUr4je3IrX_qBWwU1ofKSi21jSTj3BPh6DADvCu_ramhK_sNHTW6NUllUA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCOaFIKvv3Q_5CvGkcVAqQ56tAVWA4X1n3ZMsM5dHdUFA&oe=6A6E221D",
+            "spend": 116.78,
+            "leads": 1,
+            "clicks": 56,
+            "impressions": 8976,
+            "cpl": 116.78,
+            "ctr": 0.62
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQF0xOZBwW5g5JOc9sEaRP4oXArjTCpBp0A_fUnuo08A2PVzN4hr-ENVT2l3e6NO1Bk7RQR_B9rklQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQA6tmMp4x_JOGVpqMX_4t_dwMJ5sSf73k33JHEAHiFwbA&oe=6A6E221D",
+            "spend": 25.07,
+            "leads": 1,
+            "clicks": 6,
+            "impressions": 443,
+            "cpl": 25.07,
+            "ctr": 1.35
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEcvvY8GrlIRiTlbjMU75I5CJ95o-GmaBTB21wCFOenzr2ZB8l0EMY4BMBr0xlCr8vy5X-AQ-YXWA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDNNq90l0sZ6c7ultx0TSyQSxobpgZOzQR762dAy4DhyA&oe=6A6E221D",
+            "spend": 7.56,
+            "leads": 1,
+            "clicks": 12,
+            "impressions": 605,
+            "cpl": 7.56,
+            "ctr": 1.98
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHsjQKvcvse8x3HSZv8XEGzq2c2Y1_FCIzHCg_A1xxTQ8ZccwBYlF5jjwcdYnmPxiXolTudJL9QJg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQB-dh75_kwzxt_h3bCZ3xMqTk6hTdoJq6aVsiMVv7k1tQ&oe=6A6E49B1",
+            "spend": 26.9,
+            "leads": 1,
+            "clicks": 34,
+            "impressions": 2576,
+            "cpl": 26.9,
+            "ctr": 1.32
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHsjQKvcvse8x3HSZv8XEGzq2c2Y1_FCIzHCg_A1xxTQ8ZccwBYlF5jjwcdYnmPxiXolTudJL9QJg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQB-dh75_kwzxt_h3bCZ3xMqTk6hTdoJq6aVsiMVv7k1tQ&oe=6A6E49B1",
+            "spend": 0.0,
+            "leads": 1,
+            "clicks": 0,
+            "impressions": 1,
+            "cpl": 0.0,
+            "ctr": 0.0
+        },
+        {
+            "name": "7 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEKSQXyDGQnVlJXP6AA-tFC2iqS5cZQUpIiM__fNrK0KtU_8EJKn1I0WHkvuATy32jK8m6Gd-f_hQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCkmbbh_uBkIQlwUu6sfiSqBvP7CiK7f7qr4Okp_aw9Gw&oe=6A6E3C9E",
+            "spend": 29.55,
+            "leads": 1,
+            "clicks": 13,
+            "impressions": 1650,
+            "cpl": 29.55,
+            "ctr": 0.79
+        },
+        {
+            "name": "7 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFPIujfgn8zT8TLmuJRgqFJAdtneHpPLMGFAkEz6rh3F95Er2mitz-jCnkGUiBw3Oo1bsre02g1IQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQDW2p1RZmEcAbUR-KK1omkR_JxLvW21Xw6q2RpQqjiR8g&oe=6A6E3C9E",
+            "spend": 28.34,
+            "leads": 1,
+            "clicks": 18,
+            "impressions": 2440,
+            "cpl": 28.34,
+            "ctr": 0.74
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/743318098_1534995614792415_6033700610051757322_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=AfXYPGnrRcIQ7kNvwEd3XIL&_nc_oc=AdowaRKSZT9ydb-gNJtqvBegzhngMxnc1rKjAAtxiTkDcLWSeB6sUGV8yVffo4kFYCw&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGxTwgkPRfSAA0D70XMkdIuk92eSzLj-wzl9_SePP2O7dwjz13PPI9lmXezOzlsTmQJv5edhm65eQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQDavmAV8HrG0_r4PIWaIsJRFSmWWVjyd33Z3b3grGnDDQ&oe=6A6E2DAD",
+            "spend": 4.31,
+            "leads": 1,
+            "clicks": 1,
+            "impressions": 179,
+            "cpl": 4.31,
+            "ctr": 0.56
+        },
+        {
+            "name": "6 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t15.5256-10/752674257_1378041004257522_2018752790553977468_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=VwhtGf5dPVcQ7kNvwHkJZ8-&_nc_oc=AdrXA35KX5G9tixx7xAHu9pxR5TiizPY4WVKbv_0O8-KU4CaEZTk5Ua2GA1mddHE_z0&_nc_zt=23&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEeUDwrFBKg8aKcoIcX51L7sMP85NWVGCzUNRRkDUliKdda60JeqASf1KAOsQFUzYYDmk_xdgG6XA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCnBxd52Bx3o1A4FD6WEo_z4szqoYoXF7Zk_Jk-2MLD7g&oe=6A6E4F25",
+            "spend": 13.25,
+            "leads": 1,
+            "clicks": 4,
+            "impressions": 811,
+            "cpl": 13.25,
+            "ctr": 0.49
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t45.1600-4/681373103_947284681489998_1121586242708678184_n.png?_nc_cat=106&ccb=1-7&_nc_ohc=CKOYHB5wG9kQ7kNvwGQ8GKs&_nc_oc=AdofubrUWTASdgMVwXuMeIiuCq2qh8SMb7p49AM5pvhrJA5ZpIDLYxEqo6jTmo83mpI&_nc_zt=1&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQGNMIhLoaZr2dfO_A9GVJ9M7EDmh9jM5r5eVKTDcNHy_DmPnWe0wo1LZElkRc_Ih4h2Z5ITjRIzKg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQAgpzRlh5nFqBo_kZcB4Y6wqWwUl3U0p_rPny1rL_Ul0Q&oe=6A6E5511",
+            "spend": 5.97,
+            "leads": 0,
+            "clicks": 1,
+            "impressions": 307,
+            "cpl": null,
+            "ctr": 0.33
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t45.1600-4/681373103_947284681489998_1121586242708678184_n.png?_nc_cat=106&ccb=1-7&_nc_ohc=CKOYHB5wG9kQ7kNvwGQ8GKs&_nc_oc=AdofubrUWTASdgMVwXuMeIiuCq2qh8SMb7p49AM5pvhrJA5ZpIDLYxEqo6jTmo83mpI&_nc_zt=1&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=A2Yp6ifirPhypa8Vp2MVyw&_nc_tpa=Q5bMBQGG-LdzR-PMTwgni4u4GZgIPvm0YV8s9gmAKBGS9BCEWWCqFd3YC0ppOi3ps0cFm5j-efArJwOu7w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_AQBHkRUpv0I_L2aYX8Fyka5LQx08weC889iHAzw1Fl1sGg&oe=6A6E5511",
+            "spend": 1.79,
+            "leads": 0,
+            "clicks": 2,
+            "impressions": 103,
+            "cpl": null,
+            "ctr": 1.94
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFTVkKtNCAxiI-RDRWVL1AZDpuA8dm-1E511DTvyS8yVDPKDA32WgLXMvAHYqr8MkLAdCF_RV_4HQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCL33Pr0UON-YcfCoDTTMjUy-Jvr7SsG_k2fu9o0rIH0Q&oe=6A6E49B1",
+            "spend": 0.54,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 9,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQF1kFY2UBUgMbKdzf7lJJfCBLB8q5WcXtQuIJPfdAeXehcnsytnFDXWqMmfJxa62jYR7GeDK8hPGQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAlUYJXfKrDfpML4boHZNjNp-DlOAgjQznPQEDRB_PQ2w&oe=6A6E49B1",
+            "spend": 2.14,
+            "leads": 0,
+            "clicks": 3,
+            "impressions": 238,
+            "cpl": null,
+            "ctr": 1.26
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQELbeEOXYntfDtuK6Gff-ydj3WdbbKnNcUJZdTlh2L518IFCYY5guCQUEMnVM-tBKdlN7X0X4Gajg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQBXT5arq4XFsvlmLHlhPowmNkpYus3VDYshZM-Euq-2mQ&oe=6A6E3C9E",
+            "spend": 16.44,
+            "leads": 0,
+            "clicks": 4,
+            "impressions": 321,
+            "cpl": null,
+            "ctr": 1.25
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE8uae-lnqAimGlOVQn27DH8-_WUOl7dz8pgvna3KMOgihZSbYpmKVV9LENSQ59Ioy0r4u0XDgx7A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAR1gbYF38_hYPGlyhELmHcK56tvxlRlIoP2ScsbqylnA&oe=6A6E49B1",
+            "spend": 39.41,
+            "leads": 0,
+            "clicks": 21,
+            "impressions": 1685,
+            "cpl": null,
+            "ctr": 1.25
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEZ-zbnXMnuwp1i1QE1h9FrH2j8mWHLf-xPaCJg758rTShorzYKNMVJter63-Nl_KDmmul4InNF8g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDNU6ljGLMfSYduNavSG4kBdloMjGbi-5kK-NOZLdA7lQ&oe=6A6E221D",
+            "spend": 0.04,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 2,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQF82OADZ1XT0HUBQ6XZgcFIW6o_x2zPQz9CHFikrUwWdLZAQGpJjNs3Z4rKaxxEGYNBKY8LL3a6CQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAqi457tyTpG4GsT81TUkSVXIZcA5ozaAovJVqRZ7qFUA&oe=6A6E221D",
+            "spend": 20.25,
+            "leads": 0,
+            "clicks": 14,
+            "impressions": 672,
+            "cpl": null,
+            "ctr": 2.08
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGHJdGCDbrW6_5j7crnguTcHVj2v5DtOGU8otUNbRKQRvKLgQ3LLna4HgBAqSLDePbdx4zAoqDeZQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDHClF6Woiih1t_urznWfhlY7wt94HQIVOl10nalSS4ug&oe=6A6E3C9E",
+            "spend": 2.22,
+            "leads": 0,
+            "clicks": 1,
+            "impressions": 83,
+            "cpl": null,
+            "ctr": 1.2
+        },
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE5wYRJH1ME90RsJTgbqFMqZ989ub72PMEhghqBo4-OV73natk8Wc4BS0QUxuNBTMQWxMAqRACPpg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQD2uZG0AP_x1xnlrhDieP3_-EBQ7-21hoVfZ7iEfrnKmg&oe=6A6E3C9E",
+            "spend": 0.5,
+            "leads": 0,
+            "clicks": 2,
+            "impressions": 56,
+            "cpl": null,
+            "ctr": 3.57
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEZ-zbnXMnuwp1i1QE1h9FrH2j8mWHLf-xPaCJg758rTShorzYKNMVJter63-Nl_KDmmul4InNF8g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDNU6ljGLMfSYduNavSG4kBdloMjGbi-5kK-NOZLdA7lQ&oe=6A6E221D",
+            "spend": 0.65,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 14,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE5wYRJH1ME90RsJTgbqFMqZ989ub72PMEhghqBo4-OV73natk8Wc4BS0QUxuNBTMQWxMAqRACPpg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQD2uZG0AP_x1xnlrhDieP3_-EBQ7-21hoVfZ7iEfrnKmg&oe=6A6E3C9E",
+            "spend": 2.59,
+            "leads": 0,
+            "clicks": 2,
+            "impressions": 148,
+            "cpl": null,
+            "ctr": 1.35
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin2-3.xx.fbcdn.net/v/t15.5256-10/700091760_940985898770751_3624769832835378966_n.jpg?_nc_cat=107&ccb=1-7&_nc_ohc=S-ShC9NeKMYQ7kNvwGJIqel&_nc_oc=AdrL2NbLoDzlderUKOwvqgpfUQhXCmkLszi9zXuu2diflvQG1vnLhmbhlQ9251-_0Ac&_nc_zt=23&_nc_ht=scontent-sin2-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHsjQKvcvse8x3HSZv8XEGzq2c2Y1_FCIzHCg_A1xxTQ8ZccwBYlF5jjwcdYnmPxiXolTudJL9QJg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQB-dh75_kwzxt_h3bCZ3xMqTk6hTdoJq6aVsiMVv7k1tQ&oe=6A6E49B1",
+            "spend": 27.54,
+            "leads": 0,
+            "clicks": 43,
+            "impressions": 3256,
+            "cpl": null,
+            "ctr": 1.32
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin11-1.xx.fbcdn.net/v/t15.5256-10/715359769_2048497186024131_2072972903602675046_n.jpg?_nc_cat=104&ccb=1-7&_nc_ohc=SSnumjyPJCkQ7kNvwHMf0MC&_nc_oc=AdrkY0QsgkPzOB75V4vUZ93nxCU4snYe_8GCINQMHAjfh1DWSF4TeXX1nqEyZCsxCk0&_nc_zt=23&_nc_ht=scontent-sin11-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEZ-zbnXMnuwp1i1QE1h9FrH2j8mWHLf-xPaCJg758rTShorzYKNMVJter63-Nl_KDmmul4InNF8g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQDNU6ljGLMfSYduNavSG4kBdloMjGbi-5kK-NOZLdA7lQ&oe=6A6E221D",
+            "spend": 42.44,
+            "leads": 0,
+            "clicks": 50,
+            "impressions": 3451,
+            "cpl": null,
+            "ctr": 1.45
+        },
+        {
+            "name": "2",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE5wYRJH1ME90RsJTgbqFMqZ989ub72PMEhghqBo4-OV73natk8Wc4BS0QUxuNBTMQWxMAqRACPpg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQD2uZG0AP_x1xnlrhDieP3_-EBQ7-21hoVfZ7iEfrnKmg&oe=6A6E3C9E",
+            "spend": 0.0,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 2,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "7",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFn-WcRym7OspzstNJpYn5V49UGM0QQjZDOMYjNvnQPog0AchvbMM4AclkV6DzpJKYKcRbpODdA7Q&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCJutUO-JSVDMDk4UMPrsVyfx7ewtX2tCD09prEwqfNFw&oe=6A6E3C9E",
+            "spend": 28.0,
+            "leads": 0,
+            "clicks": 13,
+            "impressions": 1921,
+            "cpl": null,
+            "ctr": 0.68
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG0-CswQeUBDRtpLRmOBjC0MElH4EJ_5CXXciPrElpNT9nbktMubdOSaLkR12A37KTBIsiNzy_Eyw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCLirvVg2kKud07E7BvRfBEYM2lfLoT332YXpTVypdNIQ&oe=6A6E265C",
+            "spend": 1.29,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 17,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "5",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE85gDZV6Hi8V4u4JjXQoEtOQq0UyGgjD5ImsIDyVF9Y1lywlsuhzZ7fyeC1e3fr9prJIOTvSaYTQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAMvf3xpAAn17BBKa_tpEzaZ__rBOFrfSuRvTIOKdWscQ&oe=6A6E265C",
+            "spend": 1.85,
+            "leads": 0,
+            "clicks": 4,
+            "impressions": 84,
+            "cpl": null,
+            "ctr": 4.76
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/743318098_1534995614792415_6033700610051757322_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=AfXYPGnrRcIQ7kNvwEd3XIL&_nc_oc=AdowaRKSZT9ydb-gNJtqvBegzhngMxnc1rKjAAtxiTkDcLWSeB6sUGV8yVffo4kFYCw&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQETEbhO10nKpVJG3Xg6-1XYyEnhmMz_CdyBlGaSo-ikOUR3_tLOh7suKimbFsxavFN8BYsadiU36Q&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCoF1F36sSpMvbM92A1Szyutb_NgWQQ5CN81xLU_vT-ww&oe=6A6E2DAD",
+            "spend": 0.19,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 11,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "4",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752972684_37081902418122264_2763656777641074752_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=TO_5S3Dpjj0Q7kNvwFsdQfK&_nc_oc=Adp4f8uwa6c8UzHtIsBqevDuXtmfyG1-67JDXbdAhsl2fhToO-dZ28woBl1wJY9UO1Y&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEpjE0hx-Y8vPjA3j1FWViD5qy7t1dBZId3L7DZ9d192xpxhNk1GHWVQSmmq77VQ1lEJFOE-9uNtg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCfOcEbhfEMrwXNwG2_6RTSTqHZcwGrBmmjpCyUrFt2GQ&oe=6A6E20AF",
+            "spend": 0.12,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 16,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "6",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t15.5256-10/752674257_1378041004257522_2018752790553977468_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=VwhtGf5dPVcQ7kNvwHkJZ8-&_nc_oc=AdrXA35KX5G9tixx7xAHu9pxR5TiizPY4WVKbv_0O8-KU4CaEZTk5Ua2GA1mddHE_z0&_nc_zt=23&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFENM6kxLDjOwXpNZlI9C6j5BAIu1eK-F3grH5Jk6JEQyjgwix4Z9iGEnIFLZ-RSvjsXS8HGFsJHw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBITlwZ1pgmRh3S29G-x7Bum2HgvPRqWU6nbtOjS6g3VA&oe=6A6E4F25",
+            "spend": 5.08,
+            "leads": 0,
+            "clicks": 3,
+            "impressions": 272,
+            "cpl": null,
+            "ctr": 1.1
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/743318098_1534995614792415_6033700610051757322_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=AfXYPGnrRcIQ7kNvwEd3XIL&_nc_oc=AdowaRKSZT9ydb-gNJtqvBegzhngMxnc1rKjAAtxiTkDcLWSeB6sUGV8yVffo4kFYCw&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGxTwgkPRfSAA0D70XMkdIuk92eSzLj-wzl9_SePP2O7dwjz13PPI9lmXezOzlsTmQJv5edhm65eQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQDavmAV8HrG0_r4PIWaIsJRFSmWWVjyd33Z3b3grGnDDQ&oe=6A6E2DAD",
+            "spend": 0.88,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 54,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFjGVDNFMO1IuXzS_LWwNANmEVVeV2eYuGPpbcrHdMr2yEWtU1CuJ7zNZEU6SK3QT05pAbMmCJsNw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQC9hrWjkN9nQ2MNqYi2fCfwJqixfl6i0GDOUOR-c2bfAg&oe=6A6E265C",
+            "spend": 0.39,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 27,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "4 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752972684_37081902418122264_2763656777641074752_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=TO_5S3Dpjj0Q7kNvwFsdQfK&_nc_oc=Adp4f8uwa6c8UzHtIsBqevDuXtmfyG1-67JDXbdAhsl2fhToO-dZ28woBl1wJY9UO1Y&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG8nC_AmytUVZxlmfIA1pyjNl7Gh5qD6qJmHy9XsiQ6IbpxF2AlG52TO0IZCY4H6Sh7NAg2qzznog&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBKmQm4hMxsjSZhqrQc2oBQQ_vgwq94XVFhog7tRS0Fvw&oe=6A6E20AF",
+            "spend": 0.12,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 7,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "5 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGm_Lv_TxatcSau_AmeFcPEuvwgFbgTSe_MYb9EiRI1Ki9IU0SKWBaooT-hIxGiUd3datbI5awoJQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQB5qxSYag-69UQACQlEQLZX3H7-wLNmeoHJu5LePtsMNw&oe=6A6E265C",
+            "spend": 8.23,
+            "leads": 0,
+            "clicks": 2,
+            "impressions": 257,
+            "cpl": null,
+            "ctr": 0.78
+        },
+        {
+            "name": "6 — Копия",
+            "thumbnail_url": "https://scontent-sin6-3.xx.fbcdn.net/v/t15.5256-10/752674257_1378041004257522_2018752790553977468_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=VwhtGf5dPVcQ7kNvwHkJZ8-&_nc_oc=AdrXA35KX5G9tixx7xAHu9pxR5TiizPY4WVKbv_0O8-KU4CaEZTk5Ua2GA1mddHE_z0&_nc_zt=23&_nc_ht=scontent-sin6-3.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEeUDwrFBKg8aKcoIcX51L7sMP85NWVGCzUNRRkDUliKdda60JeqASf1KAOsQFUzYYDmk_xdgG6XA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCnBxd52Bx3o1A4FD6WEo_z4szqoYoXF7Zk_Jk-2MLD7g&oe=6A6E4F25",
+            "spend": 2.23,
+            "leads": 0,
+            "clicks": 3,
+            "impressions": 134,
+            "cpl": null,
+            "ctr": 2.24
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin2-2.xx.fbcdn.net/v/t15.5256-10/752410107_1788314155715382_5893110477165220661_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=9slDvqRp-7EQ7kNvwGLIJET&_nc_oc=AdrcqB2497m4QVSUhIbiqANCfkQ8V1vp86_0gS8Y8FXnXfEw-Mfpn9SfV1z51OHusR0&_nc_zt=23&_nc_ht=scontent-sin2-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGIpwJ-zGfjKk9RmfZVJwwToQoovNWSyJ5ugdb9d1YCigMROGSLVWddhz3mZhX35r1gzKP5yyEhww&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQDiPhh7pNfCuULWlQAdQ6aivmzTjcjZcboAxmDSvsH52w&oe=6A6E52B0",
+            "spend": 3.12,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 47,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "4 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752972684_37081902418122264_2763656777641074752_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=TO_5S3Dpjj0Q7kNvwFsdQfK&_nc_oc=Adp4f8uwa6c8UzHtIsBqevDuXtmfyG1-67JDXbdAhsl2fhToO-dZ28woBl1wJY9UO1Y&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFf-aUrV6g0ANoIKVOjH-EoLw-DSJ5KsKKzWcxa6hPBAZUSfauw54cR7TCL8joJd9abYA9xCofXiQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBzhM7y3TcpTVo9YboXo9kFzZ2sM6IzK29oVo4A_UHHGg&oe=6A6E20AF",
+            "spend": 0.2,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 13,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE-kPw0Ty7CH0yFy2XDEB8F6DVs7tBKr2i5F5NWTjsBSx0WkRz_y7pm-pKnsSKImheaxdiDKcd9yA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBSLL1GjxsKCdxQoJRXyK8uyHcbZ7rqkIfZhGnRPpv6qA&oe=6A6E265C",
+            "spend": 2.27,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 28,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "3 — Копия",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/743318098_1534995614792415_6033700610051757322_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=AfXYPGnrRcIQ7kNvwEd3XIL&_nc_oc=AdowaRKSZT9ydb-gNJtqvBegzhngMxnc1rKjAAtxiTkDcLWSeB6sUGV8yVffo4kFYCw&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFMv5llVyH7BPjyFkfB_7U8P7WUaTfC8sBznzC1abfbeNM_G4EBUDSSCqMg4T0iU7YD97AvJTz1iQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQCaQKEa1dsuH8FRCRUR2W6X1J75sDQZ1pSEClmf422HlA&oe=6A6E2DAD",
+            "spend": 3.01,
+            "leads": 0,
+            "clicks": 1,
+            "impressions": 103,
+            "cpl": null,
+            "ctr": 0.97
+        },
+        {
+            "name": "6 — Копия",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/751938430_879194164835521_4208797613483769618_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=HHt6iddTqPIQ7kNvwHxoiaJ&_nc_oc=AdqIuBkUD7s4HH7DvKloczYwAgcWH1-NSl4oXZj3lowBOGfNk3uwi3dhtdD3i1_p6m0&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQHY7zpLJu_IYWdd347dLAROESZ1Lnv1cv3qKLbmJRtr5SorAyokLLKDnq6x28ZWtbLEI0Q2mB3EKQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=4c1fc5&_nc_sid=58080a&oh=00_AQDtMz5XhhexwaFmEuRhsukdMKaw3FXx3YJ94doXdU6QFg&oe=6A6E4D03",
+            "spend": 0.63,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 59,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "5 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEvtzXfoEn1Ft5PCUFU3ORQUFlQzFOLchtQa9dXUsF-c_3vR8SPcH4putZztieFEDObxAVoJHPvFQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAse7ynRAJ5FV2qdeEOiyU5Ml6-NYrLtMGjSzIZBsM61w&oe=6A6E265C",
+            "spend": 0.19,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 21,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "2 — Копия",
+            "thumbnail_url": "https://scontent-sin2-2.xx.fbcdn.net/v/t15.5256-10/752410107_1788314155715382_5893110477165220661_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=9slDvqRp-7EQ7kNvwGLIJET&_nc_oc=AdrcqB2497m4QVSUhIbiqANCfkQ8V1vp86_0gS8Y8FXnXfEw-Mfpn9SfV1z51OHusR0&_nc_zt=23&_nc_ht=scontent-sin2-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGjf9ZJvWtzafkwZZAgw-MV4qEdKJBTseR5dcssqI2VOVEZ0kvYcAEkdNCd_NbUxRzUjQkmgjuUGw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQAXfSkRf9G84E95B2V50zkitHK5N0Wq4p_YonkHSXVMww&oe=6A6E52B0",
+            "spend": 0.29,
+            "leads": 0,
+            "clicks": 1,
+            "impressions": 12,
+            "cpl": null,
+            "ctr": 8.33
+        },
+        {
+            "name": "2 — Копия — Копия",
+            "thumbnail_url": "https://scontent-sin2-2.xx.fbcdn.net/v/t15.5256-10/752410107_1788314155715382_5893110477165220661_n.jpg?_nc_cat=103&ccb=1-7&_nc_ohc=9slDvqRp-7EQ7kNvwGLIJET&_nc_oc=AdrcqB2497m4QVSUhIbiqANCfkQ8V1vp86_0gS8Y8FXnXfEw-Mfpn9SfV1z51OHusR0&_nc_zt=23&_nc_ht=scontent-sin2-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQGjf9ZJvWtzafkwZZAgw-MV4qEdKJBTseR5dcssqI2VOVEZ0kvYcAEkdNCd_NbUxRzUjQkmgjuUGw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQAXfSkRf9G84E95B2V50zkitHK5N0Wq4p_YonkHSXVMww&oe=6A6E52B0",
+            "spend": 0.73,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 44,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "4 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752972684_37081902418122264_2763656777641074752_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=TO_5S3Dpjj0Q7kNvwFsdQfK&_nc_oc=Adp4f8uwa6c8UzHtIsBqevDuXtmfyG1-67JDXbdAhsl2fhToO-dZ28woBl1wJY9UO1Y&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG8nC_AmytUVZxlmfIA1pyjNl7Gh5qD6qJmHy9XsiQ6IbpxF2AlG52TO0IZCY4H6Sh7NAg2qzznog&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQBKmQm4hMxsjSZhqrQc2oBQQ_vgwq94XVFhog7tRS0Fvw&oe=6A6E20AF",
+            "spend": 11.17,
+            "leads": 0,
+            "clicks": 4,
+            "impressions": 420,
+            "cpl": null,
+            "ctr": 0.95
+        },
+        {
+            "name": "1 — Копия",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFjGVDNFMO1IuXzS_LWwNANmEVVeV2eYuGPpbcrHdMr2yEWtU1CuJ7zNZEU6SK3QT05pAbMmCJsNw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQC9hrWjkN9nQ2MNqYi2fCfwJqixfl6i0GDOUOR-c2bfAg&oe=6A6E265C",
+            "spend": 2.95,
+            "leads": 0,
+            "clicks": 1,
+            "impressions": 80,
+            "cpl": null,
+            "ctr": 1.25
+        },
+        {
+            "name": "3",
+            "thumbnail_url": "https://scontent-sin6-2.xx.fbcdn.net/v/t15.5256-10/743318098_1534995614792415_6033700610051757322_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=AfXYPGnrRcIQ7kNvwEd3XIL&_nc_oc=AdowaRKSZT9ydb-gNJtqvBegzhngMxnc1rKjAAtxiTkDcLWSeB6sUGV8yVffo4kFYCw&_nc_zt=23&_nc_ht=scontent-sin6-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQETEbhO10nKpVJG3Xg6-1XYyEnhmMz_CdyBlGaSo-ikOUR3_tLOh7suKimbFsxavFN8BYsadiU36Q&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCoF1F36sSpMvbM92A1Szyutb_NgWQQ5CN81xLU_vT-ww&oe=6A6E2DAD",
+            "spend": 0.55,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 24,
+            "cpl": null,
+            "ctr": 0.0
+        },
+        {
+            "name": "7",
+            "thumbnail_url": "https://scontent-sin6-1.xx.fbcdn.net/v/t15.5256-10/716530398_3309260892589187_84220445700309107_n.jpg?_nc_cat=111&ccb=1-7&_nc_ohc=eBe0ch3SzmAQ7kNvwEMGkdu&_nc_oc=AdrK4j1pMWAHnZTNNwGJl-ouMlYdUdhpDlhQVq4Q3J3FX-J7Tubow4tGt8qMs0_N69A&_nc_zt=23&_nc_ht=scontent-sin6-1.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQFn-WcRym7OspzstNJpYn5V49UGM0QQjZDOMYjNvnQPog0AchvbMM4AclkV6DzpJKYKcRbpODdA7Q&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCJutUO-JSVDMDk4UMPrsVyfx7ewtX2tCD09prEwqfNFw&oe=6A6E3C9E",
+            "spend": 15.21,
+            "leads": 0,
+            "clicks": 15,
+            "impressions": 1214,
+            "cpl": null,
+            "ctr": 1.24
+        },
+        {
+            "name": "1",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQG0-CswQeUBDRtpLRmOBjC0MElH4EJ_5CXXciPrElpNT9nbktMubdOSaLkR12A37KTBIsiNzy_Eyw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCLirvVg2kKud07E7BvRfBEYM2lfLoT332YXpTVypdNIQ&oe=6A6E265C",
+            "spend": 4.8,
+            "leads": 0,
+            "clicks": 4,
+            "impressions": 135,
+            "cpl": null,
+            "ctr": 2.96
+        },
+        {
+            "name": "5",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752514734_1375579790569444_1059896510063282533_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=qbw1KeDTS-oQ7kNvwEY1b9E&_nc_oc=Adpevp7Ft-R2ZX1VL2_nnuRQ605W0SC3S9ruJ7jlWRqJWCr3oADlfQJ6YOxulUQ5kRo&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQE85gDZV6Hi8V4u4JjXQoEtOQq0UyGgjD5ImsIDyVF9Y1lywlsuhzZ7fyeC1e3fr9prJIOTvSaYTQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQAMvf3xpAAn17BBKa_tpEzaZ__rBOFrfSuRvTIOKdWscQ&oe=6A6E265C",
+            "spend": 8.74,
+            "leads": 0,
+            "clicks": 11,
+            "impressions": 481,
+            "cpl": null,
+            "ctr": 2.29
+        },
+        {
+            "name": "4",
+            "thumbnail_url": "https://scontent-sin11-2.xx.fbcdn.net/v/t15.5256-10/752972684_37081902418122264_2763656777641074752_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=TO_5S3Dpjj0Q7kNvwFsdQfK&_nc_oc=Adp4f8uwa6c8UzHtIsBqevDuXtmfyG1-67JDXbdAhsl2fhToO-dZ28woBl1wJY9UO1Y&_nc_zt=23&_nc_ht=scontent-sin11-2.xx&edm=AOgd6ZUEAAAA&_nc_gid=MunYtfnW2lFunLayBSe43w&_nc_tpa=Q5bMBQEpjE0hx-Y8vPjA3j1FWViD5qy7t1dBZId3L7DZ9d192xpxhNk1GHWVQSmmq77VQ1lEJFOE-9uNtg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=b696e2&_nc_sid=58080a&oh=00_AQCfOcEbhfEMrwXNwG2_6RTSTqHZcwGrBmmjpCyUrFt2GQ&oe=6A6E20AF",
+            "spend": 1.0,
+            "leads": 0,
+            "clicks": 0,
+            "impressions": 36,
+            "cpl": null,
+            "ctr": 0.0
+        }
+    ],
+    "flows": [
+        {
+            "language": "RU",
+            "spend": 6789.96,
+            "share": 100.0,
+            "leads": 430,
+            "cpl": 15.79,
+            "ctr": 1.71
+        }
+    ]
+}

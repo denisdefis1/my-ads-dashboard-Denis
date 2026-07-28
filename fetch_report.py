@@ -4,9 +4,6 @@ import json
 import requests
 from datetime import datetime, timedelta
 
-# ============================================================
-# НАСТРОЙКИ ПЛАНА — меняешь тут руками, из Meta API это не тянется
-# ============================================================
 PLAN_DAILY_BUDGET = 250          # $ в день
 PLAN_MONTHLY_LEADS = 400         # план по лидам на месяц
 DAYS_IN_MONTH = 30

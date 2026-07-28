@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import time
 import requests
 from datetime import datetime, timedelta
 
@@ -39,7 +40,22 @@ if not ACCOUNT_ID.startswith('act_'):
 
 end_date = datetime.now().strftime('%Y-%m-%d')
 start_date = (datetime.now() - timedelta(days=FETCH_DAYS)).strftime('%Y-%m-%d')
-TIME_RANGE = json.dumps({'since': start_date, 'until': end_date})
+
+# Размер одного куска запроса в днях. На больших диапазонах с разбивкой по
+# дням (time_increment=1) на уровне campaign/ad Meta иногда отдаёт
+# 500 Internal Server Error — запрос слишком тяжёлый для одного вызова.
+# Поэтому режем весь период на куски и делаем несколько запросов подряд.
+CHUNK_DAYS = 30
+
+
+def date_chunks(since_str, until_str, chunk_days):
+    since = datetime.strptime(since_str, '%Y-%m-%d')
+    until = datetime.strptime(until_str, '%Y-%m-%d')
+    cur = since
+    while cur <= until:
+        chunk_end = min(cur + timedelta(days=chunk_days - 1), until)
+        yield cur.strftime('%Y-%m-%d'), chunk_end.strftime('%Y-%m-%d')
+        cur = chunk_end + timedelta(days=1)
 
 
 def api_get(path, params):
@@ -48,14 +64,26 @@ def api_get(path, params):
     all_data = []
 
     while url:
-        try:
-            resp = requests.get(url, params=params, timeout=120)
-            resp.raise_for_status()
-            payload = resp.json()
-        except requests.exceptions.RequestException as e:
-            print(f"Ошибка запроса к {path}: {e}")
+        resp = None
+        for attempt in range(3):
+            try:
+                resp = requests.get(url, params=params, timeout=120)
+                if resp.status_code >= 500:
+                    print(f"Meta API {resp.status_code} на {path}, попытка {attempt + 1}/3, повтор через {2 ** attempt}с...")
+                    time.sleep(2 ** attempt)
+                    continue
+                resp.raise_for_status()
+                break
+            except requests.exceptions.RequestException as e:
+                if attempt == 2:
+                    print(f"Ошибка запроса к {path}: {e}")
+                    sys.exit(1)
+                time.sleep(2 ** attempt)
+        else:
+            print(f"Meta API стабильно возвращает 5xx на {path} после 3 попыток.")
             sys.exit(1)
 
+        payload = resp.json()
         if 'error' in payload:
             print(f"Meta API вернул ошибку на {path}: {payload['error']}")
             sys.exit(1)
@@ -64,6 +92,15 @@ def api_get(path, params):
         url = payload.get('paging', {}).get('next')
         params = {}
 
+    return all_data
+
+
+def api_get_chunked(path, base_params, since, until):
+    """Тянет insights кусками по CHUNK_DAYS, чтобы не словить 500 на большом диапазоне."""
+    all_data = []
+    for chunk_since, chunk_until in date_chunks(since, until, CHUNK_DAYS):
+        params = {**base_params, 'time_range': json.dumps({'since': chunk_since, 'until': chunk_until})}
+        all_data.extend(api_get(path, params))
     return all_data
 
 
@@ -99,24 +136,22 @@ def day_row(raw):
 # ============================================================
 # 1. Аккаунт — по дням
 # ============================================================
-account_raw = api_get(f"{ACCOUNT_ID}/insights", {
-    'time_range': TIME_RANGE,
+account_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'fields': 'spend,clicks,impressions,actions',
     'limit': 500,
-})
+}, start_date, end_date)
 account_daily = sorted((day_row(r) for r in account_raw), key=lambda d: d['date'])
 
 # ============================================================
 # 2. Кампании — по дням, сгруппировано по campaign_id
 # ============================================================
-campaigns_raw = api_get(f"{ACCOUNT_ID}/insights", {
-    'time_range': TIME_RANGE,
+campaigns_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'campaign',
     'fields': 'campaign_id,campaign_name,spend,clicks,impressions,actions',
     'limit': 500,
-})
+}, start_date, end_date)
 
 campaigns_by_id = {}
 for r in campaigns_raw:
@@ -136,13 +171,12 @@ for c in campaigns:
 # ============================================================
 # 3. Объявления — по дням, сгруппировано по ad_id + превью картинок
 # ============================================================
-ads_raw = api_get(f"{ACCOUNT_ID}/insights", {
-    'time_range': TIME_RANGE,
+ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'ad',
     'fields': 'ad_id,ad_name,spend,clicks,impressions,actions',
     'limit': 500,
-})
+}, start_date, end_date)
 
 ads_by_id = {}
 for r in ads_raw:

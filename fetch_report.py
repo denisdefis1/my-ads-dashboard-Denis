@@ -3,7 +3,7 @@ import json
 import requests
 from datetime import datetime
 
-# 1. Забираем секреты из настроек репозитория
+# 1. Получаем секреты из настроек репозитория
 RAW_TOKEN = os.getenv("FB_ACCESS_TOKEN")
 RAW_ACCOUNT_ID = os.getenv("FB_AD_ACCOUNT_ID")
 
@@ -13,10 +13,10 @@ if not RAW_TOKEN or not RAW_ACCOUNT_ID:
 # Очищаем токен и ID от возможных пробелов
 ACCESS_TOKEN = str(RAW_TOKEN).strip()
 clean_id = ''.join(filter(str.isdigit, str(RAW_ACCOUNT_ID)))
-AD_ACCOUNT_ID = f"act_{clean_id}"
+AD_ACCOUNT_ID = "act_" + clean_id
 
-# ИСПРАВЛЕННЫЙ ОФИЦИАЛЬНЫЙ URL (теперь строго ://facebook.com со всеми слэшами)
-url = f"https://://facebook.com/v19.0/{AD_ACCOUNT_ID}/insights"
+# СТРОГАЯ ССЫЛКА НА GRAPH API (без лишних символов и двоеточий)
+url = "https://facebook.com" + AD_ACCOUNT_ID + "/insights"
 
 # 2. Настраиваем временной диапазон (с 9 марта по сегодняшний день)
 today_str = datetime.now().strftime('%Y-%m-%d')
@@ -36,7 +36,7 @@ params = {
 }
 
 try:
-    print(f"Запрос отправляется по правильному адресу: {url}")
+    print("Запрос отправляется по адресу: " + url)
     response = requests.get(url, params=params)
     response.raise_for_status()
     raw_data = response.json().get('data', [])
@@ -66,11 +66,11 @@ try:
     with open('data/report.json', 'w', encoding='utf-8') as f:
         json.dump(processed_data, f, ensure_ascii=False, indent=4)
         
-    print(f"Данные успешно обновлены! Строк обработано: {len(processed_data)}")
+    print("Данные успешно обновлены! Строк обработано: " + str(len(processed_data)))
 
 except requests.exceptions.HTTPError as err:
-    print(f"Facebook отклонил запрос. Ответ сервера: {err.response.text}")
+    print("Facebook отклонил запрос. Ответ сервера: " + err.response.text)
     exit(1)
 except Exception as e:
-    print(f"Системная ошибка: {e}")
+    print("Системная ошибка: " + str(e))
     exit(1)

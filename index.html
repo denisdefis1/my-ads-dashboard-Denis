@@ -3,82 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta Ads Analytics Dashboard</title>
+    <title>Meta Ads Dashboard</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 20px; }
-        .controls { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
-        button { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-        button:hover, button.active { background: #2563eb; border-color: #3b82f6; }
-        input[type="date"] { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 7px; border-radius: 6px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; }
-        .stat-card h3 { margin: 0 0 10px 0; font-size: 14px; color: #94a3b8; text-transform: uppercase; }
-        .stat-card .value { font-size: 24px; font-weight: bold; color: #38bdf8; }
-        table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #334155; color: #cbd5e1; }
-        tr:hover { background: #1e293b; filter: brightness(1.2); }
+        :root {
+            --bg-main: #0d1117;
+            --bg-card: #161b22;
+            --border: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --success: #2ea44f;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 30px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        h1 { margin: 0; font-size: 24px; font-weight: 600; }
+        
+        /* Кнопки и Календарь */
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        button { 
+            background: var(--bg-card); 
+            color: var(--text-main); 
+            border: 1px solid var(--border); 
+            padding: 6px 14px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        button:hover, button.active { 
+            background: #21262d; 
+            border-color: var(--text-muted); 
+        }
+        button.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .calendar-group { display: flex; gap: 8px; align-items: center; margin-left: 15px; font-size: 14px; color: var(--text-muted); }
+        input[type="date"] { 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            border: 1px solid var(--border); 
+            padding: 5px 10px; 
+            border-radius: 6px; 
+            outline: none;
+        }
+
+        /* Виджеты метрик */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 30px; }
+        .stat-card { 
+            background: var(--bg-card); 
+            padding: 20px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border); 
+        }
+        .stat-card h3 { margin: 0 0 8px 0; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 26px; font-weight: 600; color: #f0f6fc; }
+
+        /* Таблица */
+        .table-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background: #1f242c; color: var(--text-muted); font-weight: 500; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(88, 166, 255, 0.03); }
+        .camp-name { font-weight: 500; color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <h1>Аналитика Meta Ads</h1>
-    
-    <!-- Панель управления календарем -->
-    <div class="controls">
-        <button onclick="setPeriod(1, this)">1 день</button>
-        <button onclick="setPeriod(7, this)">7 дней</button>
-        <button onclick="setPeriod(30, this)">30 дней</button>
-        <button onclick="setPeriod('all', this)" class="active">С 9 марта</button>
-        
-        <div style="margin-left: auto; display: flex; gap: 10px; align-items: center;">
-            <label>С:</label> <input type="date" id="dateFrom" onchange="manualDateChange()">
-            <label>По:</label> <input type="date" id="dateTo" onchange="manualDateChange()">
+    <div class="header-container">
+        <h1>Meta Ads Analytics</h1>
+        <div class="controls">
+            <button onclick="setPeriod(1, this)">1 день</button>
+            <button onclick="setPeriod(7, this)">7 дней</button>
+            <button onclick="setPeriod(30, this)">30 дней</button>
+            <button onclick="setPeriod('all', this)" class="active">Все время</button>
+            
+            <div class="calendar-group">
+                <span>С</span> <input type="date" id="dateFrom" onchange="manualDateChange()">
+                <span>По</span> <input type="date" id="dateTo" onchange="manualDateChange()">
+            </div>
         </div>
     </div>
 
-    <!-- Виджеты главных метрик -->
     <div class="stats-grid">
-        <div class="stat-card"><h3>Расход</h3><div class="value" id="totalSpend">$0.00</div></div>
-        <div class="stat-card"><h3>Клики</h3><div class="value" id="totalClicks">0</div></div>
-        <div class="stat-card"><h3>Лиды (Конверсии)</h3><div class="value" id="totalLeads">0</div></div>
+        <div class="stat-card"><h3>Расход всего</h3><div class="value" id="totalSpend">$0.00</div></div>
+        <div class="stat-card"><h3>Клики по ссылкам</h3><div class="value" id="totalClicks">0</div></div>
+        <div class="stat-card"><h3>Результаты (Лиды)</h3><div class="value" id="totalLeads">0</div></div>
         <div class="stat-card"><h3>CPA (Цена лида)</h3><div class="value" id="totalCPA">$0.00</div></div>
     </div>
 
-    <!-- Таблица кампаний -->
-    <h2>Эффективность кампаний за период</h2>
-    <table id="campaignsTable">
-        <thead>
-            <tr>
-                <th>Название кампании</th>
-                <th>Расход</th>
-                <th>Показы</th>
-                <th>Клики</th>
-                <th>Лиды</th>
-                <th>Покупки</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="table-container">
+        <table id="campaignsTable">
+            <thead>
+                <tr>
+                    <th>Название кампании</th>
+                    <th>Расход</th>
+                    <th>Показы</th>
+                    <th>Клики</th>
+                    <th>Лиды</th>
+                    <th>Покупки</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         let rawData = [];
-        // Фиксированная дата старта по вашему требованию
         const START_DATE = new Date('2026-03-09'); 
 
-        // Загрузка JSON данных
         fetch('data/report.json')
             .then(res => res.json())
             .then(data => {
                 rawData = data;
-                // Устанавливаем дефолтные даты в инпуты календаря (с 9 марта по сегодня)
                 document.getElementById('dateFrom').value = '2026-03-09';
                 document.getElementById('dateTo').value = new Date().toISOString().split('T')[0];
                 updateDashboard();
             })
             .catch(err => console.error("Ошибка загрузки данных:", err));
 
-        // Быстрые кнопки периодов
         function setPeriod(days, btn) {
             document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -90,7 +147,7 @@
                 fromDate = START_DATE;
             } else {
                 fromDate.setDate(today.getDate() - days);
-                if (fromDate < START_DATE) fromDate = START_DATE; // Не уходим раньше 9 марта
+                if (fromDate < START_DATE) fromDate = START_DATE;
             }
 
             document.getElementById('dateFrom').value = fromDate.toISOString().split('T')[0];
@@ -103,20 +160,16 @@
             updateDashboard();
         }
 
-        // Фильтрация и пересчет данных
         function updateDashboard() {
             const from = new Date(document.getElementById('dateFrom').value);
             const to = new Date(document.getElementById('dateTo').value);
-            // Устанавливаем конец дня для корректного сравнения дат
             to.setHours(23, 59, 59, 999);
 
-            // Шаг 1: Фильтруем массив по выбранным датам
             const filtered = rawData.filter(item => {
                 const itemDate = new Date(item.date);
                 return itemDate >= from && itemDate <= to;
             });
 
-            // Шаг 2: Агрегируем данные по кампаниям (складываем метрики за разные дни)
             const campaignMap = {};
             let totalSpend = 0, totalClicks = 0, totalLeads = 0;
 
@@ -135,7 +188,6 @@
                 campaignMap[item.id].purchases += item.purchases;
             });
 
-            // Шаг 3: Обновляем карточки общих метрик
             document.getElementById('totalSpend').innerText = `$${totalSpend.toFixed(2)}`;
             document.getElementById('totalClicks').innerText = totalClicks.toLocaleString();
             document.getElementById('totalLeads').innerText = totalLeads.toLocaleString();
@@ -143,14 +195,13 @@
             const cpa = totalLeads > 0 ? (totalSpend / totalLeads) : 0;
             document.getElementById('totalCPA').innerText = `$${cpa.toFixed(2)}`;
 
-            # Шаг 4: Рендерим строки таблицы
             const tbody = document.querySelector('#campaignsTable tbody');
             tbody.innerHTML = '';
 
             Object.values(campaignMap).forEach(c => {
-                if (c.spend > 0 || c.clicks > 0) { // Показываем только те, где была активность за период
+                if (c.spend > 0 || c.clicks > 0) {
                     const row = `<tr>
-                        <td><strong>${c.name}</strong></td>
+                        <td class="camp-name">${c.name}</td>
                         <td>$${c.spend.toFixed(2)}</td>
                         <td>${c.impressions.toLocaleString()}</td>
                         <td>${c.clicks}</td>

@@ -10,13 +10,13 @@ RAW_ACCOUNT_ID = os.getenv("FB_AD_ACCOUNT_ID")
 if not RAW_TOKEN or not RAW_ACCOUNT_ID:
     raise ValueError("Ошибка: Проверьте FB_ACCESS_TOKEN и FB_AD_ACCOUNT_ID в GitHub Secrets!")
 
-# Принудительно очищаем токен и ID от пробелов, переносов строк и мусора
+# Очищаем токен и ID от возможных пробелов
 ACCESS_TOKEN = str(RAW_TOKEN).strip()
 clean_id = ''.join(filter(str.isdigit, str(RAW_ACCOUNT_ID)))
 AD_ACCOUNT_ID = f"act_{clean_id}"
 
-# ЖЕСТКАЯ ССЫЛКА БЕЗ ДИНАМИЧЕСКОЙ СБОРКИ СТРОК
-url = "https://facebook.com" + AD_ACCOUNT_ID + "/insights"
+# ИСПРАВЛЕННЫЙ ОФИЦИАЛЬНЫЙ URL (теперь строго ://facebook.com со всеми слэшами)
+url = f"https://://facebook.com/v19.0/{AD_ACCOUNT_ID}/insights"
 
 # 2. Настраиваем временной диапазон (с 9 марта по сегодняшний день)
 today_str = datetime.now().strftime('%Y-%m-%d')
@@ -36,7 +36,7 @@ params = {
 }
 
 try:
-    print(f"Запрос отправляется строго по адресу: {url}")
+    print(f"Запрос отправляется по правильному адресу: {url}")
     response = requests.get(url, params=params)
     response.raise_for_status()
     raw_data = response.json().get('data', [])

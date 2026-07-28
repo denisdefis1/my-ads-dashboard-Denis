@@ -14,17 +14,15 @@ if not AD_ACCOUNT_ID.startswith('act_'):
 
 url = f"https://facebook.com{AD_ACCOUNT_ID}/insights"
 
-# Запрашиваем данные с 9 марта 2026 по сегодняшний день с разбивкой по дням
 today_str = datetime.now().strftime('%Y-%m-%d')
 time_range = {'since': '2026-03-09', 'until': today_str}
 
 params = {
     'access_token': ACCESS_TOKEN,
     'level': 'campaign',
-    # Добавляем date_start и date_stop в ответ, чтобы знать, к какому дню относятся метрики
     'fields': 'campaign_id,campaign_name,spend,impressions,inline_link_clicks,actions,date_start',
     'time_range': json.dumps(time_range),
-    'time_increment': 1,  # ВАЖНО: разбивка по дням для работы календаря
+    'time_increment': 1,
     'filtering': json.dumps([
         {'field': 'campaign.delivery_info', 'operator': 'IN', 'value': ['active', 'scheduled', 'paused']}
     ]),
@@ -43,7 +41,7 @@ try:
         purchases = sum(int(a.get('value', 0)) for a in actions if a.get('action_type') in ['purchase', 'offsite_conversion.fb_pixel_purchase'])
 
         processed_data.append({
-            'date': item.get('date_start'), # Дата конкретного дня
+            'date': item.get('date_start'),
             'id': item.get('campaign_id'),
             'name': item.get('campaign_name'),
             'spend': float(item.get('spend', 0)),

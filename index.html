@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Facebook / Instagram Ads — отчёт</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --bg: #0b0e14;
@@ -30,67 +30,41 @@
   }
   h1 { font-size: 26px; margin: 0 0 4px; }
   .sub { color: var(--muted); font-size: 13px; margin-bottom: 4px; }
-  .updated { color: var(--muted); font-size: 12px; margin-bottom: 28px; }
+  .updated { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
   h2.section-title { font-size: 18px; margin: 40px 0 4px; }
   .section-sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 24px; }
+  .preset-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
   }
+  .preset-btn.active { background: #2a2440; color: var(--text); border-color: var(--accent); }
+  .date-input {
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 7px 10px; border-radius: 8px; font-size: 13px; font-family: inherit;
+  }
+
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .cards.secondary { grid-template-columns: repeat(6, 1fr); margin-top: 14px; }
   @media (max-width: 900px) {
     .cards { grid-template-columns: repeat(2, 1fr); }
     .cards.secondary { grid-template-columns: repeat(3, 1fr); }
   }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-  }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
   .card .label {
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
   }
   .card .value { font-size: 26px; font-weight: 600; }
   .card .plan-note { color: var(--muted); font-size: 12px; margin-top: 6px; }
-  .bar-track {
-    height: 5px;
-    border-radius: 3px;
-    background: #1e2430;
-    margin-top: 10px;
-    overflow: hidden;
-  }
+  .bar-track { height: 5px; border-radius: 3px; background: #1e2430; margin-top: 10px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 3px; }
-  .badge {
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 6px;
-    background: #3a3220;
-    color: var(--yellow);
-  }
-  .chart-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-top: 16px;
-  }
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 6px; background: #3a3220; color: var(--yellow); }
+
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 16px; }
   .chart-title { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 16px;
-  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
   @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
 
   .funnel-step { margin-bottom: 16px; }
@@ -105,24 +79,11 @@
   td.num, th.num { text-align: right; }
   .lang-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 
-  .creatives-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 14px;
-  }
+  .creatives-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
   @media (max-width: 1000px) { .creatives-grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 600px) { .creatives-grid { grid-template-columns: repeat(2, 1fr); } }
-  .creative-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .creative-thumb {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    background: var(--card-2) center/cover no-repeat;
-  }
+  .creative-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; }
   .creative-info { padding: 10px; }
   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
@@ -136,6 +97,8 @@
   <h1>Lagoon Resort</h1>
   <div class="sub" id="sub">Facebook / Instagram · загрузка...</div>
   <div class="updated" id="updated"></div>
+
+  <div class="controls" id="controls"></div>
 
   <div class="cards" id="main-cards"></div>
   <div class="cards secondary" id="secondary-cards"></div>
@@ -175,7 +138,7 @@
   </div>
 
   <h2 class="section-title">Кампании</h2>
-  <div class="section-sub">Сортировка по расходу</div>
+  <div class="section-sub">Сортировка по расходу за выбранный период</div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
       <thead><tr><th>Кампания</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
@@ -184,7 +147,7 @@
   </div>
 
   <h2 class="section-title">Креативы</h2>
-  <div class="section-sub" id="creatives-sub">Сортировка по лидам</div>
+  <div class="section-sub" id="creatives-sub">Сортировка по лидам за выбранный период</div>
   <div class="creatives-grid" id="creatives-grid"></div>
 
   <script>
@@ -193,58 +156,160 @@
     const fmtPct = (v) => v === null || v === undefined ? '—' : v.toFixed(2) + '%';
     const LANG_COLORS = { EN: 'var(--blue)', RU: 'var(--orange)' };
 
+    let REPORT = null;
+    let charts = {};
+    let currentRange = null; // {since, until} as 'YYYY-MM-DD'
+
     async function loadReport() {
       const res = await fetch('data/report.json?t=' + Date.now());
       if (!res.ok) throw new Error('report.json недоступен (' + res.status + ')');
-      const data = await res.json();
+      REPORT = await res.json();
 
-      document.getElementById('sub').textContent =
-        `Facebook / Instagram · весь период · ${data.period.since} – ${data.period.until}`;
-      document.getElementById('updated').textContent = 'данные на ' + data.last_updated;
+      document.getElementById('updated').textContent = 'данные на ' + REPORT.last_updated;
 
-      renderMainCards(data);
-      renderSecondaryCards(data);
-      renderCharts(data.daily);
-      renderFunnel(data.totals);
-      renderFlows(data.flows, data.totals.spend);
-      renderCampaigns(data.campaigns);
-      renderCreatives(data.creatives);
+      const lastDate = REPORT.account_daily.length
+        ? REPORT.account_daily[REPORT.account_daily.length - 1].date
+        : REPORT.fetched_range.until;
+
+      renderControls(lastDate);
+      selectPreset('30d', lastDate);
     }
 
-    function renderMainCards(data) {
-      const t = data.totals, p = data.plan;
+    function addDays(dateStr, delta) {
+      const d = new Date(dateStr + 'T00:00:00');
+      d.setDate(d.getDate() + delta);
+      return d.toISOString().slice(0, 10);
+    }
+
+    function renderControls(lastDate) {
+      const presets = [
+        { key: '7d', label: '7 дней' },
+        { key: '14d', label: '14 дней' },
+        { key: '30d', label: '30 дней' },
+        { key: 'month', label: 'Этот месяц' },
+        { key: 'all', label: 'Всё время' },
+      ];
+      const html = presets.map(p => `<button class="preset-btn" data-preset="${p.key}">${p.label}</button>`).join('')
+        + `<input type="date" class="date-input" id="date-since">`
+        + `<span style="color:var(--muted)">–</span>`
+        + `<input type="date" class="date-input" id="date-until">`;
+      document.getElementById('controls').innerHTML = html;
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectPreset(btn.dataset.preset, lastDate));
+      });
+      document.getElementById('date-since').addEventListener('change', onCustomDateChange);
+      document.getElementById('date-until').addEventListener('change', onCustomDateChange);
+    }
+
+    function selectPreset(key, lastDate) {
+      let since;
+      const until = lastDate;
+      if (key === '7d') since = addDays(lastDate, -6);
+      else if (key === '14d') since = addDays(lastDate, -13);
+      else if (key === '30d') since = addDays(lastDate, -29);
+      else if (key === 'month') since = lastDate.slice(0, 8) + '01';
+      else since = REPORT.fetched_range.since;
+
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset === key));
+      document.getElementById('date-since').value = since;
+      document.getElementById('date-until').value = until;
+      applyRange(since, until);
+    }
+
+    function onCustomDateChange() {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      const since = document.getElementById('date-since').value;
+      const until = document.getElementById('date-until').value;
+      if (since && until) applyRange(since, until);
+    }
+
+    function filterDaily(daily, since, until) {
+      return daily.filter(d => d.date >= since && d.date <= until);
+    }
+
+    function sumDaily(rows) {
+      const spend = rows.reduce((s, d) => s + d.spend, 0);
+      const leads = rows.reduce((s, d) => s + d.leads, 0);
+      const clicks = rows.reduce((s, d) => s + d.clicks, 0);
+      const impressions = rows.reduce((s, d) => s + d.impressions, 0);
+      return {
+        spend: Math.round(spend * 100) / 100,
+        leads, clicks, impressions,
+        cpl: leads ? Math.round(spend / leads * 100) / 100 : null,
+        cpm: impressions ? Math.round(spend / impressions * 1000 * 100) / 100 : null,
+        cpc: clicks ? Math.round(spend / clicks * 100) / 100 : null,
+        ctr: impressions ? Math.round(clicks / impressions * 100 * 100) / 100 : 0,
+      };
+    }
+
+    function applyRange(since, until) {
+      currentRange = { since, until };
+
+      const accDaily = filterDaily(REPORT.account_daily, since, until);
+      const totals = sumDaily(accDaily);
+
+      const campaignsInRange = REPORT.campaigns.map(c => {
+        const rows = filterDaily(c.daily, since, until);
+        return { name: c.name, language: c.language, ...sumDaily(rows) };
+      }).filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
+        .sort((a, b) => b.spend - a.spend);
+
+      const creativesInRange = REPORT.creatives.map(c => {
+        const rows = filterDaily(c.daily, since, until);
+        return { name: c.name, thumbnail_url: c.thumbnail_url, ...sumDaily(rows) };
+      }).filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
+        .sort((a, b) => b.leads - a.leads);
+
+      const flowsMap = {};
+      campaignsInRange.forEach(c => {
+        const f = flowsMap[c.language] || { language: c.language, spend: 0, leads: 0, clicks: 0, impressions: 0 };
+        f.spend += c.spend; f.leads += c.leads; f.clicks += c.clicks; f.impressions += c.impressions;
+        flowsMap[c.language] = f;
+      });
+      const flows = Object.values(flowsMap).map(f => ({
+        language: f.language,
+        spend: Math.round(f.spend * 100) / 100,
+        share: totals.spend ? Math.round(f.spend / totals.spend * 1000) / 10 : 0,
+        leads: f.leads,
+        cpl: f.leads ? Math.round(f.spend / f.leads * 100) / 100 : null,
+        ctr: f.impressions ? Math.round(f.clicks / f.impressions * 100 * 100) / 100 : 0,
+      }));
+
+      document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}`;
+
+      renderMainCards(totals);
+      renderSecondaryCards(totals);
+      renderDailyCharts(accDaily);
+      renderFunnel(totals);
+      renderFlows(flows);
+      renderCampaigns(campaignsInRange);
+      renderCreatives(creativesInRange);
+    }
+
+    function renderMainCards(t) {
+      const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
       const cplOverTarget = t.cpl !== null && t.cpl > p.target_cpl;
       const cplPct = t.cpl !== null ? Math.min(100, (t.cpl / (p.target_cpl * 2)) * 100) : 0;
 
       const cards = [
-        { label: 'Расход', value: fmtMoney(t.spend),
-          note: `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`,
-          barPct: budgetPct, barColor: 'var(--accent)' },
-        { label: 'Лиды', value: fmtNum(t.leads),
-          note: `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`,
-          barPct: leadsPct, barColor: 'var(--green)' },
-        { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl),
-          note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'),
-          barPct: cplPct, barColor: 'var(--orange)' },
-        { label: 'Охват периода', value: fmtNum(t.impressions),
-          note: `Клики ${fmtNum(t.clicks)} · CTR ${fmtPct(t.ctr)}`,
-          barPct: null },
+        { label: 'Расход', value: fmtMoney(t.spend), note: `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`, barPct: budgetPct, barColor: 'var(--accent)' },
+        { label: 'Лиды', value: fmtNum(t.leads), note: `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`, barPct: leadsPct, barColor: 'var(--green)' },
+        { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl), note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'), barPct: cplPct, barColor: 'var(--orange)' },
+        { label: 'Охват периода', value: fmtNum(t.impressions), note: `Клики ${fmtNum(t.clicks)} · CTR ${fmtPct(t.ctr)}`, barPct: null },
       ];
-
       document.getElementById('main-cards').innerHTML = cards.map(c => `
         <div class="card">
           <div class="label">${c.label}</div>
           <div class="value">${c.value}</div>
           <div class="plan-note">${c.note}</div>
           ${c.barPct !== null ? `<div class="bar-track"><div class="bar-fill" style="width:${c.barPct}%; background:${c.barColor}"></div></div>` : ''}
-        </div>
-      `).join('');
+        </div>`).join('');
     }
 
-    function renderSecondaryCards(data) {
-      const t = data.totals;
+    function renderSecondaryCards(t) {
       const cards = [
         { label: 'CPM', value: fmtMoney(t.cpm) },
         { label: 'CPC', value: fmtMoney(t.cpc) },
@@ -257,18 +322,18 @@
         <div class="card">
           <div class="label">${c.label} ${c.badge ? `<span class="badge">${c.badge}</span>` : ''}</div>
           <div class="value">${c.value}</div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
 
-    function renderCharts(daily) {
+    function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+
+    function renderDailyCharts(daily) {
+      destroyCharts();
       const labels = daily.map(d => d.date.slice(5).split('-').reverse().join('.'));
       const gridColor = '#1c2230';
-      const commonScales = {
-        x: { grid: { color: gridColor }, ticks: { color: '#8992a3', font: { size: 11 } } },
-      };
+      const scalesX = { grid: { color: gridColor }, ticks: { color: '#8992a3', font: { size: 11 } } };
 
-      new Chart(document.getElementById('chart-spend-leads'), {
+      charts.spendLeads = new Chart(document.getElementById('chart-spend-leads'), {
         data: {
           labels,
           datasets: [
@@ -277,28 +342,25 @@
           ],
         },
         options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
+          responsive: true, plugins: { legend: { display: false } },
           scales: {
-            ...commonScales,
+            x: scalesX,
             y: { position: 'left', grid: { color: gridColor }, ticks: { color: '#8992a3', callback: v => '$' + v } },
             y1: { position: 'right', grid: { display: false }, ticks: { color: '#8992a3' } },
           },
         },
       });
 
-      new Chart(document.getElementById('chart-cpl'), {
+      charts.cpl = new Chart(document.getElementById('chart-cpl'), {
         type: 'line',
-        data: { labels, datasets: [{ data: daily.map(d => d.cpl), borderColor: '#e0c56f', tension: 0.4, pointRadius: 0, spanGaps: true }] },
-        options: { responsive: true, plugins: { legend: { display: false } },
-          scales: { ...commonScales, y: { grid: { color: gridColor }, ticks: { color: '#8992a3', callback: v => '$' + v } } } },
+        data: { labels, datasets: [{ data: daily.map(d => d.leads ? Math.round(d.spend / d.leads * 100) / 100 : null), borderColor: '#e0c56f', tension: 0.4, pointRadius: 0, spanGaps: true }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: scalesX, y: { grid: { color: gridColor }, ticks: { color: '#8992a3', callback: v => '$' + v } } } },
       });
 
-      new Chart(document.getElementById('chart-ctr'), {
+      charts.ctr = new Chart(document.getElementById('chart-ctr'), {
         type: 'line',
-        data: { labels, datasets: [{ data: daily.map(d => d.ctr), borderColor: '#6fa8e8', tension: 0.4, pointRadius: 0 }] },
-        options: { responsive: true, plugins: { legend: { display: false } },
-          scales: { ...commonScales, y: { grid: { color: gridColor }, ticks: { color: '#8992a3', callback: v => v + '%' } } } },
+        data: { labels, datasets: [{ data: daily.map(d => d.impressions ? Math.round(d.clicks / d.impressions * 100 * 100) / 100 : 0), borderColor: '#6fa8e8', tension: 0.4, pointRadius: 0 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: scalesX, y: { grid: { color: gridColor }, ticks: { color: '#8992a3', callback: v => v + '%' } } } },
       });
     }
 
@@ -314,17 +376,17 @@
           <div class="funnel-label"><span>${s.label}</span><span>${fmtNum(s.value)}</span></div>
           <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:${(s.value / max * 100)}%; background:${s.color}"></div></div>
           ${s.drop ? `<div class="funnel-drop">${s.drop}</div>` : ''}
-        </div>
-      `).join('') + `
+        </div>`).join('') + `
         <div class="funnel-step">
           <div class="funnel-label"><span>Квал-лиды <span class="badge">ждёт CRM</span></span><span>—</span></div>
           <div class="funnel-bar-track"></div>
         </div>`;
     }
 
-    function renderFlows(flows, totalSpend) {
-      if (!flows || !flows.length) {
-        document.getElementById('flows-body').innerHTML = `<tr><td colspan="6" class="empty">Нет данных по языковым потокам</td></tr>`;
+    function renderFlows(flows) {
+      if (!flows.length) {
+        document.getElementById('flow-bar').innerHTML = '';
+        document.getElementById('flows-body').innerHTML = `<tr><td colspan="6" class="empty">Нет данных за выбранный период</td></tr>`;
         return;
       }
       document.getElementById('flow-bar').innerHTML = flows.map(f =>
@@ -338,13 +400,12 @@
           <td class="num">${fmtNum(f.leads)}</td>
           <td class="num">${fmtMoney(f.cpl)}</td>
           <td class="num">${fmtPct(f.ctr)}</td>
-        </tr>
-      `).join('');
+        </tr>`).join('');
     }
 
     function renderCampaigns(campaigns) {
-      if (!campaigns || !campaigns.length) {
-        document.getElementById('campaigns-body').innerHTML = `<tr><td colspan="5" class="empty">Нет данных по кампаниям</td></tr>`;
+      if (!campaigns.length) {
+        document.getElementById('campaigns-body').innerHTML = `<tr><td colspan="5" class="empty">Нет данных за выбранный период</td></tr>`;
         return;
       }
       document.getElementById('campaigns-body').innerHTML = campaigns.map(c => `
@@ -354,13 +415,13 @@
           <td class="num">${fmtNum(c.leads)}</td>
           <td class="num">${fmtMoney(c.cpl)}</td>
           <td class="num">${fmtPct(c.ctr)}</td>
-        </tr>
-      `).join('');
+        </tr>`).join('');
     }
 
     function renderCreatives(creatives) {
-      if (!creatives || !creatives.length) {
-        document.getElementById('creatives-grid').innerHTML = `<div class="empty">Нет данных по объявлениям</div>`;
+      if (!creatives.length) {
+        document.getElementById('creatives-grid').innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;
+        document.getElementById('creatives-sub').textContent = `0 объявлений за период`;
         return;
       }
       document.getElementById('creatives-sub').textContent = `${creatives.length} объявлений за период`;
@@ -375,8 +436,7 @@
               <span>${fmtPct(c.ctr)}</span>
             </div>
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
 
     loadReport().catch(err => {

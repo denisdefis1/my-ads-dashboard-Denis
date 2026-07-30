@@ -10,6 +10,7 @@ PLAN_MONTHLY_LEADS = 400
 DAYS_IN_MONTH = 30
 PLAN_MONTHLY_BUDGET = PLAN_DAILY_BUDGET * DAYS_IN_MONTH
 TARGET_CPL = round(PLAN_MONTHLY_BUDGET / PLAN_MONTHLY_LEADS, 2)
+TARGET_CPQL = 200
 
 FETCH_SINCE = '2026-03-09'
 CHUNK_DAYS = 30
@@ -94,8 +95,11 @@ def count_leads(actions):
 
 def parse_language(name):
     for p in (name or '').split('_'):
-        if p.upper() in ('EN', 'RU'):
-            return p.upper()
+        upper = p.upper()
+        if upper in ('EN', 'ENG', 'ENGLISH'):
+            return 'EN'
+        if upper in ('RU', 'RUS', 'RUSSIAN'):
+            return 'RU'
     return 'RU'
 
 
@@ -252,6 +256,7 @@ report_data = {
         "monthly_budget": PLAN_MONTHLY_BUDGET,
         "monthly_leads": PLAN_MONTHLY_LEADS,
         "target_cpl": TARGET_CPL,
+        "target_cpql": TARGET_CPQL,
     },
     "account_daily": account_daily,
     "campaigns": campaigns,

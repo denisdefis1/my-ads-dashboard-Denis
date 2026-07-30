@@ -77,6 +77,27 @@
   .funnel-drop { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
   .empty { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+
+  .sort-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
+  .sort-btn { background: var(--card-2); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 7px; font-size: 12px; cursor: pointer; }
+  .sort-btn.active { background: linear-gradient(135deg, #362f5c, #2a2440); color: var(--text); border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  td.num, th.num { text-align: right; }
+  .lang-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .rank { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-right: 8px; }
+  .rank.best { background: #1f3a2c; color: var(--green); }
+  .rank.mid { background: #3a3220; color: var(--yellow); }
+  .rank.worst { background: #3a2020; color: var(--red); }
+
+  .show-more-btn {
+    width: 100%; margin-top: 10px; padding: 10px; border-radius: 8px;
+    background: var(--card-2); border: 1px dashed var(--border); color: var(--muted);
+    font-size: 13px; cursor: pointer;
+  }
+  .show-more-btn:hover { color: var(--text); border-color: var(--accent-2); }
 </style>
 </head>
 <body>
@@ -115,16 +136,43 @@
     <div id="funnel"></div>
   </div>
 
-  <div class="empty" style="margin-top:40px;">Кампании, аудитории, демография, устройства, креативы и страны — следующим шагом.</div>
+  <h2 class="section-title">Рейтинг кампаний</h2>
+  <div class="section-sub">Квал-лиды и CPQL по каждой кампании</div>
+  <div class="sort-toggle" id="campaigns-sort"></div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Кампания</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
+      <tbody id="campaigns-body"></tbody>
+    </table>
+    <button class="show-more-btn" id="campaigns-more"></button>
+  </div>
+
+  <h2 class="section-title">Рейтинг аудиторий</h2>
+  <div class="section-sub">По группам объявлений — квал-лиды и CPQL</div>
+  <div class="sort-toggle" id="adsets-sort"></div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Аудитория</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
+      <tbody id="adsets-body"></tbody>
+    </table>
+    <button class="show-more-btn" id="adsets-more"></button>
+  </div>
+
+  <div class="empty" style="margin-top:40px;">Демография, устройства, креативы и страны — следующим шагом.</div>
 
   <script>
     const fmtMoney = (v) => v === null || v === undefined ? '—' : '$' + v.toLocaleString('ru-RU', {maximumFractionDigits: 2});
     const fmtNum = (v) => v === null || v === undefined ? '—' : v.toLocaleString('ru-RU');
     const fmtPct = (v) => v === null || v === undefined ? '—' : v.toFixed(2) + '%';
+    const LANG_COLORS = { EN: 'var(--blue)', RU: 'var(--orange)' };
 
     let REPORT = null;
     let CRM = null;
     let charts = {};
+    let campaignsSortMode = 'cpl';
+    let campaignsExpanded = false;
+    let adsetsSortMode = 'cpl';
+    let adsetsExpanded = false;
 
     async function loadAll() {
       const [reportRes, crmRes] = await Promise.all([
@@ -250,6 +298,8 @@
     }
 
     function applyRange(since, until, presetKey) {
+      currentSince = since;
+      currentUntil = until;
       const accDaily = filterDaily(REPORT.account_daily, since, until);
       const totals = sumDaily(accDaily);
       const reach = presetKey ? REPORT.reach_by_preset[presetKey] : null;
@@ -262,6 +312,8 @@
       renderSecondaryCards(totals);
       renderDailyCharts(accDaily);
       renderFunnel(totals, crmStats);
+      renderCampaignsSection();
+      renderAdsetsSection();
     }
 
     function renderMainCards(t, lifetimeReach, crmStats, cpql) {
@@ -315,7 +367,126 @@
         </div>`).join('');
     }
 
-    function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+    function crmQualifiedByEntity(since, until, idField) {
+      const map = {};
+      if (!CRM) return map;
+      CRM.leads.forEach(l => {
+        if (!l.created_at || !l[idField]) return;
+        const d = l.created_at.slice(0, 10);
+        if (d < since || d > until) return;
+        if (l.qualified !== true) return;
+        map[l[idField]] = (map[l[idField]] || 0) + 1;
+      });
+      return map;
+    }
+
+    function buildEntityRows(entities, idField, since, until) {
+      const qualMap = crmQualifiedByEntity(since, until, idField);
+      return entities.map(e => {
+        const t = sumDaily(filterDaily(e.daily, since, until));
+        const qualified = qualMap[e.id] || 0;
+        return {
+          id: e.id,
+          name: e.name,
+          language: e.language,
+          spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
+          cpl: t.cpl,
+          qualified,
+          cpql: qualified ? Math.round(t.spend / qualified * 100) / 100 : null,
+        };
+      }).filter(r => r.spend > 0 || r.leads > 0 || r.clicks > 0);
+    }
+
+    function sortRows(rows, mode) {
+      if (mode === 'leads') {
+        return [...rows].sort((a, b) => b.leads - a.leads);
+      }
+      const withLeads = rows.filter(r => r.leads > 0).sort((a, b) => a.cpl - b.cpl);
+      const withoutLeads = rows.filter(r => r.leads === 0).sort((a, b) => b.spend - a.spend);
+      return [...withLeads, ...withoutLeads];
+    }
+
+    function rankClass(index, total) {
+      if (total <= 1) return 'mid';
+      const ratio = index / (total - 1);
+      if (ratio < 0.33) return 'best';
+      if (ratio > 0.66) return 'worst';
+      return 'mid';
+    }
+
+    function renderSortToggle(elId, mode, onSelect) {
+      const el = document.getElementById(elId);
+      const options = [
+        { key: 'cpl', label: 'По цене лида' },
+        { key: 'leads', label: 'По количеству лидов' },
+      ];
+      el.innerHTML = options.map(o => `<button class="sort-btn ${o.key === mode ? 'active' : ''}" data-key="${o.key}">${o.label}</button>`).join('');
+      el.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', () => onSelect(btn.dataset.key));
+      });
+    }
+
+    function renderRankedTable(bodyId, moreBtnId, rows, mode, expanded, showLangDot, onToggleExpand) {
+      const sorted = sortRows(rows, mode);
+      const visible = expanded ? sorted : sorted.slice(0, 5);
+      const body = document.getElementById(bodyId);
+      const moreBtn = document.getElementById(moreBtnId);
+
+      if (!sorted.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty">Нет данных за выбранный период</td></tr>`;
+        moreBtn.style.display = 'none';
+        return;
+      }
+
+      body.innerHTML = visible.map((r, i) => `
+        <tr>
+          <td>
+            <span class="rank ${rankClass(i, sorted.length)}">${i + 1}</span>
+            ${showLangDot ? `<span class="lang-dot" style="background:${LANG_COLORS[r.language] || 'var(--muted)'}"></span>` : ''}
+            ${r.name}
+          </td>
+          <td class="num">${fmtMoney(r.spend)}</td>
+          <td class="num">${fmtNum(r.leads)}</td>
+          <td class="num">${fmtMoney(r.cpl)}</td>
+          <td class="num">${CRM ? fmtNum(r.qualified) : '—'}</td>
+          <td class="num">${CRM ? fmtMoney(r.cpql) : '—'}</td>
+          <td class="num">${fmtPct(r.ctr)}</td>
+        </tr>`).join('');
+
+      if (sorted.length > 5) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = expanded ? 'Свернуть' : `Показать ещё ${sorted.length - 5}`;
+        moreBtn.onclick = onToggleExpand;
+      } else {
+        moreBtn.style.display = 'none';
+      }
+    }
+
+    let currentSince = null, currentUntil = null;
+
+    function renderCampaignsSection() {
+      const rows = buildEntityRows(REPORT.campaigns, 'campaign_id', currentSince, currentUntil);
+      renderSortToggle('campaigns-sort', campaignsSortMode, (key) => {
+        campaignsSortMode = key;
+        renderCampaignsSection();
+      });
+      renderRankedTable('campaigns-body', 'campaigns-more', rows, campaignsSortMode, campaignsExpanded, true, () => {
+        campaignsExpanded = !campaignsExpanded;
+        renderCampaignsSection();
+      });
+    }
+
+    function renderAdsetsSection() {
+      const rows = buildEntityRows(REPORT.adsets, 'adset_id', currentSince, currentUntil);
+      renderSortToggle('adsets-sort', adsetsSortMode, (key) => {
+        adsetsSortMode = key;
+        renderAdsetsSection();
+      });
+      renderRankedTable('adsets-body', 'adsets-more', rows, adsetsSortMode, adsetsExpanded, false, () => {
+        adsetsExpanded = !adsetsExpanded;
+        renderAdsetsSection();
+      });
+    }
 
     function renderDailyCharts(daily) {
       destroyCharts();

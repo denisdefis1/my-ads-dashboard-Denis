@@ -15,11 +15,6 @@ FETCH_DAYS = 270
 CHUNK_DAYS = 30
 API_VERSION = 'v25.0'
 LEAD_ACTION_TYPES = {'lead', 'offsite_conversion.fb_pixel_lead'}
-ALL_EFFECTIVE_STATUSES = [
-    'ACTIVE', 'PAUSED', 'DELETED', 'ARCHIVED', 'PENDING_REVIEW',
-    'DISAPPROVED', 'PREAPPROVED', 'PENDING_BILLING_INFO',
-    'CAMPAIGN_PAUSED', 'ADSET_PAUSED', 'IN_PROCESS', 'WITH_ISSUES',
-]
 
 ACCESS_TOKEN = os.getenv('FACEBOOK_ACCESS_TOKEN')
 ACCOUNT_ID = os.getenv('FACEBOOK_ACT_ID')
@@ -179,7 +174,6 @@ creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name')
 
 ads_meta_raw = api_get(f"{ACCOUNT_ID}/ads", {
     'fields': 'id,creative{thumbnail_url}',
-    'effective_status': json.dumps(ALL_EFFECTIVE_STATUSES),
     'limit': 500,
 })
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}

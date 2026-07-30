@@ -11,7 +11,7 @@ DAYS_IN_MONTH = 30
 PLAN_MONTHLY_BUDGET = PLAN_DAILY_BUDGET * DAYS_IN_MONTH
 TARGET_CPL = round(PLAN_MONTHLY_BUDGET / PLAN_MONTHLY_LEADS, 2)
 
-FETCH_DAYS = 270
+FETCH_SINCE = '2026-03-09'
 CHUNK_DAYS = 30
 API_VERSION = 'v25.0'
 LEAD_ACTION_TYPES = {'lead', 'offsite_conversion.fb_pixel_lead'}
@@ -27,7 +27,7 @@ if not ACCOUNT_ID.startswith('act_'):
     ACCOUNT_ID = f'act_{ACCOUNT_ID}'
 
 end_date = datetime.now().strftime('%Y-%m-%d')
-start_date = (datetime.now() - timedelta(days=FETCH_DAYS)).strftime('%Y-%m-%d')
+start_date = FETCH_SINCE
 
 
 def date_chunks(since_str, until_str, chunk_days):
@@ -144,6 +144,18 @@ account_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'fields': 'spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
+
+action_type_totals = {}
+for r in account_raw:
+    for action in r.get('actions', []) or []:
+        t = action.get('action_type')
+        v = int(action.get('value', 0))
+        action_type_totals[t] = action_type_totals.get(t, 0) + v
+
+print("Все типы конверсий за период и их суммы:")
+for t, v in sorted(action_type_totals.items(), key=lambda x: -x[1]):
+    print(f"  {t}: {v}")
+
 account_daily = dedup_by_date(account_raw)
 
 campaigns_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
@@ -182,24 +194,31 @@ for c in creatives:
 
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
-    'breakdowns': 'age',
+    'breakdowns': 'age,gender',
     'fields': 'spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
 
-age_by_bucket = {}
+demo_by_bucket = {}
 for r in age_raw:
-    bucket = r.get('age', 'unknown')
-    entry = age_by_bucket.setdefault(bucket, {})
+    bucket = (r.get('age', 'unknown'), r.get('gender', 'unknown'))
+    entry = demo_by_bucket.setdefault(bucket, {})
     entry[r['date_start']] = r
 
 age_groups = []
-for bucket, by_date in age_by_bucket.items():
+for (age, gender), by_date in demo_by_bucket.items():
     daily = []
     for date, r in sorted(by_date.items()):
         spend, leads, clicks, impressions = day_metrics(r)
         daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
-    age_groups.append({"age": bucket, "daily": daily})
+    age_groups.append({"age": age, "gender": gender, "daily": daily})
+
+reach_raw = api_get(f"{ACCOUNT_ID}/insights", {
+    'time_range': json.dumps({'since': start_date, 'until': end_date}),
+    'fields': 'reach',
+    'limit': 1,
+})
+lifetime_reach = int(reach_raw[0].get('reach', 0)) if reach_raw else 0
 
 report_data = {
     "last_updated": datetime.now().strftime('%d.%m.%Y, %H:%M'),
@@ -214,10 +233,16 @@ report_data = {
     "adsets": adsets,
     "creatives": creatives,
     "age_groups": age_groups,
+    "lifetime_reach": lifetime_reach,
 }
 
 os.makedirs('data', exist_ok=True)
 with open('data/report.json', 'w', encoding='utf-8') as f:
     json.dump(report_data, f, ensure_ascii=False, indent=2)
 
-print(f"Готово: {len(account_daily)} дней, {len(campaigns)} кампаний, {len(adsets)} аудиторий, {len(creatives)} объявлений, {len(age_groups)} возрастных групп.")
+total_spend = sum(d['spend'] for d in account_daily)
+total_leads = sum(d['leads'] for d in account_daily)
+total_impressions = sum(d['impressions'] for d in account_daily)
+
+print(f"Готово: {len(account_daily)} дней, {len(campaigns)} кампаний, {len(adsets)} аудиторий, {len(creatives)} объявлений, {len(age_groups)} демо-групп.")
+print(f"Итого за период {start_date} — {end_date}: расход ${total_spend:.2f}, лиды {total_leads}, показы {total_impressions}, охват (реальный, не сумма по дням) {lifetime_reach}.")

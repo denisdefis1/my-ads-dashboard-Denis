@@ -151,11 +151,11 @@
     </table>
   </div>
 
-  <h2 class="section-title">По возрасту</h2>
-  <div class="section-sub">Эффективность по возрастным группам за выбранный период</div>
+  <h2 class="section-title">По демографии</h2>
+  <div class="section-sub">Возраст и пол — эффективность за выбранный период</div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
-      <thead><tr><th>Возраст</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
+      <thead><tr><th>Возраст / пол</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
       <tbody id="age-body"></tbody>
     </table>
   </div>
@@ -285,8 +285,10 @@
       );
 
       const ageInRange = rankByCpl(
-        REPORT.age_groups.map(a => ({ name: a.age, ...sumDaily(filterDaily(a.daily, since, until)) }))
-          .filter(a => a.spend > 0 || a.leads > 0 || a.clicks > 0)
+        REPORT.age_groups.map(a => ({
+          name: `${a.age} · ${a.gender === 'male' ? 'муж' : a.gender === 'female' ? 'жен' : a.gender}`,
+          ...sumDaily(filterDaily(a.daily, since, until)),
+        })).filter(a => a.spend > 0 || a.leads > 0 || a.clicks > 0)
       );
 
       const creativesInRange = REPORT.creatives
@@ -311,7 +313,8 @@
 
       document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}`;
 
-      renderMainCards(totals);
+      const isFullRange = since === REPORT.fetched_range.since && until === REPORT.fetched_range.until;
+      renderMainCards(totals, isFullRange ? REPORT.lifetime_reach : null);
       renderSecondaryCards(totals);
       renderDailyCharts(accDaily);
       renderFunnel(totals);
@@ -322,18 +325,21 @@
       renderCreatives(creativesInRange);
     }
 
-    function renderMainCards(t) {
+    function renderMainCards(t, lifetimeReach) {
       const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
       const cplOverTarget = t.cpl !== null && t.cpl > p.target_cpl;
       const cplPct = t.cpl !== null ? Math.min(100, (t.cpl / (p.target_cpl * 2)) * 100) : 0;
+      const reachNote = lifetimeReach !== null
+        ? `Уникальный охват: ${fmtNum(lifetimeReach)}`
+        : `Клики ${fmtNum(t.clicks)} · CTR ${fmtPct(t.ctr)}`;
 
       const cards = [
         { label: 'Расход', value: fmtMoney(t.spend), note: `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`, barPct: budgetPct, barColor: 'var(--accent)' },
         { label: 'Лиды', value: fmtNum(t.leads), note: `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`, barPct: leadsPct, barColor: 'var(--green)' },
         { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl), note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'), barPct: cplPct, barColor: 'var(--orange)' },
-        { label: 'Охват периода', value: fmtNum(t.impressions), note: `Клики ${fmtNum(t.clicks)} · CTR ${fmtPct(t.ctr)}`, barPct: null },
+        { label: 'Показы', value: fmtNum(t.impressions), note: reachNote, barPct: null },
       ];
       document.getElementById('main-cards').innerHTML = cards.map(c => `
         <div class="card">

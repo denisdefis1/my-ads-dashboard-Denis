@@ -98,6 +98,31 @@
     font-size: 13px; cursor: pointer;
   }
   .show-more-btn:hover { color: var(--text); border-color: var(--accent-2); }
+
+  .creatives-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  @media (max-width: 1000px) { .creatives-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .creatives-grid { grid-template-columns: repeat(2, 1fr); } }
+  .creative-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color .15s, transform .15s; }
+  .creative-card:hover { border-color: var(--accent-2); transform: translateY(-2px); }
+  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
+  .creative-info { padding: 10px; }
+  .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
+  .creative-stats .leads { color: var(--green); font-weight: 600; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5,6,10,0.75); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; max-width: 720px; width: 100%; max-height: 88vh; overflow-y: auto; display: grid; grid-template-columns: 260px 1fr; }
+  @media (max-width: 640px) { .modal-box { grid-template-columns: 1fr; } }
+  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; }
+  .modal-content { padding: 24px; position: relative; }
+  .modal-close { position: absolute; top: 14px; right: 14px; background: var(--card-2); border: 1px solid var(--border); color: var(--muted); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+  .modal-title { font-size: 17px; margin: 0 0 4px; padding-right: 30px; }
+  .modal-sub { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modal-stat { background: var(--card-2); border-radius: 8px; padding: 10px 12px; }
+  .modal-stat .l { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .modal-stat .v { font-size: 16px; font-weight: 600; margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -158,7 +183,56 @@
     <button class="show-more-btn" id="adsets-more"></button>
   </div>
 
-  <div class="empty" style="margin-top:40px;">Демография, устройства, креативы и страны — следующим шагом.</div>
+  <h2 class="section-title">Демография</h2>
+  <div class="section-sub">Возраст и пол. Квал-лиды по демографии CRM не фиксирует — показано честно как «нет данных».</div>
+  <div class="sort-toggle" id="demo-sort"></div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Возраст / пол</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CTR</th></tr></thead>
+      <tbody id="demo-body"></tbody>
+    </table>
+    <button class="show-more-btn" id="demo-more"></button>
+  </div>
+
+  <h2 class="section-title">Устройства</h2>
+  <div class="section-sub">Mobile / Desktop / Tablet</div>
+  <div class="sort-toggle" id="devices-sort"></div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Устройство</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CTR</th></tr></thead>
+      <tbody id="devices-body"></tbody>
+    </table>
+    <button class="show-more-btn" id="devices-more"></button>
+  </div>
+
+  <h2 class="section-title">Креативы</h2>
+  <div class="section-sub" id="creatives-sub">Квал-лиды и CPQL по каждому объявлению. Клик по карточке — детали.</div>
+  <div class="sort-toggle" id="creatives-sort"></div>
+  <div class="creatives-grid" id="creatives-grid"></div>
+  <button class="show-more-btn" id="creatives-more"></button>
+
+  <h2 class="section-title">Страны</h2>
+  <div class="section-sub">Из CRM — лиды и квалы по стране, которую записал менеджер. Расход/CPL по гео Meta не подключены отдельно.</div>
+  <div class="sort-toggle" id="countries-sort"></div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Страна</th><th class="num">Лиды (CRM)</th><th class="num">Квалы</th><th class="num">% квала</th></tr></thead>
+      <tbody id="countries-body"></tbody>
+    </table>
+    <button class="show-more-btn" id="countries-more"></button>
+  </div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-img" id="modal-img"></div>
+      <div class="modal-content">
+        <button class="modal-close" id="modal-close">✕</button>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-sub" id="modal-sub"></div>
+        <div class="modal-grid" id="modal-grid"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
     const fmtMoney = (v) => v === null || v === undefined ? '—' : '$' + v.toLocaleString('ru-RU', {maximumFractionDigits: 2});
@@ -173,6 +247,14 @@
     let campaignsExpanded = false;
     let adsetsSortMode = 'cpl';
     let adsetsExpanded = false;
+    let demoSortMode = 'cpl';
+    let demoExpanded = false;
+    let devicesSortMode = 'cpl';
+    let devicesExpanded = false;
+    let creativesSortMode = 'leads';
+    let creativesExpanded = false;
+    let countriesSortMode = 'leads';
+    let countriesExpanded = false;
 
     async function loadAll() {
       const [reportRes, crmRes] = await Promise.all([
@@ -314,6 +396,10 @@
       renderFunnel(totals, crmStats);
       renderCampaignsSection();
       renderAdsetsSection();
+      renderDemoSection();
+      renderDevicesSection();
+      renderCreativesSection();
+      renderCountriesSection();
     }
 
     function renderMainCards(t, lifetimeReach, crmStats, cpql) {
@@ -391,6 +477,7 @@
           id: e.id,
           name: e.name,
           language: e.language,
+          thumbnail_url: e.thumbnail_url,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
           cpl: t.cpl,
           qualified,
@@ -416,13 +503,13 @@
       return 'mid';
     }
 
-    function renderSortToggle(elId, mode, onSelect) {
+    function renderSortToggle(elId, mode, onSelect, options) {
       const el = document.getElementById(elId);
-      const options = [
+      const opts = options || [
         { key: 'cpl', label: 'По цене лида' },
         { key: 'leads', label: 'По количеству лидов' },
       ];
-      el.innerHTML = options.map(o => `<button class="sort-btn ${o.key === mode ? 'active' : ''}" data-key="${o.key}">${o.label}</button>`).join('');
+      el.innerHTML = opts.map(o => `<button class="sort-btn ${o.key === mode ? 'active' : ''}" data-key="${o.key}">${o.label}</button>`).join('');
       el.querySelectorAll('.sort-btn').forEach(btn => {
         btn.addEventListener('click', () => onSelect(btn.dataset.key));
       });
@@ -488,6 +575,193 @@
         adsetsExpanded = !adsetsExpanded;
         renderAdsetsSection();
       });
+    }
+
+    const DEVICE_LABELS = { mobile_app: 'Mobile App', desktop: 'Desktop', tablet: 'Tablet', connected_tv: 'Connected TV', unknown: 'Другое' };
+
+    function renderDemoSection() {
+      const rows = REPORT.age_groups.map(g => {
+        const t = sumDaily(filterDaily(g.daily, currentSince, currentUntil));
+        const genderLabel = g.gender === 'male' ? 'муж' : g.gender === 'female' ? 'жен' : g.gender;
+        return { id: g.age + g.gender, name: `${g.age} · ${genderLabel}`, spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr, cpl: t.cpl, qualified: 0, cpql: null };
+      }).filter(r => r.spend > 0 || r.leads > 0 || r.clicks > 0);
+
+      renderSortToggle('demo-sort', demoSortMode, (key) => { demoSortMode = key; renderDemoSection(); });
+      renderNoQualTable('demo-body', 'demo-more', rows, demoSortMode, demoExpanded, () => { demoExpanded = !demoExpanded; renderDemoSection(); });
+    }
+
+    function renderDevicesSection() {
+      const rows = REPORT.devices.map(d => {
+        const t = sumDaily(filterDaily(d.daily, currentSince, currentUntil));
+        return { id: d.device, name: DEVICE_LABELS[d.device] || d.device, spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr, cpl: t.cpl, qualified: 0, cpql: null };
+      }).filter(r => r.spend > 0 || r.leads > 0 || r.clicks > 0);
+
+      renderSortToggle('devices-sort', devicesSortMode, (key) => { devicesSortMode = key; renderDevicesSection(); });
+      renderNoQualTable('devices-body', 'devices-more', rows, devicesSortMode, devicesExpanded, () => { devicesExpanded = !devicesExpanded; renderDevicesSection(); });
+    }
+
+    function renderNoQualTable(bodyId, moreBtnId, rows, mode, expanded, onToggleExpand) {
+      const sorted = sortRows(rows, mode);
+      const visible = expanded ? sorted : sorted.slice(0, 5);
+      const body = document.getElementById(bodyId);
+      const moreBtn = document.getElementById(moreBtnId);
+
+      if (!sorted.length) {
+        body.innerHTML = `<tr><td colspan="6" class="empty">Нет данных за выбранный период</td></tr>`;
+        moreBtn.style.display = 'none';
+        return;
+      }
+
+      body.innerHTML = visible.map((r, i) => `
+        <tr>
+          <td><span class="rank ${rankClass(i, sorted.length)}">${i + 1}</span>${r.name}</td>
+          <td class="num">${fmtMoney(r.spend)}</td>
+          <td class="num">${fmtNum(r.leads)}</td>
+          <td class="num">${fmtMoney(r.cpl)}</td>
+          <td class="num">${CRM ? '<span class="badge">нет данных</span>' : '—'}</td>
+          <td class="num">${fmtPct(r.ctr)}</td>
+        </tr>`).join('');
+
+      if (sorted.length > 5) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = expanded ? 'Свернуть' : `Показать ещё ${sorted.length - 5}`;
+        moreBtn.onclick = onToggleExpand;
+      } else {
+        moreBtn.style.display = 'none';
+      }
+    }
+
+    let creativesRowsCache = [];
+
+    function renderCreativesSection() {
+      const rows = buildEntityRows(REPORT.creatives, 'ad_id', currentSince, currentUntil);
+      creativesRowsCache = sortRows(rows, creativesSortMode);
+      document.getElementById('creatives-sub').textContent = `${creativesRowsCache.length} объявлений за период · клик по карточке — детали`;
+
+      renderSortToggle('creatives-sort', creativesSortMode, (key) => { creativesSortMode = key; renderCreativesSection(); });
+
+      const grid = document.getElementById('creatives-grid');
+      const moreBtn = document.getElementById('creatives-more');
+      const visible = creativesExpanded ? creativesRowsCache : creativesRowsCache.slice(0, 10);
+
+      if (!creativesRowsCache.length) {
+        grid.innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;
+        moreBtn.style.display = 'none';
+        return;
+      }
+
+      grid.innerHTML = visible.map((c, i) => `
+        <div class="creative-card" data-idx="${i}">
+          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+          <div class="creative-info">
+            <div class="creative-name" title="${c.name}">${c.name}</div>
+            <div class="creative-stats">
+              <span class="leads">${fmtNum(c.leads)} лид.</span>
+              <span>${fmtMoney(c.cpl)}</span>
+              <span>${CRM ? fmtNum(c.qualified) + ' квал' : ''}</span>
+            </div>
+          </div>
+        </div>`).join('');
+
+      grid.querySelectorAll('.creative-card').forEach(el => {
+        el.addEventListener('click', () => openCreativeModal(visible[+el.dataset.idx]));
+      });
+
+      if (creativesRowsCache.length > 10) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = creativesExpanded ? 'Свернуть' : `Показать ещё ${creativesRowsCache.length - 10}`;
+        moreBtn.onclick = () => { creativesExpanded = !creativesExpanded; renderCreativesSection(); };
+      } else {
+        moreBtn.style.display = 'none';
+      }
+    }
+
+    function openCreativeModal(c) {
+      const campaign = REPORT.campaigns.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.campaign_id);
+      const adset = REPORT.adsets.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.adset_id);
+
+      document.getElementById('modal-img').style.backgroundImage = c.thumbnail_url ? `url('${c.thumbnail_url}')` : '';
+      document.getElementById('modal-title').textContent = c.name;
+      document.getElementById('modal-sub').textContent = `Кампания: ${campaign ? campaign.name : '—'} · Аудитория: ${adset ? adset.name : '—'}`;
+
+      const stats = [
+        { l: 'Расход', v: fmtMoney(c.spend) },
+        { l: 'Показы', v: fmtNum(c.impressions) },
+        { l: 'Клики', v: fmtNum(c.clicks) },
+        { l: 'Клики по ссылке', v: fmtNum(c.linkClicks) },
+        { l: 'CTR', v: fmtPct(c.ctr) },
+        { l: 'Лиды', v: fmtNum(c.leads) },
+        { l: 'CPL', v: fmtMoney(c.cpl) },
+        { l: 'Квал-лиды', v: CRM ? fmtNum(c.qualified) : '—' },
+        { l: 'CPQL', v: CRM ? fmtMoney(c.cpql) : '—' },
+      ];
+      document.getElementById('modal-grid').innerHTML = stats.map(s => `
+        <div class="modal-stat"><div class="l">${s.l}</div><div class="v">${s.v}</div></div>`).join('');
+
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('modal-overlay').classList.remove('open');
+    });
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modal-overlay') document.getElementById('modal-overlay').classList.remove('open');
+    });
+
+    function renderCountriesSection() {
+      if (!CRM) {
+        document.getElementById('countries-body').innerHTML = `<tr><td colspan="4" class="empty">CRM не подключена</td></tr>`;
+        document.getElementById('countries-more').style.display = 'none';
+        renderSortToggle('countries-sort', countriesSortMode, () => {});
+        return;
+      }
+      const byCountry = {};
+      CRM.leads.forEach(l => {
+        if (!l.created_at || !l.country) return;
+        const d = l.created_at.slice(0, 10);
+        if (d < currentSince || d > currentUntil) return;
+        const c = byCountry[l.country] || { name: l.country, leads: 0, qualified: 0 };
+        c.leads += 1;
+        if (l.qualified === true) c.qualified += 1;
+        byCountry[l.country] = c;
+      });
+      let rows = Object.values(byCountry).map(c => ({ ...c, qualRate: c.leads ? Math.round(c.qualified / c.leads * 1000) / 10 : 0 }));
+
+      const countryOptions = [
+        { key: 'leads', label: 'По количеству лидов' },
+        { key: 'qual', label: 'По конверсии в квал' },
+      ];
+      renderSortToggle('countries-sort', countriesSortMode, (key) => { countriesSortMode = key; renderCountriesSection(); }, countryOptions);
+
+      rows = countriesSortMode === 'qual'
+        ? rows.sort((a, b) => b.qualRate - a.qualRate)
+        : rows.sort((a, b) => b.leads - a.leads);
+
+      const visible = countriesExpanded ? rows : rows.slice(0, 5);
+      const body = document.getElementById('countries-body');
+      const moreBtn = document.getElementById('countries-more');
+
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="4" class="empty">Нет данных за выбранный период</td></tr>`;
+        moreBtn.style.display = 'none';
+        return;
+      }
+
+      body.innerHTML = visible.map((r, i) => `
+        <tr>
+          <td><span class="rank ${rankClass(i, rows.length)}">${i + 1}</span>${r.name}</td>
+          <td class="num">${fmtNum(r.leads)}</td>
+          <td class="num">${fmtNum(r.qualified)}</td>
+          <td class="num">${r.qualRate}%</td>
+        </tr>`).join('');
+
+      if (rows.length > 5) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = countriesExpanded ? 'Свернуть' : `Показать ещё ${rows.length - 5}`;
+        moreBtn.onclick = () => { countriesExpanded = !countriesExpanded; renderCountriesSection(); };
+      } else {
+        moreBtn.style.display = 'none';
+      }
     }
 
     function renderDailyCharts(daily) {

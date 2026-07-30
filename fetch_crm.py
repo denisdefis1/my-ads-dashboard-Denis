@@ -4,8 +4,9 @@ import csv
 import io
 import sys
 import json
+import difflib
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 
 SHEET_ID = '1gcHoNF5FMpnhwYyi0sOEr-ZSD6NQ3LZ2Xz5aYkPBlq4'
 SHEET_GID = '0'
@@ -14,6 +15,22 @@ NOT_QUAL_VALUE = 'не квал'
 EXPECTED_HEADER_LEN = 16
 
 CSV_URL = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid={SHEET_GID}'
+
+LEAD_FORM_SHEETS = [
+    '1odo97vIg5Il5AFV-bb4wMbFMuy9Txy7PnIOuHdeTZlk',
+    '1lv4EFZxUkvE9N_0Rmhf63eo7LHbvjqIj1S4HwzPr97U',
+    '1KfugmWce9tZw1NA2iMJqfFAZxeNwfektQirllqYC7u0',
+    '1y6qYq5cl3BlSpIsUqPL1FcNEBmGlPS8sAQULM457Nps',
+]
+
+# Предположение: "Дата создания" в CRM записана в тбилисском времени (UTC+4).
+# Если совпадения будут систематически промахиваться на фиксированное число
+# часов — значит это предположение неверное, поправить тут одну цифру.
+# Точное время в разных источниках не согласовано (проверено вручную —
+# расхождение может быть нефиксированным, не просто разница часовых поясов).
+# Поэтому матчим только по имени, без временного окна. Порог выше, чем был
+# бы при опоре на время, чтобы не путать разных людей с похожими именами.
+MATCH_NAME_MIN_RATIO = 0.72
 
 
 def clean_id(value):
@@ -25,6 +42,12 @@ def clean_id(value):
     return value
 
 
+def strip_prefix(value):
+    if not value:
+        return None
+    return re.sub(r'^[a-z]+:', '', value.strip())
+
+
 def extract_ad_id_from_referer(referer):
     if not referer:
         return None
@@ -34,17 +57,40 @@ def extract_ad_id_from_referer(referer):
     return clean_id(match.group(1))
 
 
-def parse_date(value):
+def parse_crm_date(value):
     try:
         return datetime.strptime(value.strip(), '%d.%m.%Y %H:%M:%S')
     except (ValueError, AttributeError):
         return None
 
 
-resp = requests.get(CSV_URL, timeout=60)
-resp.raise_for_status()
-resp.encoding = 'utf-8'
-rows = list(csv.reader(io.StringIO(resp.text)))
+def parse_lead_form_date(value):
+    try:
+        return datetime.fromisoformat(value.strip()).astimezone(timezone.utc)
+    except (ValueError, AttributeError):
+        return None
+
+
+def normalize_name(value):
+    return re.sub(r'\s+', ' ', (value or '').strip().lower())
+
+
+def name_similarity(a, b):
+    if not a or not b:
+        return 0.0
+    if a in b or b in a:
+        return 1.0
+    return difflib.SequenceMatcher(None, a, b).ratio()
+
+
+def fetch_csv(url):
+    resp = requests.get(url, timeout=60)
+    resp.raise_for_status()
+    resp.encoding = 'utf-8'
+    return list(csv.reader(io.StringIO(resp.text)))
+
+
+rows = fetch_csv(CSV_URL)
 
 if len(rows) < 2:
     print("CRM-таблица пустая или недоступна.")
@@ -55,10 +101,6 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
     sys.exit(1)
 
 leads = []
-matched_ad = 0
-matched_campaign = 0
-unmatched = 0
-
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
@@ -67,7 +109,7 @@ for row in rows[1:]:
     if not deal_id:
         continue
 
-    created_at = parse_date(row[0])
+    created_at = parse_crm_date(row[0])
     stage = row[5].strip()
     country = row[6].strip()
     referer = row[7].strip()
@@ -89,17 +131,15 @@ for row in rows[1:]:
 
     if ad_id:
         match_type = 'ad'
-        matched_ad += 1
     elif campaign_id:
         match_type = 'campaign'
-        matched_campaign += 1
     else:
         match_type = None
-        unmatched += 1
 
     leads.append({
         "deal_id": deal_id,
-        "created_at": created_at.strftime('%Y-%m-%d %H:%M:%S') if created_at else None,
+        "created_at": created_at,
+        "name_norm": normalize_name(row[4]),
         "stage": stage,
         "country": country,
         "qualified": qualified,
@@ -107,10 +147,88 @@ for row in rows[1:]:
         "campaign_id": campaign_id,
         "adset_id": adset_id,
         "match_type": match_type,
+        "match_confidence": 1.0 if match_type else None,
     })
 
+lead_form_entries = []
+for sheet_id in LEAD_FORM_SHEETS:
+    url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid=0'
+    try:
+        sheet_rows = fetch_csv(url)
+    except requests.exceptions.RequestException as e:
+        print(f"Не удалось прочитать lead-form таблицу {sheet_id}: {e}")
+        continue
+
+    if len(sheet_rows) < 2:
+        continue
+
+    header = [h.strip() for h in sheet_rows[0]]
+    try:
+        idx_created = header.index('created_time')
+        idx_ad = header.index('ad_id')
+        idx_adset = header.index('adset_id')
+        idx_campaign = header.index('campaign_id')
+        idx_name = header.index('full_name')
+    except ValueError:
+        print(f"Таблица {sheet_id} имеет неожиданную структуру, пропускаю.")
+        continue
+
+    for row in sheet_rows[1:]:
+        if len(row) <= max(idx_created, idx_ad, idx_adset, idx_campaign, idx_name):
+            continue
+        created = parse_lead_form_date(row[idx_created])
+        if not created:
+            continue
+        lead_form_entries.append({
+            "created_at": created,
+            "ad_id": clean_id(strip_prefix(row[idx_ad])),
+            "adset_id": clean_id(strip_prefix(row[idx_adset])),
+            "campaign_id": clean_id(strip_prefix(row[idx_campaign])),
+            "name_norm": normalize_name(row[idx_name]),
+        })
+
+matched_ad = matched_campaign = matched_fuzzy = unmatched = 0
+
+for lead in leads:
+    if lead["match_type"]:
+        if lead["match_type"] == 'ad':
+            matched_ad += 1
+        else:
+            matched_campaign += 1
+        continue
+
+    if not lead["name_norm"]:
+        unmatched += 1
+        continue
+
+    best = None
+    best_score = 0.0
+    second_score = 0.0
+    for entry in lead_form_entries:
+        if not (entry["ad_id"] or entry["campaign_id"]):
+            continue
+        score = name_similarity(lead["name_norm"], entry["name_norm"])
+        if score > best_score:
+            second_score = best_score
+            best_score = score
+            best = entry
+        elif score > second_score:
+            second_score = score
+
+    ambiguous = best_score - second_score < 0.05 and second_score > 0
+
+    if best and best_score >= MATCH_NAME_MIN_RATIO and not ambiguous:
+        lead["ad_id"] = best["ad_id"]
+        lead["adset_id"] = best["adset_id"]
+        lead["campaign_id"] = best["campaign_id"]
+        lead["match_type"] = 'fuzzy'
+        lead["match_confidence"] = round(best_score, 2)
+        matched_fuzzy += 1
+    else:
+        unmatched += 1
+
 total = len(leads)
-match_rate = round((matched_ad + matched_campaign) / total * 100, 1) if total else 0
+match_rate = round((matched_ad + matched_campaign + matched_fuzzy) / total * 100, 1) if total else 0
 
 if total < 10:
     print(f"Подозрительно мало строк в CRM: {total}.")
@@ -120,11 +238,16 @@ if match_rate < 50:
     print(f"Match rate подозрительно низкий: {match_rate}%. Останавливаюсь, чтобы не записать мусор.")
     sys.exit(1)
 
+for lead in leads:
+    lead["created_at"] = lead["created_at"].strftime('%Y-%m-%d %H:%M:%S') if lead["created_at"] else None
+    del lead["name_norm"]
+
 crm_data = {
     "fetched_at": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "total_leads": total,
     "matched_by_ad": matched_ad,
     "matched_by_campaign": matched_campaign,
+    "matched_fuzzy": matched_fuzzy,
     "unmatched": unmatched,
     "match_rate": match_rate,
     "leads": leads,
@@ -134,4 +257,4 @@ os.makedirs('data', exist_ok=True)
 with open('data/crm.json', 'w', encoding='utf-8') as f:
     json.dump(crm_data, f, ensure_ascii=False, indent=2)
 
-print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, не сматчено {unmatched} ({match_rate}%).")
+print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")

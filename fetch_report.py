@@ -14,7 +14,7 @@ TARGET_CPL = round(PLAN_MONTHLY_BUDGET / PLAN_MONTHLY_LEADS, 2)
 FETCH_SINCE = '2026-03-09'
 CHUNK_DAYS = 30
 API_VERSION = 'v25.0'
-LEAD_ACTION_TYPES = {'lead', 'offsite_conversion.fb_pixel_lead'}
+LEAD_ACTION_TYPES = {'lead'}
 
 ACCESS_TOKEN = os.getenv('FACEBOOK_ACCESS_TOKEN')
 ACCOUNT_ID = os.getenv('FACEBOOK_ACT_ID')
@@ -144,17 +144,6 @@ account_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'fields': 'spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-
-action_type_totals = {}
-for r in account_raw:
-    for action in r.get('actions', []) or []:
-        t = action.get('action_type')
-        v = int(action.get('value', 0))
-        action_type_totals[t] = action_type_totals.get(t, 0) + v
-
-print("Все типы конверсий за период и их суммы:")
-for t, v in sorted(action_type_totals.items(), key=lambda x: -x[1]):
-    print(f"  {t}: {v}")
 
 account_daily = dedup_by_date(account_raw)
 

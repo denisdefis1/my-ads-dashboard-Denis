@@ -5,34 +5,21 @@ import time
 import requests
 from datetime import datetime, timedelta
 
-# ============================================================
-# НАСТРОЙКИ ПЛАНА — меняешь тут руками, из Meta API это не тянется
-# ============================================================
 PLAN_DAILY_BUDGET = 250
 PLAN_MONTHLY_LEADS = 400
 DAYS_IN_MONTH = 30
 PLAN_MONTHLY_BUDGET = PLAN_DAILY_BUDGET * DAYS_IN_MONTH
 TARGET_CPL = round(PLAN_MONTHLY_BUDGET / PLAN_MONTHLY_LEADS, 2)
 
-# Сколько дней истории тянуть за раз. Фронтенд сам режет это на 7/14/30/
-# месяц/произвольный период — глубже, чем FETCH_DAYS, выбрать будет нельзя.
-# 270 дней ≈ 9 месяцев. Учти: чем больше диапазон, тем дольше отрабатывает
-# workflow и тем тяжелее получается data/report.json (но для статики это
-# всё равно не проблема — счёт на сотни КБ – единицы МБ).
 FETCH_DAYS = 270
-
-# Окно атрибуции конверсий. Meta по умолчанию использует настройку аккаунта,
-# которая может не совпадать с тем, что выставлено у тебя в отчётах Ads
-# Manager вручную — из-за этого возникают небольшие расхождения в лидах.
-# Стандартное окно Meta: 7 дней по клику + 1 день по показу.
-ATTRIBUTION_WINDOWS = ['7d_click', '1d_view']
-
-# Типы конверсий, которые считаем лидами.
-# Если Pixel lead и Lead Ads форма стреляют одновременно на одно и то же
-# событие — сверь в Events Manager, что это не задваивает счётчик.
-LEAD_ACTION_TYPES = {'lead', 'offsite_conversion.fb_pixel_lead'}
-
+CHUNK_DAYS = 30
 API_VERSION = 'v25.0'
+LEAD_ACTION_TYPES = {'lead', 'offsite_conversion.fb_pixel_lead'}
+ALL_EFFECTIVE_STATUSES = [
+    'ACTIVE', 'PAUSED', 'DELETED', 'ARCHIVED', 'PENDING_REVIEW',
+    'DISAPPROVED', 'PREAPPROVED', 'PENDING_BILLING_INFO',
+    'CAMPAIGN_PAUSED', 'ADSET_PAUSED', 'IN_PROCESS', 'WITH_ISSUES',
+]
 
 ACCESS_TOKEN = os.getenv('FACEBOOK_ACCESS_TOKEN')
 ACCOUNT_ID = os.getenv('FACEBOOK_ACT_ID')
@@ -46,12 +33,6 @@ if not ACCOUNT_ID.startswith('act_'):
 
 end_date = datetime.now().strftime('%Y-%m-%d')
 start_date = (datetime.now() - timedelta(days=FETCH_DAYS)).strftime('%Y-%m-%d')
-
-# Размер одного куска запроса в днях. На больших диапазонах с разбивкой по
-# дням (time_increment=1) на уровне campaign/ad Meta иногда отдаёт
-# 500 Internal Server Error — запрос слишком тяжёлый для одного вызова.
-# Поэтому режем весь период на куски и делаем несколько запросов подряд.
-CHUNK_DAYS = 30
 
 
 def date_chunks(since_str, until_str, chunk_days):
@@ -75,7 +56,6 @@ def api_get(path, params):
             try:
                 resp = requests.get(url, params=params, timeout=120)
                 if resp.status_code >= 500:
-                    print(f"Meta API {resp.status_code} на {path}, попытка {attempt + 1}/3, повтор через {2 ** attempt}с...")
                     time.sleep(2 ** attempt)
                     continue
                 resp.raise_for_status()
@@ -86,7 +66,7 @@ def api_get(path, params):
                     sys.exit(1)
                 time.sleep(2 ** attempt)
         else:
-            print(f"Meta API стабильно возвращает 5xx на {path} после 3 попыток.")
+            print(f"Meta API стабильно возвращает 5xx на {path}")
             sys.exit(1)
 
         payload = resp.json()
@@ -102,7 +82,6 @@ def api_get(path, params):
 
 
 def api_get_chunked(path, base_params, since, until):
-    """Тянет insights кусками по CHUNK_DAYS, чтобы не словить 500 на большом диапазоне."""
     all_data = []
     for chunk_since, chunk_until in date_chunks(since, until, CHUNK_DAYS):
         params = {**base_params, 'time_range': json.dumps({'since': chunk_since, 'until': chunk_until})}
@@ -125,90 +104,109 @@ def parse_language(name):
     return 'RU'
 
 
-def day_row(raw):
+def day_metrics(raw):
     spend = float(raw.get('spend', 0))
     leads = count_leads(raw.get('actions'))
     clicks = int(raw.get('clicks', 0))
     impressions = int(raw.get('impressions', 0))
-    return {
-        "date": raw['date_start'],
-        "spend": round(spend, 2),
-        "leads": leads,
-        "clicks": clicks,
-        "impressions": impressions,
-    }
+    return spend, leads, clicks, impressions
 
 
-# ============================================================
-# 1. Аккаунт — по дням
-# ============================================================
+def dedup_by_date(raw_rows):
+    by_date = {}
+    for r in raw_rows:
+        by_date[r['date_start']] = r
+    result = []
+    for date, r in sorted(by_date.items()):
+        spend, leads, clicks, impressions = day_metrics(r)
+        result.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
+    return result
+
+
+def dedup_by_entity_date(raw_rows, id_field, name_field):
+    by_id = {}
+    for r in raw_rows:
+        entity_id = r.get(id_field)
+        entry = by_id.setdefault(entity_id, {
+            "id": entity_id,
+            "name": r.get(name_field, ''),
+            "daily_by_date": {},
+        })
+        entry["daily_by_date"][r['date_start']] = r
+
+    entities = []
+    for entity_id, entry in by_id.items():
+        daily = []
+        for date, r in sorted(entry["daily_by_date"].items()):
+            spend, leads, clicks, impressions = day_metrics(r)
+            daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
+        entities.append({"id": entity_id, "name": entry["name"], "daily": daily})
+    return entities
+
+
 account_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'fields': 'spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-account_daily = sorted((day_row(r) for r in account_raw), key=lambda d: d['date'])
+account_daily = dedup_by_date(account_raw)
 
-# ============================================================
-# 2. Кампании — по дням, сгруппировано по campaign_id
-# ============================================================
 campaigns_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'campaign',
     'fields': 'campaign_id,campaign_name,spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-
-campaigns_by_id = {}
-for r in campaigns_raw:
-    cid = r.get('campaign_id')
-    entry = campaigns_by_id.setdefault(cid, {
-        "id": cid,
-        "name": r.get('campaign_name', ''),
-        "language": parse_language(r.get('campaign_name')),
-        "daily": [],
-    })
-    entry["daily"].append(day_row(r))
-
-campaigns = list(campaigns_by_id.values())
+campaigns = dedup_by_entity_date(campaigns_raw, 'campaign_id', 'campaign_name')
 for c in campaigns:
-    c["daily"].sort(key=lambda d: d['date'])
+    c["language"] = parse_language(c["name"])
 
-# ============================================================
-# 3. Объявления — по дням, сгруппировано по ad_id + превью картинок
-# ============================================================
+adsets_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
+    'time_increment': 1,
+    'level': 'adset',
+    'fields': 'adset_id,adset_name,spend,clicks,impressions,actions',
+    'limit': 500,
+}, start_date, end_date)
+adsets = dedup_by_entity_date(adsets_raw, 'adset_id', 'adset_name')
+
 ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'ad',
     'fields': 'ad_id,ad_name,spend,clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-
-ads_by_id = {}
-for r in ads_raw:
-    aid = r.get('ad_id')
-    entry = ads_by_id.setdefault(aid, {
-        "id": aid,
-        "name": r.get('ad_name', ''),
-        "thumbnail_url": None,
-        "daily": [],
-    })
-    entry["daily"].append(day_row(r))
+creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name')
 
 ads_meta_raw = api_get(f"{ACCOUNT_ID}/ads", {
     'fields': 'id,creative{thumbnail_url}',
+    'effective_status': json.dumps(ALL_EFFECTIVE_STATUSES),
     'limit': 500,
 })
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
-
-creatives = list(ads_by_id.values())
 for c in creatives:
     c["thumbnail_url"] = thumb_by_ad_id.get(c["id"])
-    c["daily"].sort(key=lambda d: d['date'])
 
-# ============================================================
-# Итоговый файл
-# ============================================================
+age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
+    'time_increment': 1,
+    'breakdowns': 'age',
+    'fields': 'spend,clicks,impressions,actions',
+    'limit': 500,
+}, start_date, end_date)
+
+age_by_bucket = {}
+for r in age_raw:
+    bucket = r.get('age', 'unknown')
+    entry = age_by_bucket.setdefault(bucket, {})
+    entry[r['date_start']] = r
+
+age_groups = []
+for bucket, by_date in age_by_bucket.items():
+    daily = []
+    for date, r in sorted(by_date.items()):
+        spend, leads, clicks, impressions = day_metrics(r)
+        daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
+    age_groups.append({"age": bucket, "daily": daily})
+
 report_data = {
     "last_updated": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "fetched_range": {"since": start_date, "until": end_date},
@@ -219,11 +217,13 @@ report_data = {
     },
     "account_daily": account_daily,
     "campaigns": campaigns,
+    "adsets": adsets,
     "creatives": creatives,
+    "age_groups": age_groups,
 }
 
 os.makedirs('data', exist_ok=True)
 with open('data/report.json', 'w', encoding='utf-8') as f:
     json.dump(report_data, f, ensure_ascii=False, indent=2)
 
-print(f"Готово: {len(account_daily)} дней аккаунта, {len(campaigns)} кампаний, {len(creatives)} объявлений.")
+print(f"Готово: {len(account_daily)} дней, {len(campaigns)} кампаний, {len(adsets)} аудиторий, {len(creatives)} объявлений, {len(age_groups)} возрастных групп.")

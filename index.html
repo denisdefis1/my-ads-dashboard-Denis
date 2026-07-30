@@ -18,6 +18,7 @@
     --orange: #e8985e;
     --blue: #6fa8e8;
     --yellow: #e0c56f;
+    --red: #e0706f;
   }
   * { box-sizing: border-box; }
   body {
@@ -35,15 +36,9 @@
   .section-sub { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 
   .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 24px; }
-  .preset-btn {
-    background: var(--card); border: 1px solid var(--border); color: var(--muted);
-    padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer;
-  }
+  .preset-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
   .preset-btn.active { background: #2a2440; color: var(--text); border-color: var(--accent); }
-  .date-input {
-    background: var(--card); border: 1px solid var(--border); color: var(--text);
-    padding: 7px 10px; border-radius: 8px; font-size: 13px; font-family: inherit;
-  }
+  .date-input { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; }
 
   .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .cards.secondary { grid-template-columns: repeat(6, 1fr); margin-top: 14px; }
@@ -52,10 +47,7 @@
     .cards.secondary { grid-template-columns: repeat(3, 1fr); }
   }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-  .card .label {
-    color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-  }
+  .card .label { color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
   .card .value { font-size: 26px; font-weight: 600; }
   .card .plan-note { color: var(--muted); font-size: 12px; margin-top: 6px; }
   .bar-track { height: 5px; border-radius: 3px; background: #1e2430; margin-top: 10px; overflow: hidden; }
@@ -78,12 +70,16 @@
   th { color: var(--muted); font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
   td.num, th.num { text-align: right; }
   .lang-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .rank { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-right: 8px; }
+  .rank.best { background: #1f3a2c; color: var(--green); }
+  .rank.mid { background: #3a3220; color: var(--yellow); }
+  .rank.worst { background: #3a2020; color: var(--red); }
 
   .creatives-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
   @media (max-width: 1000px) { .creatives-grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 600px) { .creatives-grid { grid-template-columns: repeat(2, 1fr); } }
   .creative-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; }
+  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
   .creative-info { padding: 10px; }
   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
@@ -137,12 +133,30 @@
     </div>
   </div>
 
-  <h2 class="section-title">Кампании</h2>
-  <div class="section-sub">Сортировка по расходу за выбранный период</div>
+  <h2 class="section-title">Рейтинг кампаний</h2>
+  <div class="section-sub">От самой эффективной к самой слабой по цене лида</div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
       <thead><tr><th>Кампания</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
       <tbody id="campaigns-body"></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">Рейтинг аудиторий</h2>
+  <div class="section-sub">По группам объявлений — от самой выигрышной к самой слабой</div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Аудитория</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
+      <tbody id="adsets-body"></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">По возрасту</h2>
+  <div class="section-sub">Эффективность по возрастным группам за выбранный период</div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Возраст</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">CTR</th></tr></thead>
+      <tbody id="age-body"></tbody>
     </table>
   </div>
 
@@ -158,7 +172,6 @@
 
     let REPORT = null;
     let charts = {};
-    let currentRange = null; // {since, until} as 'YYYY-MM-DD'
 
     async function loadReport() {
       const res = await fetch('data/report.json?t=' + Date.now());
@@ -189,11 +202,11 @@
         { key: 'month', label: 'Этот месяц' },
         { key: 'all', label: 'Всё время' },
       ];
-      const html = presets.map(p => `<button class="preset-btn" data-preset="${p.key}">${p.label}</button>`).join('')
+      document.getElementById('controls').innerHTML =
+        presets.map(p => `<button class="preset-btn" data-preset="${p.key}">${p.label}</button>`).join('')
         + `<input type="date" class="date-input" id="date-since">`
         + `<span style="color:var(--muted)">–</span>`
         + `<input type="date" class="date-input" id="date-until">`;
-      document.getElementById('controls').innerHTML = html;
 
       document.querySelectorAll('.preset-btn').forEach(btn => {
         btn.addEventListener('click', () => selectPreset(btn.dataset.preset, lastDate));
@@ -243,22 +256,42 @@
       };
     }
 
-    function applyRange(since, until) {
-      currentRange = { since, until };
+    function rankByCpl(items) {
+      const withLeads = items.filter(i => i.leads > 0).sort((a, b) => a.cpl - b.cpl);
+      const withoutLeads = items.filter(i => i.leads === 0).sort((a, b) => b.spend - a.spend);
+      return [...withLeads, ...withoutLeads];
+    }
 
+    function rankClass(index, total) {
+      if (total <= 1) return 'mid';
+      const ratio = index / (total - 1);
+      if (ratio < 0.33) return 'best';
+      if (ratio > 0.66) return 'worst';
+      return 'mid';
+    }
+
+    function applyRange(since, until) {
       const accDaily = filterDaily(REPORT.account_daily, since, until);
       const totals = sumDaily(accDaily);
 
-      const campaignsInRange = REPORT.campaigns.map(c => {
-        const rows = filterDaily(c.daily, since, until);
-        return { name: c.name, language: c.language, ...sumDaily(rows) };
-      }).filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
-        .sort((a, b) => b.spend - a.spend);
+      const campaignsInRange = rankByCpl(
+        REPORT.campaigns.map(c => ({ name: c.name, language: c.language, ...sumDaily(filterDaily(c.daily, since, until)) }))
+          .filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
+      );
 
-      const creativesInRange = REPORT.creatives.map(c => {
-        const rows = filterDaily(c.daily, since, until);
-        return { name: c.name, thumbnail_url: c.thumbnail_url, ...sumDaily(rows) };
-      }).filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
+      const adsetsInRange = rankByCpl(
+        REPORT.adsets.map(a => ({ name: a.name, ...sumDaily(filterDaily(a.daily, since, until)) }))
+          .filter(a => a.spend > 0 || a.leads > 0 || a.clicks > 0)
+      );
+
+      const ageInRange = rankByCpl(
+        REPORT.age_groups.map(a => ({ name: a.age, ...sumDaily(filterDaily(a.daily, since, until)) }))
+          .filter(a => a.spend > 0 || a.leads > 0 || a.clicks > 0)
+      );
+
+      const creativesInRange = REPORT.creatives
+        .map(c => ({ name: c.name, thumbnail_url: c.thumbnail_url, ...sumDaily(filterDaily(c.daily, since, until)) }))
+        .filter(c => c.spend > 0 || c.leads > 0 || c.clicks > 0)
         .sort((a, b) => b.leads - a.leads);
 
       const flowsMap = {};
@@ -283,7 +316,9 @@
       renderDailyCharts(accDaily);
       renderFunnel(totals);
       renderFlows(flows);
-      renderCampaigns(campaignsInRange);
+      renderRankedTable('campaigns-body', campaignsInRange, true);
+      renderRankedTable('adsets-body', adsetsInRange, false);
+      renderRankedTable('age-body', ageInRange, false);
       renderCreatives(creativesInRange);
     }
 
@@ -403,31 +438,38 @@
         </tr>`).join('');
     }
 
-    function renderCampaigns(campaigns) {
-      if (!campaigns.length) {
-        document.getElementById('campaigns-body').innerHTML = `<tr><td colspan="5" class="empty">Нет данных за выбранный период</td></tr>`;
+    function renderRankedTable(elementId, items, showLangDot) {
+      const el = document.getElementById(elementId);
+      if (!items.length) {
+        el.innerHTML = `<tr><td colspan="5" class="empty">Нет данных за выбранный период</td></tr>`;
         return;
       }
-      document.getElementById('campaigns-body').innerHTML = campaigns.map(c => `
+      el.innerHTML = items.map((item, i) => `
         <tr>
-          <td><span class="lang-dot" style="background:${LANG_COLORS[c.language] || 'var(--muted)'}"></span>${c.name}</td>
-          <td class="num">${fmtMoney(c.spend)}</td>
-          <td class="num">${fmtNum(c.leads)}</td>
-          <td class="num">${fmtMoney(c.cpl)}</td>
-          <td class="num">${fmtPct(c.ctr)}</td>
+          <td>
+            <span class="rank ${rankClass(i, items.length)}">${i + 1}</span>
+            ${showLangDot ? `<span class="lang-dot" style="background:${LANG_COLORS[item.language] || 'var(--muted)'}"></span>` : ''}
+            ${item.name}
+          </td>
+          <td class="num">${fmtMoney(item.spend)}</td>
+          <td class="num">${fmtNum(item.leads)}</td>
+          <td class="num">${fmtMoney(item.cpl)}</td>
+          <td class="num">${fmtPct(item.ctr)}</td>
         </tr>`).join('');
     }
 
     function renderCreatives(creatives) {
+      const grid = document.getElementById('creatives-grid');
+      const sub = document.getElementById('creatives-sub');
       if (!creatives.length) {
-        document.getElementById('creatives-grid').innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;
-        document.getElementById('creatives-sub').textContent = `0 объявлений за период`;
+        grid.innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;
+        sub.textContent = `0 объявлений за период`;
         return;
       }
-      document.getElementById('creatives-sub').textContent = `${creatives.length} объявлений за период`;
-      document.getElementById('creatives-grid').innerHTML = creatives.map(c => `
+      sub.textContent = `${creatives.length} объявлений за период`;
+      grid.innerHTML = creatives.map(c => `
         <div class="creative-card">
-          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}"></div>
+          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
           <div class="creative-info">
             <div class="creative-name" title="${c.name}">${c.name}</div>
             <div class="creative-stats">

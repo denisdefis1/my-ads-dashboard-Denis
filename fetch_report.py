@@ -187,7 +187,7 @@ creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name', parent_fields=['ad
 
 ads_meta_raw = api_get(f"{ACCOUNT_ID}/ads", {
     'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url}',
-    'limit': 500,
+    'limit': 25,
 })
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
 for c in creatives:

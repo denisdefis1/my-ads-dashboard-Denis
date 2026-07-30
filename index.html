@@ -139,7 +139,7 @@
 
   .empty { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
 
-  .sort-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
+  .sort-toggle { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .sort-btn { background: var(--card-2); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 7px; font-size: 12px; cursor: pointer; }
   .sort-btn.active { background: linear-gradient(135deg, #362f5c, #2a2440); color: var(--text); border-color: var(--accent); }
 
@@ -706,13 +706,38 @@
       }).filter(r => r.spend > 0 || r.leads > 0 || r.clicks > 0);
     }
 
+    const SORT_MODES = [
+      { key: 'qualified', label: 'По квалам' },
+      { key: 'cpql', label: 'По CPQL' },
+      { key: 'leads', label: 'По лидам' },
+      { key: 'cpl', label: 'По CPL' },
+      { key: 'spend', label: 'По расходу' },
+      { key: 'ctr', label: 'По CTR' },
+    ];
+
     function sortRows(rows, mode) {
-      if (mode === 'leads') {
-        return [...rows].sort((a, b) => b.leads - a.leads);
+      const arr = [...rows];
+      switch (mode) {
+        case 'qualified':
+          return arr.sort((a, b) => (b.qualified || 0) - (a.qualified || 0));
+        case 'cpql': {
+          const withCpql = arr.filter(r => r.cpql !== null && r.cpql !== undefined).sort((a, b) => a.cpql - b.cpql);
+          const withoutCpql = arr.filter(r => r.cpql === null || r.cpql === undefined);
+          return [...withCpql, ...withoutCpql];
+        }
+        case 'leads':
+          return arr.sort((a, b) => b.leads - a.leads);
+        case 'spend':
+          return arr.sort((a, b) => b.spend - a.spend);
+        case 'ctr':
+          return arr.sort((a, b) => b.ctr - a.ctr);
+        case 'cpl':
+        default: {
+          const withLeads = arr.filter(r => r.leads > 0).sort((a, b) => a.cpl - b.cpl);
+          const withoutLeads = arr.filter(r => r.leads === 0).sort((a, b) => b.spend - a.spend);
+          return [...withLeads, ...withoutLeads];
+        }
       }
-      const withLeads = rows.filter(r => r.leads > 0).sort((a, b) => a.cpl - b.cpl);
-      const withoutLeads = rows.filter(r => r.leads === 0).sort((a, b) => b.spend - a.spend);
-      return [...withLeads, ...withoutLeads];
     }
 
     function rankClass(index, total) {
@@ -725,10 +750,7 @@
 
     function renderSortToggle(elId, mode, onSelect, options) {
       const el = document.getElementById(elId);
-      const opts = options || [
-        { key: 'cpl', label: 'По цене лида' },
-        { key: 'leads', label: 'По количеству лидов' },
-      ];
+      const opts = options || SORT_MODES;
       el.innerHTML = opts.map(o => `<button class="sort-btn ${o.key === mode ? 'active' : ''}" data-key="${o.key}">${o.label}</button>`).join('');
       el.querySelectorAll('.sort-btn').forEach(btn => {
         btn.addEventListener('click', () => onSelect(btn.dataset.key));

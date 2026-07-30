@@ -123,6 +123,13 @@
   .modal-stat { background: var(--card-2); border-radius: 8px; padding: 10px 12px; }
   .modal-stat .l { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
   .modal-stat .v { font-size: 16px; font-weight: 600; margin-top: 2px; }
+
+  .flow-toggle { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 4px; }
+  .flow-btn { background: transparent; border: none; color: var(--muted); padding: 7px 16px; border-radius: 7px; font-size: 13px; cursor: pointer; font-weight: 500; }
+  .flow-btn.active.all { background: linear-gradient(135deg, #362f5c, #2a2440); color: var(--text); }
+  .flow-btn.active.en { background: linear-gradient(135deg, #2d4a70, #24405f); color: var(--text); }
+  .flow-btn.active.ru { background: linear-gradient(135deg, #6b4a2c, #55391f); color: var(--text); }
+  .flow-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -132,6 +139,7 @@
   <div class="updated" id="updated"></div>
 
   <div class="controls" id="controls"></div>
+  <div id="flow-toggle-wrap" style="margin-bottom:20px;"></div>
 
   <div class="quality-bar" id="quality-bar"></div>
 
@@ -159,6 +167,15 @@
   <div class="section-sub">Показы → Клики → Клики по ссылке → Лиды → Квал-лиды</div>
   <div class="chart-card">
     <div id="funnel"></div>
+  </div>
+
+  <h2 class="section-title">Потоки ENG / RU</h2>
+  <div class="section-sub">Язык определяется по кампании — переключатель "Все / ENG / RU" наверху фильтрует все разделы ниже</div>
+  <div class="chart-card" style="padding:8px 12px;">
+    <table>
+      <thead><tr><th>Поток</th><th class="num">Расход</th><th class="num">Доля</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
+      <tbody id="flows-body"></tbody>
+    </table>
   </div>
 
   <h2 class="section-title">Рейтинг кампаний</h2>
@@ -270,6 +287,9 @@
 
       renderQualityBar();
 
+      REPORT.campaigns.forEach(c => { campaignLangById[c.id] = c.language; });
+      renderFlowToggle();
+
       const lastDate = REPORT.account_daily.length
         ? REPORT.account_daily[REPORT.account_daily.length - 1].date
         : REPORT.fetched_range.until;
@@ -293,6 +313,55 @@
         </div>
         <span class="quality-label">точно: ${CRM.matched_by_ad + CRM.matched_by_campaign} · мост: ${CRM.matched_bridge} · приближённо: ${CRM.matched_fuzzy} · не сматчено: ${CRM.unmatched}</span>
       `;
+    }
+
+    function renderFlowToggle() {
+      const flows = [
+        { key: 'all', label: 'Все', cls: 'all' },
+        { key: 'EN', label: 'ENG', cls: 'en' },
+        { key: 'RU', label: 'RU', cls: 'ru' },
+      ];
+      document.getElementById('flow-toggle-wrap').innerHTML = `
+        <div class="flow-toggle">
+          ${flows.map(f => `<button class="flow-btn ${f.cls} ${flowFilter === f.key ? 'active' : ''}" data-key="${f.key}">${f.label}</button>`).join('')}
+        </div>
+        <div class="flow-note">Демография и устройства считаются по всему аккаунту — Meta не даёт эту разбивку одновременно по кампаниям и по демографии/устройствам в одном запросе.</div>
+      `;
+      document.querySelectorAll('.flow-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          flowFilter = btn.dataset.key;
+          renderFlowToggle();
+          applyRange(currentSince, currentUntil, currentPresetKey);
+        });
+      });
+    }
+
+    function mergedDailyFromEntities(entities) {
+      const byDate = {};
+      entities.forEach(e => {
+        e.daily.forEach(d => {
+          const acc = byDate[d.date] || { date: d.date, spend: 0, leads: 0, clicks: 0, link_clicks: 0, impressions: 0 };
+          acc.spend += d.spend; acc.leads += d.leads; acc.clicks += d.clicks;
+          acc.link_clicks += (d.link_clicks || 0); acc.impressions += d.impressions;
+          byDate[d.date] = acc;
+        });
+      });
+      return Object.values(byDate).sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function campaignsForFlow() {
+      return flowFilter === 'all' ? REPORT.campaigns : REPORT.campaigns.filter(c => c.language === flowFilter);
+    }
+    function adsetsForFlow() {
+      return flowFilter === 'all' ? REPORT.adsets : REPORT.adsets.filter(a => campaignLangById[a.campaign_id] === flowFilter);
+    }
+    function creativesForFlow() {
+      return flowFilter === 'all' ? REPORT.creatives : REPORT.creatives.filter(c => campaignLangById[c.campaign_id] === flowFilter);
+    }
+
+    function accountDailyForFlow(since, until) {
+      const base = flowFilter === 'all' ? REPORT.account_daily : mergedDailyFromEntities(campaignsForFlow());
+      return filterDaily(base, since, until);
     }
 
     function addDays(dateStr, delta) {
@@ -364,12 +433,14 @@
       };
     }
 
-    function crmLeadsInRange(since, until) {
+    function crmLeadsInRange(since, until, flow) {
       if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0 };
       const rows = CRM.leads.filter(l => {
         if (!l.created_at) return false;
         const d = l.created_at.slice(0, 10);
-        return d >= since && d <= until;
+        if (d < since || d > until) return false;
+        if (flow && flow !== 'all') return campaignLangById[l.campaign_id] === flow;
+        return true;
       });
       return {
         total: rows.length,
@@ -382,18 +453,21 @@
     function applyRange(since, until, presetKey) {
       currentSince = since;
       currentUntil = until;
-      const accDaily = filterDaily(REPORT.account_daily, since, until);
+      currentPresetKey = presetKey;
+      const accDaily = accountDailyForFlow(since, until);
       const totals = sumDaily(accDaily);
-      const reach = presetKey ? REPORT.reach_by_preset[presetKey] : null;
-      const crmStats = crmLeadsInRange(since, until);
+      const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
+      const crmStats = crmLeadsInRange(since, until, flowFilter);
       const cpql = crmStats.qualified ? Math.round(totals.spend / crmStats.qualified * 100) / 100 : null;
 
-      document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}`;
+      const flowLabel = flowFilter === 'all' ? '' : ` · поток ${flowFilter}`;
+      document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}${flowLabel}`;
 
       renderMainCards(totals, reach, crmStats, cpql);
       renderSecondaryCards(totals);
       renderDailyCharts(accDaily);
       renderFunnel(totals, crmStats);
+      renderFlowsSection();
       renderCampaignsSection();
       renderAdsetsSection();
       renderDemoSection();
@@ -409,12 +483,15 @@
       const cplOverTarget = t.cpl !== null && t.cpl > p.target_cpl;
       const cplPct = t.cpl !== null ? Math.min(100, (t.cpl / (p.target_cpl * 2)) * 100) : 0;
       const qualRate = crmStats.total ? Math.round(crmStats.qualified / crmStats.total * 1000) / 10 : null;
+      const cpqlOverTarget = cpql !== null && cpql > p.target_cpql;
+      const cpqlPct = cpql !== null ? Math.min(100, (cpql / (p.target_cpql * 2)) * 100) : 0;
 
       const cards = [
         { label: 'Расход', value: fmtMoney(t.spend), note: `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`, barPct: budgetPct, barColor: 'var(--accent)' },
         { label: 'Лиды (Meta)', value: fmtNum(t.leads), note: `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`, barPct: leadsPct, barColor: 'var(--green)' },
         { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl), note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'), barPct: cplPct, barColor: 'var(--orange)' },
         { label: 'Квал-лиды (CRM)', value: CRM ? fmtNum(crmStats.qualified) : '—', note: CRM ? `из ${fmtNum(crmStats.total)} лидов CRM · конверсия ${qualRate ?? '—'}%` : 'CRM не подключена', barPct: null, badge: !CRM ? 'нет данных' : null },
+        { label: 'Цена квал-лида (CPQL)', value: CRM ? fmtMoney(cpql) : '—', note: CRM ? `цель ≤ ${fmtMoney(p.target_cpql)}` + (cpqlOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : (cpql !== null ? ' · в цели' : ' · нет квалов')) : 'CRM не подключена', barPct: CRM ? cpqlPct : null, barColor: 'var(--red)' },
       ];
       document.getElementById('main-cards').innerHTML = cards.map(c => `
         <div class="card">
@@ -425,7 +502,6 @@
         </div>`).join('');
 
       const secondRow = [
-        { label: 'Цена квал-лида (CPQL)', value: CRM ? fmtMoney(cpql) : '—' },
         { label: 'Показы', value: fmtNum(t.impressions) },
         { label: 'Охват' + (lifetimeReach === null ? ' (только для кнопок периода)' : ''), value: lifetimeReach !== null ? fmtNum(lifetimeReach) : '—' },
         { label: 'Клики / по ссылке', value: `${fmtNum(t.clicks)} / ${fmtNum(t.linkClicks)}` },
@@ -552,9 +628,43 @@
     }
 
     let currentSince = null, currentUntil = null;
+    let currentPresetKey = '30d';
+    let flowFilter = 'all';
+    let campaignLangById = {};
+
+    function renderFlowsSection() {
+      const langs = ['EN', 'RU'];
+      const totalSpendAll = sumDaily(filterDaily(REPORT.account_daily, currentSince, currentUntil)).spend;
+
+      const rows = langs.map(lang => {
+        const camps = REPORT.campaigns.filter(c => c.language === lang);
+        const daily = mergedDailyFromEntities(camps);
+        const t = sumDaily(filterDaily(daily, currentSince, currentUntil));
+        const crmStats = crmLeadsInRange(currentSince, currentUntil, lang);
+        const cpql = crmStats.qualified ? Math.round(t.spend / crmStats.qualified * 100) / 100 : null;
+        return { lang, ...t, qualified: crmStats.qualified, cpql, share: totalSpendAll ? Math.round(t.spend / totalSpendAll * 1000) / 10 : 0 };
+      }).filter(r => r.spend > 0 || r.leads > 0);
+
+      const body = document.getElementById('flows-body');
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="8" class="empty">Нет данных за выбранный период</td></tr>`;
+        return;
+      }
+      body.innerHTML = rows.map(r => `
+        <tr>
+          <td><span class="lang-dot" style="background:${LANG_COLORS[r.lang]}"></span>${r.lang}</td>
+          <td class="num">${fmtMoney(r.spend)}</td>
+          <td class="num">${r.share}%</td>
+          <td class="num">${fmtNum(r.leads)}</td>
+          <td class="num">${fmtMoney(r.cpl)}</td>
+          <td class="num">${CRM ? fmtNum(r.qualified) : '—'}</td>
+          <td class="num">${CRM ? fmtMoney(r.cpql) : '—'}</td>
+          <td class="num">${fmtPct(r.ctr)}</td>
+        </tr>`).join('');
+    }
 
     function renderCampaignsSection() {
-      const rows = buildEntityRows(REPORT.campaigns, 'campaign_id', currentSince, currentUntil);
+      const rows = buildEntityRows(campaignsForFlow(), 'campaign_id', currentSince, currentUntil);
       renderSortToggle('campaigns-sort', campaignsSortMode, (key) => {
         campaignsSortMode = key;
         renderCampaignsSection();
@@ -566,7 +676,7 @@
     }
 
     function renderAdsetsSection() {
-      const rows = buildEntityRows(REPORT.adsets, 'adset_id', currentSince, currentUntil);
+      const rows = buildEntityRows(adsetsForFlow(), 'adset_id', currentSince, currentUntil);
       renderSortToggle('adsets-sort', adsetsSortMode, (key) => {
         adsetsSortMode = key;
         renderAdsetsSection();
@@ -634,7 +744,7 @@
     let creativesRowsCache = [];
 
     function renderCreativesSection() {
-      const rows = buildEntityRows(REPORT.creatives, 'ad_id', currentSince, currentUntil);
+      const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil);
       creativesRowsCache = sortRows(rows, creativesSortMode);
       document.getElementById('creatives-sub').textContent = `${creativesRowsCache.length} объявлений за период · клик по карточке — детали`;
 
@@ -720,6 +830,7 @@
         if (!l.created_at || !l.country) return;
         const d = l.created_at.slice(0, 10);
         if (d < currentSince || d > currentUntil) return;
+        if (flowFilter !== 'all' && campaignLangById[l.campaign_id] !== flowFilter) return;
         const c = byCountry[l.country] || { name: l.country, leads: 0, qualified: 0 };
         c.leads += 1;
         if (l.qualified === true) c.qualified += 1;

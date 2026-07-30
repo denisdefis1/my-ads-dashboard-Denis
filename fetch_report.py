@@ -103,8 +103,9 @@ def day_metrics(raw):
     spend = float(raw.get('spend', 0))
     leads = count_leads(raw.get('actions'))
     clicks = int(raw.get('clicks', 0))
+    link_clicks = int(raw.get('inline_link_clicks', 0))
     impressions = int(raw.get('impressions', 0))
-    return spend, leads, clicks, impressions
+    return spend, leads, clicks, link_clicks, impressions
 
 
 def dedup_by_date(raw_rows):
@@ -113,18 +114,19 @@ def dedup_by_date(raw_rows):
         by_date[r['date_start']] = r
     result = []
     for date, r in sorted(by_date.items()):
-        spend, leads, clicks, impressions = day_metrics(r)
-        result.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
+        spend, leads, clicks, link_clicks, impressions = day_metrics(r)
+        result.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "link_clicks": link_clicks, "impressions": impressions})
     return result
 
 
-def dedup_by_entity_date(raw_rows, id_field, name_field):
+def dedup_by_entity_date(raw_rows, id_field, name_field, parent_fields=None):
     by_id = {}
     for r in raw_rows:
         entity_id = r.get(id_field)
         entry = by_id.setdefault(entity_id, {
             "id": entity_id,
             "name": r.get(name_field, ''),
+            "parents": {pf: r.get(pf) for pf in (parent_fields or [])},
             "daily_by_date": {},
         })
         entry["daily_by_date"][r['date_start']] = r
@@ -133,15 +135,17 @@ def dedup_by_entity_date(raw_rows, id_field, name_field):
     for entity_id, entry in by_id.items():
         daily = []
         for date, r in sorted(entry["daily_by_date"].items()):
-            spend, leads, clicks, impressions = day_metrics(r)
-            daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
-        entities.append({"id": entity_id, "name": entry["name"], "daily": daily})
+            spend, leads, clicks, link_clicks, impressions = day_metrics(r)
+            daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "link_clicks": link_clicks, "impressions": impressions})
+        entity = {"id": entity_id, "name": entry["name"], "daily": daily}
+        entity.update(entry["parents"])
+        entities.append(entity)
     return entities
 
 
 account_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
-    'fields': 'spend,clicks,impressions,actions',
+    'fields': 'spend,clicks,inline_link_clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
 
@@ -150,7 +154,7 @@ account_daily = dedup_by_date(account_raw)
 campaigns_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'campaign',
-    'fields': 'campaign_id,campaign_name,spend,clicks,impressions,actions',
+    'fields': 'campaign_id,campaign_name,spend,clicks,inline_link_clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
 campaigns = dedup_by_entity_date(campaigns_raw, 'campaign_id', 'campaign_name')
@@ -160,18 +164,18 @@ for c in campaigns:
 adsets_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'adset',
-    'fields': 'adset_id,adset_name,spend,clicks,impressions,actions',
+    'fields': 'adset_id,adset_name,campaign_id,spend,clicks,inline_link_clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-adsets = dedup_by_entity_date(adsets_raw, 'adset_id', 'adset_name')
+adsets = dedup_by_entity_date(adsets_raw, 'adset_id', 'adset_name', parent_fields=['campaign_id'])
 
 ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'level': 'ad',
-    'fields': 'ad_id,ad_name,spend,clicks,impressions,actions',
+    'fields': 'ad_id,ad_name,adset_id,campaign_id,spend,clicks,inline_link_clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
-creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name')
+creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name', parent_fields=['adset_id', 'campaign_id'])
 
 ads_meta_raw = api_get(f"{ACCOUNT_ID}/ads", {
     'fields': 'id,creative{thumbnail_url}',
@@ -184,7 +188,7 @@ for c in creatives:
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,
     'breakdowns': 'age,gender',
-    'fields': 'spend,clicks,impressions,actions',
+    'fields': 'spend,clicks,inline_link_clicks,impressions,actions',
     'limit': 500,
 }, start_date, end_date)
 
@@ -198,16 +202,48 @@ age_groups = []
 for (age, gender), by_date in demo_by_bucket.items():
     daily = []
     for date, r in sorted(by_date.items()):
-        spend, leads, clicks, impressions = day_metrics(r)
-        daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "impressions": impressions})
+        spend, leads, clicks, link_clicks, impressions = day_metrics(r)
+        daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "link_clicks": link_clicks, "impressions": impressions})
     age_groups.append({"age": age, "gender": gender, "daily": daily})
 
-reach_raw = api_get(f"{ACCOUNT_ID}/insights", {
-    'time_range': json.dumps({'since': start_date, 'until': end_date}),
-    'fields': 'reach',
-    'limit': 1,
-})
-lifetime_reach = int(reach_raw[0].get('reach', 0)) if reach_raw else 0
+device_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
+    'time_increment': 1,
+    'breakdowns': 'impression_device',
+    'fields': 'spend,clicks,inline_link_clicks,impressions,actions',
+    'limit': 500,
+}, start_date, end_date)
+
+device_by_bucket = {}
+for r in device_raw:
+    bucket = r.get('impression_device', 'unknown')
+    entry = device_by_bucket.setdefault(bucket, {})
+    entry[r['date_start']] = r
+
+devices = []
+for device, by_date in device_by_bucket.items():
+    daily = []
+    for date, r in sorted(by_date.items()):
+        spend, leads, clicks, link_clicks, impressions = day_metrics(r)
+        daily.append({"date": date, "spend": round(spend, 2), "leads": leads, "clicks": clicks, "link_clicks": link_clicks, "impressions": impressions})
+    devices.append({"device": device, "daily": daily})
+
+def fetch_reach(since, until):
+    raw = api_get(f"{ACCOUNT_ID}/insights", {
+        'time_range': json.dumps({'since': since, 'until': until}),
+        'fields': 'reach',
+        'limit': 1,
+    })
+    return int(raw[0].get('reach', 0)) if raw else 0
+
+
+month_start = end_date[:8] + '01'
+reach_by_preset = {
+    '7d': fetch_reach((datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=6)).strftime('%Y-%m-%d'), end_date),
+    '14d': fetch_reach((datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=13)).strftime('%Y-%m-%d'), end_date),
+    '30d': fetch_reach((datetime.strptime(end_date, '%Y-%m-%d') - timedelta(days=29)).strftime('%Y-%m-%d'), end_date),
+    'month': fetch_reach(month_start, end_date),
+    'all': fetch_reach(start_date, end_date),
+}
 
 report_data = {
     "last_updated": datetime.now().strftime('%d.%m.%Y, %H:%M'),
@@ -222,7 +258,8 @@ report_data = {
     "adsets": adsets,
     "creatives": creatives,
     "age_groups": age_groups,
-    "lifetime_reach": lifetime_reach,
+    "devices": devices,
+    "reach_by_preset": reach_by_preset,
 }
 
 os.makedirs('data', exist_ok=True)
@@ -231,7 +268,10 @@ with open('data/report.json', 'w', encoding='utf-8') as f:
 
 total_spend = sum(d['spend'] for d in account_daily)
 total_leads = sum(d['leads'] for d in account_daily)
+total_clicks = sum(d['clicks'] for d in account_daily)
+total_link_clicks = sum(d['link_clicks'] for d in account_daily)
 total_impressions = sum(d['impressions'] for d in account_daily)
 
-print(f"Готово: {len(account_daily)} дней, {len(campaigns)} кампаний, {len(adsets)} аудиторий, {len(creatives)} объявлений, {len(age_groups)} демо-групп.")
-print(f"Итого за период {start_date} — {end_date}: расход ${total_spend:.2f}, лиды {total_leads}, показы {total_impressions}, охват (реальный, не сумма по дням) {lifetime_reach}.")
+print(f"Готово: {len(account_daily)} дней, {len(campaigns)} кампаний, {len(adsets)} аудиторий, {len(creatives)} объявлений, {len(age_groups)} демо-групп, {len(devices)} устройств.")
+print(f"Итого за период {start_date} — {end_date}: расход ${total_spend:.2f}, лиды {total_leads}, клики {total_clicks}, клики по ссылке {total_link_clicks}, показы {total_impressions}.")
+print(f"Охват по периодам: {reach_by_preset}")

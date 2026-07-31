@@ -403,9 +403,7 @@
       REPORT.campaigns.forEach(c => { campaignLangById[c.id] = c.language; });
       renderFlowToggle();
 
-      const lastDate = REPORT.account_daily.length
-        ? REPORT.account_daily[REPORT.account_daily.length - 1].date
-        : REPORT.fetched_range.until;
+      const lastDate = toLocalISO(new Date());
 
       renderControls(lastDate);
       selectPreset('30d', lastDate);

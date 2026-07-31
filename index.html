@@ -93,7 +93,7 @@
   .delta.flat { background: #23283a; color: var(--muted); }
 
   .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .cards.secondary { grid-template-columns: repeat(6, 1fr); margin-top: 14px; }
+  .cards.secondary { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-top: 14px; }
   @media (max-width: 900px) {
     .cards { grid-template-columns: repeat(2, 1fr); }
     .cards.secondary { grid-template-columns: repeat(3, 1fr); }
@@ -203,6 +203,13 @@
   .flow-btn.active.en { background: linear-gradient(135deg, #2d5f8f, #1f4166); color: #fff; box-shadow: 0 0 14px rgba(111,180,240,0.35); }
   .flow-btn.active.ru { background: linear-gradient(135deg, #a06a34, #7a4f24); color: #fff; box-shadow: 0 0 14px rgba(240,168,104,0.35); }
   .flow-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .stage-row { margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .stage-bar-track { flex: 1; height: 34px; border-radius: 8px; background: #171c2a; overflow: hidden; position: relative; }
+  .stage-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #2a3f34, #3a5a48); display: flex; align-items: center; padding-left: 12px; font-size: 13px; color: var(--text); }
+  .stage-bar-fill.dim { background: #1c2230; color: var(--muted); }
+  .stage-nums { width: 90px; text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .stage-nums b { color: var(--text); }
 </style>
 </head>
 <body>
@@ -221,8 +228,14 @@
   <div class="cards" id="main-cards"></div>
   <div class="cards secondary" id="secondary-cards"></div>
 
+  <h2 class="section-title">Сравнение по неделям</h2>
+  <div class="section-sub">Вся история, по неделям пн–вс — как в твоей ручной таблице</div>
+  <div class="chart-card" style="overflow-x:auto;">
+    <table id="weekly-table" style="min-width:900px;"></table>
+  </div>
+
   <h2 class="section-title">Динамика по дням</h2>
-  <div class="section-sub">Расход, лиды и эффективность за выбранный период</div>
+  <div class="section-sub" id="daily-charts-sub">Расход, лиды и эффективность за выбранный период</div>
   <div class="chart-card">
     <div class="chart-title">Расход и лиды</div>
     <canvas id="chart-spend-leads" height="90"></canvas>
@@ -302,6 +315,10 @@
   <div class="sort-toggle" id="creatives-sort"></div>
   <div class="creatives-grid" id="creatives-grid"></div>
   <button class="show-more-btn" id="creatives-more"></button>
+
+  <h2 class="section-title">Этапы сделок</h2>
+  <div class="section-sub" id="stages-sub">Из CRM за выбранный период</div>
+  <div class="chart-card" id="stages-card"></div>
 
   <h2 class="section-title">Страны</h2>
   <div class="section-sub">Из CRM — лиды и квалы по стране, которую записал менеджер. Расход/CPL по гео Meta не подключены отдельно.</div>
@@ -409,6 +426,66 @@
           applyRange(currentSince, currentUntil, currentPresetKey);
         });
       });
+    }
+
+    function mondayOf(dateStr) {
+      const dt = new Date(dateStr + 'T00:00:00');
+      const day = (dt.getDay() + 6) % 7;
+      dt.setDate(dt.getDate() - day);
+      return dt.toISOString().slice(0, 10);
+    }
+
+    function renderWeeklyComparison() {
+      const table = document.getElementById('weekly-table');
+      const rangeSince = REPORT.fetched_range.since;
+      const rangeUntil = REPORT.fetched_range.until;
+
+      const weeks = [];
+      let cursor = mondayOf(rangeSince);
+      while (cursor <= rangeUntil) {
+        const weekEnd = addDays(cursor, 6);
+        weeks.push({ since: cursor, until: weekEnd > rangeUntil ? rangeUntil : weekEnd });
+        cursor = addDays(cursor, 7);
+      }
+
+      const camps = campaignsForFlow();
+      const creativesList = creativesForFlow();
+
+      const cols = weeks.map(w => {
+        const t = sumDaily(accountDailyForFlow(w.since, w.until));
+        const crm = crmLeadsInRange(w.since, w.until, flowFilter);
+        const cpql = crm.qualified ? Math.round(t.spend / crm.qualified * 100) / 100 : null;
+        const activeCampaigns = camps.filter(c => filterDaily(c.daily, w.since, w.until).some(d => d.spend > 0)).length;
+        const activeCreatives = creativesList.filter(c => filterDaily(c.daily, w.since, w.until).some(d => d.spend > 0)).length;
+        return {
+          label: `${w.since.slice(8, 10)}.${w.since.slice(5, 7)}–${w.until.slice(8, 10)}.${w.until.slice(5, 7)}`,
+          spend: t.spend, clicks: t.clicks, linkClicks: t.linkClicks, cpc: t.cpc, ctr: t.ctr,
+          linkCtr: t.impressions ? Math.round(t.linkClicks / t.impressions * 10000) / 100 : 0,
+          impressions: t.impressions, cpm: t.cpm, leads: t.leads, cpl: t.cpl,
+          qualified: crm.qualified, cpql, activeCampaigns, activeCreatives,
+        };
+      });
+
+      const rows = [
+        { label: 'Затраты', get: c => fmtMoney(c.spend) },
+        { label: 'Все клики', get: c => fmtNum(c.clicks) },
+        { label: 'Клики по ссылке', get: c => fmtNum(c.linkClicks) },
+        { label: 'CPC', get: c => fmtMoney(c.cpc) },
+        { label: 'CTR all', get: c => fmtPct(c.ctr) },
+        { label: 'CTR по ссылке', get: c => fmtPct(c.linkCtr) },
+        { label: 'Показы', get: c => fmtNum(c.impressions) },
+        { label: 'CPM', get: c => fmtMoney(c.cpm) },
+        { label: 'Лиды (Meta)', get: c => fmtNum(c.leads) },
+        { label: 'Цена за лид', get: c => fmtMoney(c.cpl) },
+        { label: 'Квал-лиды (CRM)', get: c => CRM ? fmtNum(c.qualified) : '—' },
+        { label: 'Цена за квал-лид', get: c => CRM ? fmtMoney(c.cpql) : '—' },
+        { label: 'Активных кампаний', get: c => fmtNum(c.activeCampaigns) },
+        { label: 'Активных объявлений', get: c => fmtNum(c.activeCreatives) },
+      ];
+
+      const thead = `<thead><tr><th>Метрика</th>${cols.map(c => `<th class="num">${c.label}</th>`).join('')}</tr></thead>`;
+      const tbody = `<tbody>${rows.map(r => `<tr><td>${r.label}</td>${cols.map(c => `<td class="num">${r.get(c)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+      table.innerHTML = thead + tbody;
     }
 
     function mergedDailyFromEntities(entities) {
@@ -560,11 +637,26 @@
       const prev = previousRangeTotals(since, until);
       const prevCpql = prev.crm.qualified ? Math.round(prev.totals.spend / prev.crm.qualified * 100) / 100 : null;
 
+      let pacing = null;
+      if (presetKey === 'month') {
+        const daysElapsed = accDaily.length;
+        const monthDate = new Date(until + 'T00:00:00');
+        const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+        if (daysElapsed > 0) {
+          pacing = {
+            projectedSpend: Math.round(totals.spend / daysElapsed * daysInMonth),
+            projectedLeads: Math.round(totals.leads / daysElapsed * daysInMonth),
+            daysElapsed, daysInMonth,
+          };
+        }
+      }
+
       const flowLabel = flowFilter === 'all' ? '' : ` · поток ${flowFilter}`;
       document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}${flowLabel}`;
 
-      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql);
-      renderSecondaryCards(totals);
+      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing);
+      renderSecondaryCards(totals, reach);
+      renderWeeklyComparison();
       renderDailyCharts(accDaily);
       renderFunnel(totals, crmStats);
       renderFlowsSection();
@@ -574,6 +666,7 @@
       renderDevicesSection();
       renderCreativesSection();
       renderCountriesSection();
+      renderStagesSection();
       renderInsights();
     }
 
@@ -614,7 +707,7 @@
         </div>`;
     }
 
-    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql) {
+    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing) {
       const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
@@ -630,9 +723,16 @@
       const qualDelta = CRM ? deltaBadge(deltaPct(crmStats.qualified, prevCrm.qualified), false) : '';
       const cpqlDelta = CRM ? deltaBadge(deltaPct(cpql, prevCpql), true) : '';
 
+      const spendNote = pacing
+        ? `план ${fmtMoney(p.monthly_budget)} · по темпу выйдет ${fmtMoney(pacing.projectedSpend)} (${Math.round(pacing.projectedSpend / p.monthly_budget * 100)}%)`
+        : `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`;
+      const leadsNote = pacing
+        ? `план ${fmtNum(p.monthly_leads)} · по темпу выйдет ${fmtNum(pacing.projectedLeads)} (${Math.round(pacing.projectedLeads / p.monthly_leads * 100)}%)`
+        : `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`;
+
       const cards = [
-        { label: 'Расход', value: fmtMoney(t.spend), delta: spendDelta, note: `план месяца ${fmtMoney(p.monthly_budget)} · ${budgetPct.toFixed(1)}%`, barPct: budgetPct, barColor: 'var(--accent)' },
-        { label: 'Лиды (Meta)', value: fmtNum(t.leads), delta: leadsDelta, note: `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`, barPct: leadsPct, barColor: 'var(--green)' },
+        { label: 'Расход', value: fmtMoney(t.spend), delta: spendDelta, note: spendNote, barPct: budgetPct, barColor: 'var(--accent)' },
+        { label: 'Лиды (Meta)', value: fmtNum(t.leads), delta: leadsDelta, note: leadsNote, barPct: leadsPct, barColor: 'var(--green)' },
         { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl), delta: cplDelta, note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'), barPct: cplPct, barColor: 'var(--orange)' },
         { label: 'Квал-лиды (CRM)', value: CRM ? fmtNum(crmStats.qualified) : '—', delta: qualDelta, note: CRM ? `из ${fmtNum(crmStats.total)} лидов CRM · конверсия ${qualRate ?? '—'}%` : 'CRM не подключена', barPct: null, badge: !CRM ? 'нет данных' : null },
         { label: 'Цена квал-лида (CPQL)', value: CRM ? fmtMoney(cpql) : '—', delta: cpqlDelta, note: CRM ? `цель ≤ ${fmtMoney(p.target_cpql)}` + (cpqlOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : (cpql !== null ? ' · в цели' : ' · нет квалов')) : 'CRM не подключена', barPct: CRM ? cpqlPct : null, barColor: 'var(--red)' },
@@ -657,7 +757,7 @@
         </div>`).join('');
     }
 
-    function renderSecondaryCards(t) {
+    function renderSecondaryCards(t, reach) {
       const cards = [
         { label: 'CPM', value: fmtMoney(t.cpm) },
         { label: 'CPC', value: fmtMoney(t.cpc) },
@@ -665,6 +765,7 @@
         { label: 'Клики', value: fmtNum(t.clicks) },
         { label: 'Клики по ссылке', value: fmtNum(t.linkClicks) },
         { label: 'CTR по ссылке', value: t.impressions ? fmtPct(Math.round(t.linkClicks / t.impressions * 10000) / 100) : '—' },
+        { label: 'Частота', value: reach ? (Math.round(t.impressions / reach * 100) / 100).toFixed(2) : '—' },
       ];
       document.getElementById('secondary-cards').innerHTML = cards.map(c => `
         <div class="card">
@@ -984,6 +1085,51 @@
       if (e.target.id === 'modal-overlay') document.getElementById('modal-overlay').classList.remove('open');
     });
 
+    function renderStagesSection() {
+      const card = document.getElementById('stages-card');
+      const sub = document.getElementById('stages-sub');
+      if (!CRM) {
+        card.innerHTML = `<div class="empty">CRM не подключена</div>`;
+        return;
+      }
+      const rows = CRM.leads.filter(l => {
+        if (!l.created_at) return false;
+        const d = l.created_at.slice(0, 10);
+        if (d < currentSince || d > currentUntil) return false;
+        if (flowFilter !== 'all' && campaignLangById[l.campaign_id] !== flowFilter) return false;
+        return true;
+      });
+      sub.textContent = `${rows.length} сделок в CRM за период`;
+
+      const byStage = {};
+      rows.forEach(l => {
+        const stage = l.stage || 'Без этапа';
+        byStage[stage] = (byStage[stage] || 0) + 1;
+      });
+      const total = rows.length || 1;
+      const DIM_STAGES = new Set(['не отвечает', 'Закрыто и не реализовано/спам']);
+      const entries = Object.entries(byStage).sort((a, b) => b[1] - a[1]);
+
+      if (!entries.length) {
+        card.innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;
+        return;
+      }
+
+      const maxCount = Math.max(...entries.map(e => e[1]));
+      card.innerHTML = entries.map(([stage, count]) => {
+        const pct = Math.round(count / total * 1000) / 10;
+        const widthPct = Math.max(6, Math.round(count / maxCount * 100));
+        const dim = DIM_STAGES.has(stage);
+        return `
+          <div class="stage-row">
+            <div class="stage-bar-track">
+              <div class="stage-bar-fill ${dim ? 'dim' : ''}" style="width:${widthPct}%">${stage}</div>
+            </div>
+            <div class="stage-nums"><b>${count}</b> ${pct}%</div>
+          </div>`;
+      }).join('');
+    }
+
     function renderCountriesSection() {
       if (!CRM) {
         document.getElementById('countries-body').innerHTML = `<tr><td colspan="4" class="empty">CRM не подключена</td></tr>`;
@@ -1041,9 +1187,29 @@
       }
     }
 
-    function renderDailyCharts(daily) {
+    function groupByWeekIfLong(daily) {
+      if (daily.length <= 45) return { rows: daily, weekly: false };
+      const byWeek = {};
+      daily.forEach(d => {
+        const dt = new Date(d.date + 'T00:00:00');
+        const weekStart = new Date(dt);
+        weekStart.setDate(dt.getDate() - dt.getDay());
+        const key = weekStart.toISOString().slice(0, 10);
+        const acc = byWeek[key] || { date: key, spend: 0, leads: 0, clicks: 0, link_clicks: 0, impressions: 0 };
+        acc.spend += d.spend; acc.leads += d.leads; acc.clicks += d.clicks;
+        acc.link_clicks += (d.link_clicks || 0); acc.impressions += d.impressions;
+        byWeek[key] = acc;
+      });
+      return { rows: Object.values(byWeek).sort((a, b) => a.date.localeCompare(b.date)), weekly: true };
+    }
+
+    function renderDailyCharts(dailyRaw) {
       destroyCharts();
-      const labels = daily.map(d => d.date.slice(5).split('-').reverse().join('.'));
+      const { rows: daily, weekly } = groupByWeekIfLong(dailyRaw);
+      document.getElementById('daily-charts-sub').textContent = weekly
+        ? 'Период длинный — сгруппировано по неделям, чтобы график читался'
+        : 'Расход, лиды и эффективность за выбранный период';
+      const labels = daily.map(d => (weekly ? 'нед. ' : '') + d.date.slice(5).split('-').reverse().join('.'));
       const gridColor = '#1c2230';
       const scalesX = { grid: { color: gridColor }, ticks: { color: '#8992a3', font: { size: 11 } } };
 

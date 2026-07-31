@@ -230,9 +230,10 @@
 
   <h2 class="section-title">Сравнение по неделям</h2>
   <div class="section-sub">Вся история, по неделям пн–вс — как в твоей ручной таблице</div>
-  <div class="chart-card" style="overflow-x:auto;">
-    <table id="weekly-table" style="min-width:900px;"></table>
+  <div class="chart-card" style="padding:8px 12px; overflow-x:auto;">
+    <table id="weekly-table"></table>
   </div>
+  <button class="show-more-btn" id="weekly-more"></button>
 
   <h2 class="section-title">Динамика по дням</h2>
   <div class="section-sub" id="daily-charts-sub">Расход, лиды и эффективность за выбранный период</div>
@@ -435,57 +436,75 @@
       return dt.toISOString().slice(0, 10);
     }
 
+    let weeklyExpanded = false;
+
     function renderWeeklyComparison() {
       const table = document.getElementById('weekly-table');
+      const moreBtn = document.getElementById('weekly-more');
       const rangeSince = REPORT.fetched_range.since;
       const rangeUntil = REPORT.fetched_range.until;
 
-      const weeks = [];
+      const allWeeks = [];
       let cursor = mondayOf(rangeSince);
       while (cursor <= rangeUntil) {
         const weekEnd = addDays(cursor, 6);
-        weeks.push({ since: cursor, until: weekEnd > rangeUntil ? rangeUntil : weekEnd });
+        allWeeks.push({ since: cursor, until: weekEnd > rangeUntil ? rangeUntil : weekEnd });
         cursor = addDays(cursor, 7);
       }
+      allWeeks.reverse();
+      const weeks = weeklyExpanded ? allWeeks : allWeeks.slice(0, 8);
 
       const camps = campaignsForFlow();
       const creativesList = creativesForFlow();
 
-      const cols = weeks.map(w => {
+      const rows = weeks.map(w => {
         const t = sumDaily(accountDailyForFlow(w.since, w.until));
         const crm = crmLeadsInRange(w.since, w.until, flowFilter);
         const cpql = crm.qualified ? Math.round(t.spend / crm.qualified * 100) / 100 : null;
         const activeCampaigns = camps.filter(c => filterDaily(c.daily, w.since, w.until).some(d => d.spend > 0)).length;
         const activeCreatives = creativesList.filter(c => filterDaily(c.daily, w.since, w.until).some(d => d.spend > 0)).length;
-        return {
-          label: `${w.since.slice(8, 10)}.${w.since.slice(5, 7)}–${w.until.slice(8, 10)}.${w.until.slice(5, 7)}`,
-          spend: t.spend, clicks: t.clicks, linkClicks: t.linkClicks, cpc: t.cpc, ctr: t.ctr,
-          linkCtr: t.impressions ? Math.round(t.linkClicks / t.impressions * 10000) / 100 : 0,
-          impressions: t.impressions, cpm: t.cpm, leads: t.leads, cpl: t.cpl,
-          qualified: crm.qualified, cpql, activeCampaigns, activeCreatives,
-        };
+        const linkCtr = t.impressions ? Math.round(t.linkClicks / t.impressions * 10000) / 100 : 0;
+        const label = `${w.since.slice(8, 10)}.${w.since.slice(5, 7)}–${w.until.slice(8, 10)}.${w.until.slice(5, 7)}`;
+        return { label, t, crm, cpql, activeCampaigns, activeCreatives, linkCtr };
       });
 
-      const rows = [
-        { label: 'Затраты', get: c => fmtMoney(c.spend) },
-        { label: 'Все клики', get: c => fmtNum(c.clicks) },
-        { label: 'Клики по ссылке', get: c => fmtNum(c.linkClicks) },
-        { label: 'CPC', get: c => fmtMoney(c.cpc) },
-        { label: 'CTR all', get: c => fmtPct(c.ctr) },
-        { label: 'CTR по ссылке', get: c => fmtPct(c.linkCtr) },
-        { label: 'Показы', get: c => fmtNum(c.impressions) },
-        { label: 'CPM', get: c => fmtMoney(c.cpm) },
-        { label: 'Лиды (Meta)', get: c => fmtNum(c.leads) },
-        { label: 'Цена за лид', get: c => fmtMoney(c.cpl) },
-        { label: 'Квал-лиды (CRM)', get: c => CRM ? fmtNum(c.qualified) : '—' },
-        { label: 'Цена за квал-лид', get: c => CRM ? fmtMoney(c.cpql) : '—' },
-        { label: 'Активных кампаний', get: c => fmtNum(c.activeCampaigns) },
-        { label: 'Активных объявлений', get: c => fmtNum(c.activeCreatives) },
-      ];
+      const thead = `
+        <thead>
+          <tr>
+            <th>Неделя</th><th class="num">Затраты</th><th class="num">Клики</th><th class="num">По ссылке</th>
+            <th class="num">CPC</th><th class="num">CTR</th><th class="num">Показы</th><th class="num">CPM</th>
+            <th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th>
+            <th class="num">Камп.</th><th class="num">Объявл.</th>
+          </tr>
+        </thead>`;
 
-      const thead = `<thead><tr><th>Метрика</th>${cols.map(c => `<th class="num">${c.label}</th>`).join('')}</tr></thead>`;
-      const tbody = `<tbody>${rows.map(r => `<tr><td>${r.label}</td>${cols.map(c => `<td class="num">${r.get(c)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+      const tbody = `<tbody>${rows.map(r => `
+        <tr>
+          <td>${r.label}</td>
+          <td class="num">${fmtMoney(r.t.spend)}</td>
+          <td class="num">${fmtNum(r.t.clicks)}</td>
+          <td class="num">${fmtNum(r.t.linkClicks)}</td>
+          <td class="num">${fmtMoney(r.t.cpc)}</td>
+          <td class="num">${fmtPct(r.t.ctr)}</td>
+          <td class="num">${fmtNum(r.t.impressions)}</td>
+          <td class="num">${fmtMoney(r.t.cpm)}</td>
+          <td class="num">${fmtNum(r.t.leads)}</td>
+          <td class="num">${fmtMoney(r.t.cpl)}</td>
+          <td class="num">${CRM ? fmtNum(r.crm.qualified) : '—'}</td>
+          <td class="num">${CRM ? fmtMoney(r.cpql) : '—'}</td>
+          <td class="num">${fmtNum(r.activeCampaigns)}</td>
+          <td class="num">${fmtNum(r.activeCreatives)}</td>
+        </tr>`).join('')}</tbody>`;
+
       table.innerHTML = thead + tbody;
+
+      if (allWeeks.length > 8) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = weeklyExpanded ? 'Свернуть до последних 8 недель' : `Показать всю историю (${allWeeks.length} недель)`;
+        moreBtn.onclick = () => { weeklyExpanded = !weeklyExpanded; renderWeeklyComparison(); };
+      } else {
+        moreBtn.style.display = 'none';
+      }
     }
 
     function mergedDailyFromEntities(entities) {

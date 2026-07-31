@@ -467,11 +467,14 @@
       }
 
       if (CRM) {
-        const qualRate = crmStats.total ? Math.round(crmStats.qualified / crmStats.total * 1000) / 10 : 0;
+        const qualRate = totals.leads ? Math.round(crmStats.qualified / totals.leads * 1000) / 10 : 0;
         const cpqlWord = cpql !== null && cpql > p.target_cpql
           ? `<span class="bad">выше цели</span> (${fmtMoney(p.target_cpql)})`
           : cpql !== null ? `<span class="good">в рамках цели</span> (${fmtMoney(p.target_cpql)})` : 'посчитать не из чего — квалов пока нет';
-        paras.push(`Из <b>${fmtNum(crmStats.total)}</b> лидов, попавших в CRM за период, квалифицировано <b>${fmtNum(crmStats.qualified)}</b> (${qualRate}%). Цена квал-лида — <b>${cpql !== null ? fmtMoney(cpql) : '—'}</b>, это ${cpqlWord}.`);
+        const qualRateWord = qualRate < p.target_qual_rate
+          ? `<span class="bad">ниже цели</span> (${p.target_qual_rate}%)`
+          : `<span class="good">в рамках цели</span> (${p.target_qual_rate}%)`;
+        paras.push(`Из <b>${fmtNum(totals.leads)}</b> лидов Meta за период квалифицировано <b>${fmtNum(crmStats.qualified)}</b> (${qualRate}% — это ${qualRateWord}). Цена квал-лида — <b>${cpql !== null ? fmtMoney(cpql) : '—'}</b>, это ${cpqlWord}.`);
       } else {
         paras.push(`CRM не подключена к этому срезу — квалификация лидов и CPQL недоступны.`);
       }
@@ -806,7 +809,7 @@
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
       const cplOverTarget = t.cpl !== null && t.cpl > p.target_cpl;
       const cplPct = t.cpl !== null ? Math.min(100, (t.cpl / (p.target_cpl * 2)) * 100) : 0;
-      const qualRate = crmStats.total ? Math.round(crmStats.qualified / crmStats.total * 1000) / 10 : null;
+      const qualRate = t.leads ? Math.round(crmStats.qualified / t.leads * 1000) / 10 : null;
       const cpqlOverTarget = cpql !== null && cpql > p.target_cpql;
       const cpqlPct = cpql !== null ? Math.min(100, (cpql / (p.target_cpql * 2)) * 100) : 0;
 
@@ -823,11 +826,17 @@
         ? `план ${fmtNum(p.monthly_leads)} · по темпу выйдет ${fmtNum(pacing.projectedLeads)} (${Math.round(pacing.projectedLeads / p.monthly_leads * 100)}%)`
         : `план месяца ${fmtNum(p.monthly_leads)} · ${leadsPct.toFixed(1)}%`;
 
+      const qualRateBelowTarget = qualRate !== null && qualRate < p.target_qual_rate;
+      const qualRatePct = qualRate !== null ? Math.min(100, (qualRate / p.target_qual_rate) * 100) : 0;
+      const qualNote = CRM
+        ? `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
+        : 'CRM не подключена';
+
       const cards = [
         { label: 'Расход', value: fmtMoney(t.spend), delta: spendDelta, note: spendNote, barPct: budgetPct, barColor: 'var(--accent)' },
         { label: 'Лиды (Meta)', value: fmtNum(t.leads), delta: leadsDelta, note: leadsNote, barPct: leadsPct, barColor: 'var(--green)' },
         { label: 'Цена лида (CPL)', value: fmtMoney(t.cpl), delta: cplDelta, note: `цель ≤ ${fmtMoney(p.target_cpl)}` + (cplOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : ' · в цели'), barPct: cplPct, barColor: 'var(--orange)' },
-        { label: 'Квал-лиды (CRM)', value: CRM ? fmtNum(crmStats.qualified) : '—', delta: qualDelta, note: CRM ? `из ${fmtNum(crmStats.total)} лидов CRM · конверсия ${qualRate ?? '—'}%` : 'CRM не подключена', barPct: null, badge: !CRM ? 'нет данных' : null },
+        { label: 'Квал-лиды (CRM)', value: CRM ? fmtNum(crmStats.qualified) : '—', delta: qualDelta, note: qualNote, barPct: CRM && qualRate !== null ? qualRatePct : null, barColor: 'var(--green)', badge: !CRM ? 'нет данных' : null },
         { label: 'Цена квал-лида (CPQL)', value: CRM ? fmtMoney(cpql) : '—', delta: cpqlDelta, note: CRM ? `цель ≤ ${fmtMoney(p.target_cpql)}` + (cpqlOverTarget ? ` · <span style="color:var(--orange)">выше цели</span>` : (cpql !== null ? ' · в цели' : ' · нет квалов')) : 'CRM не подключена', barPct: CRM ? cpqlPct : null, barColor: 'var(--red)' },
       ];
       document.getElementById('main-cards').innerHTML = cards.map(c => `
@@ -1364,7 +1373,7 @@
         { label: 'Показы', value: t.impressions, color: 'var(--blue)', drop: `↓ CTR ${fmtPct(t.ctr)}` },
         { label: 'Клики', value: t.clicks, color: '#8b7de0', drop: t.clicks ? `↓ Клик → по ссылке ${(t.linkClicks / t.clicks * 100).toFixed(1)}%` : '' },
         { label: 'Клики по ссылке', value: t.linkClicks, color: 'var(--accent)', drop: t.linkClicks ? `↓ По ссылке → лид ${(t.leads / t.linkClicks * 100).toFixed(1)}%` : '' },
-        { label: 'Лиды (Meta)', value: t.leads, color: 'var(--green)', drop: CRM ? `↓ Лид → квал ${crmStats.total ? (crmStats.qualified / crmStats.total * 100).toFixed(1) : '—'}%` : '' },
+        { label: 'Лиды (Meta)', value: t.leads, color: 'var(--green)', drop: CRM ? `↓ Лид → квал ${t.leads ? (crmStats.qualified / t.leads * 100).toFixed(1) : '—'}%` : '' },
       ];
       const max = t.impressions || 1;
       let html = steps.map(s => `

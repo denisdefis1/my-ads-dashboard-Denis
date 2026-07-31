@@ -204,10 +204,13 @@
   .flow-btn.active.ru { background: linear-gradient(135deg, #a06a34, #7a4f24); color: #fff; box-shadow: 0 0 14px rgba(240,168,104,0.35); }
   .flow-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
 
-  .stage-row { margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-  .stage-bar-track { flex: 1; height: 34px; border-radius: 8px; background: #171c2a; overflow: hidden; position: relative; }
-  .stage-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #2a3f34, #3a5a48); display: flex; align-items: center; padding-left: 12px; font-size: 13px; color: var(--text); }
-  .stage-bar-fill.dim { background: #1c2230; color: var(--muted); }
+  .stage-row { margin-bottom: 8px; display: flex; align-items: center; gap: 14px; }
+  .stage-label { width: 200px; flex-shrink: 0; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .stage-label.dim { color: var(--muted); }
+  .stage-bar-track { flex: 1; height: 22px; border-radius: 6px; background: #171c2a; overflow: hidden; }
+  .stage-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #2a3f34, #3a5a48); min-width: 3px; }
+  .stage-bar-fill.dim { background: #262b3a; }
+  @media (max-width: 700px) { .stage-label { width: 120px; font-size: 12px; } }
   .stage-nums { width: 90px; text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
   .stage-nums b { color: var(--text); }
 
@@ -1183,7 +1186,7 @@
       'Отправлено предложение',
       'Отложено',
       'Онлайн/офлайн показ',
-      'Бронь',
+      'Бронь/Ожидание оплаты',
       'Успешно реализовано',
       'Закрыто и не реализовано/спам',
     ];
@@ -1226,12 +1229,13 @@
       const maxCount = Math.max(...entries.map(e => e[1]));
       card.innerHTML = entries.map(([stage, count]) => {
         const pct = Math.round(count / total * 1000) / 10;
-        const widthPct = Math.max(6, Math.round(count / maxCount * 100));
+        const widthPct = Math.max(2, Math.round(count / maxCount * 100));
         const dim = DIM_STAGES.has(stage);
         return `
           <div class="stage-row">
+            <div class="stage-label ${dim ? 'dim' : ''}" title="${stage}">${stage}</div>
             <div class="stage-bar-track">
-              <div class="stage-bar-fill ${dim ? 'dim' : ''}" style="width:${widthPct}%">${stage}</div>
+              <div class="stage-bar-fill ${dim ? 'dim' : ''}" style="width:${widthPct}%"></div>
             </div>
             <div class="stage-nums"><b>${count}</b> ${pct}%</div>
           </div>`;

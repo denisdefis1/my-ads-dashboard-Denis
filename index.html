@@ -210,6 +210,12 @@
   .stage-bar-fill.dim { background: #1c2230; color: var(--muted); }
   .stage-nums { width: 90px; text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
   .stage-nums b { color: var(--text); }
+
+  .summary-para { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 14px; }
+  .summary-para:last-child { margin-bottom: 0; }
+  .summary-para b { color: var(--accent-2); }
+  .summary-para .good { color: var(--green); font-weight: 600; }
+  .summary-para .bad { color: var(--red); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -332,6 +338,10 @@
     <button class="show-more-btn" id="countries-more"></button>
   </div>
 
+  <h2 class="section-title">Резюме периода</h2>
+  <div class="section-sub">Собирается автоматически из данных выше — меняется вместе с выбранным периодом</div>
+  <div class="chart-card" id="summary-card"></div>
+
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal-box">
       <div class="modal-img" id="modal-img"></div>
@@ -348,6 +358,13 @@
     const fmtMoney = (v) => v === null || v === undefined ? '—' : '$' + v.toLocaleString('ru-RU', {maximumFractionDigits: 2});
     const fmtNum = (v) => v === null || v === undefined ? '—' : v.toLocaleString('ru-RU');
     const fmtPct = (v) => v === null || v === undefined ? '—' : v.toFixed(2) + '%';
+
+    function toLocalISO(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
     const LANG_COLORS = { EN: 'var(--blue)', RU: 'var(--orange)' };
 
     let REPORT = null;
@@ -429,11 +446,64 @@
       });
     }
 
+    function renderSummary(totals, prevTotals, crmStats, cpql) {
+      const p = REPORT.plan;
+      const card = document.getElementById('summary-card');
+      const paras = [];
+
+      const cplWord = totals.cpl !== null && totals.cpl > p.target_cpl
+        ? `<span class="bad">выше цели</span> (${fmtMoney(p.target_cpl)})`
+        : `<span class="good">в рамках цели</span> (${fmtMoney(p.target_cpl)})`;
+      paras.push(`За период <b>${currentSince} – ${currentUntil}</b> потрачено <b>${fmtMoney(totals.spend)}</b>, получено <b>${fmtNum(totals.leads)}</b> лидов по цене <b>${fmtMoney(totals.cpl)}</b> — это ${cplWord}. Расход составляет ${Math.round(totals.spend / p.monthly_budget * 100)}% месячного плана, лиды — ${Math.round(totals.leads / p.monthly_leads * 100)}% плана.`);
+
+      const spendD = deltaPct(totals.spend, prevTotals.spend);
+      const leadsD = deltaPct(totals.leads, prevTotals.leads);
+      const cplD = deltaPct(totals.cpl, prevTotals.cpl);
+      if (spendD !== null && leadsD !== null) {
+        paras.push(`По сравнению с предыдущим периодом такой же длины расход ${spendD >= 0 ? 'вырос' : 'снизился'} на <b>${Math.abs(spendD)}%</b>, лиды ${leadsD >= 0 ? 'выросли' : 'упали'} на <b>${Math.abs(leadsD)}%</b>${cplD !== null ? `, а CPL ${cplD >= 0 ? '<span class="bad">вырос</span>' : '<span class="good">снизился</span>'} на <b>${Math.abs(cplD)}%</b>` : ''}.`);
+      }
+
+      if (CRM) {
+        const qualRate = crmStats.total ? Math.round(crmStats.qualified / crmStats.total * 1000) / 10 : 0;
+        const cpqlWord = cpql !== null && cpql > p.target_cpql
+          ? `<span class="bad">выше цели</span> (${fmtMoney(p.target_cpql)})`
+          : cpql !== null ? `<span class="good">в рамках цели</span> (${fmtMoney(p.target_cpql)})` : 'посчитать не из чего — квалов пока нет';
+        paras.push(`Из <b>${fmtNum(crmStats.total)}</b> лидов, попавших в CRM за период, квалифицировано <b>${fmtNum(crmStats.qualified)}</b> (${qualRate}%). Цена квал-лида — <b>${cpql !== null ? fmtMoney(cpql) : '—'}</b>, это ${cpqlWord}.`);
+      } else {
+        paras.push(`CRM не подключена к этому срезу — квалификация лидов и CPQL недоступны.`);
+      }
+
+      const campaignRows = buildEntityRows(campaignsForFlow(), 'campaign_id', currentSince, currentUntil).filter(r => r.leads > 0);
+      const creativeRows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil);
+      const weakCreatives = creativeRows.filter(r => r.spend > 20 && r.ctr < 0.5);
+      if (campaignRows.length) {
+        const best = [...campaignRows].sort((a, b) => a.cpl - b.cpl)[0];
+        const worst = [...campaignRows].sort((a, b) => b.cpl - a.cpl)[0];
+        let sentence = `Лучшая кампания периода — <b>${best.name}</b> с CPL ${fmtMoney(best.cpl)}`;
+        if (worst.id !== best.id) sentence += `, самая дорогая — <b>${worst.name}</b> с CPL ${fmtMoney(worst.cpl)}`;
+        if (weakCreatives.length) sentence += `. <b>${weakCreatives.length}</b> ${weakCreatives.length === 1 ? 'креатив показывает' : 'креатива(ов) показывают'} CTR ниже 0.5% при заметном расходе — стоит обновить`;
+        paras.push(sentence + '.');
+      }
+
+      const flowsData = ['EN', 'RU'].map(lang => {
+        const camps = REPORT.campaigns.filter(c => c.language === lang);
+        const t = sumDaily(filterDaily(mergedDailyFromEntities(camps), currentSince, currentUntil));
+        return { lang, ...t };
+      }).filter(f => f.leads > 0);
+      if (flowsData.length === 2) {
+        const [en, ru] = flowsData[0].lang === 'EN' ? flowsData : [flowsData[1], flowsData[0]];
+        const cheaper = en.cpl < ru.cpl ? 'ENG' : 'RU';
+        paras.push(`Между потоками: ENG — CPL ${fmtMoney(en.cpl)} (${fmtNum(en.leads)} лидов), RU — CPL ${fmtMoney(ru.cpl)} (${fmtNum(ru.leads)} лидов). Сейчас эффективнее поток <b>${cheaper}</b>.`);
+      }
+
+      card.innerHTML = paras.map(p => `<div class="summary-para">${p}</div>`).join('');
+    }
+
     function mondayOf(dateStr) {
       const dt = new Date(dateStr + 'T00:00:00');
       const day = (dt.getDay() + 6) % 7;
       dt.setDate(dt.getDate() - day);
-      return dt.toISOString().slice(0, 10);
+      return toLocalISO(dt);
     }
 
     let weeklyExpanded = false;
@@ -538,7 +608,7 @@
     function addDays(dateStr, delta) {
       const d = new Date(dateStr + 'T00:00:00');
       d.setDate(d.getDate() + delta);
-      return d.toISOString().slice(0, 10);
+      return toLocalISO(d);
     }
 
     function renderControls(lastDate) {
@@ -686,6 +756,7 @@
       renderCreativesSection();
       renderCountriesSection();
       renderStagesSection();
+      renderSummary(totals, prev.totals, crmStats, cpql);
       renderInsights();
     }
 
@@ -1228,10 +1299,7 @@
       if (daily.length <= 45) return { rows: daily, weekly: false };
       const byWeek = {};
       daily.forEach(d => {
-        const dt = new Date(d.date + 'T00:00:00');
-        const weekStart = new Date(dt);
-        weekStart.setDate(dt.getDate() - dt.getDay());
-        const key = weekStart.toISOString().slice(0, 10);
+        const key = mondayOf(d.date);
         const acc = byWeek[key] || { date: key, spend: 0, leads: 0, clicks: 0, link_clicks: 0, impressions: 0 };
         acc.spend += d.spend; acc.leads += d.leads; acc.clicks += d.clicks;
         acc.link_clicks += (d.link_clicks || 0); acc.impressions += d.impressions;

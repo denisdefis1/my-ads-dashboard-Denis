@@ -819,6 +819,7 @@
           language: e.language,
           thumbnail_url: e.thumbnail_url,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
+          impressions: t.impressions, linkClicks: t.linkClicks, cpm: t.cpm, cpc: t.cpc,
           cpl: t.cpl,
           qualified,
           cpql: qualified ? Math.round(t.spend / qualified * 100) / 100 : null,
@@ -1104,6 +1105,18 @@
       if (e.target.id === 'modal-overlay') document.getElementById('modal-overlay').classList.remove('open');
     });
 
+    const STAGE_ORDER = [
+      'Первый контакт',
+      'не отвечает',
+      'Квалификация клиента',
+      'Отправлено предложение',
+      'Отложено',
+      'Онлайн/офлайн показ',
+      'Бронь',
+      'Успешно реализовано',
+      'Закрыто и не реализовано/спам',
+    ];
+
     function renderStagesSection() {
       const card = document.getElementById('stages-card');
       const sub = document.getElementById('stages-sub');
@@ -1127,7 +1140,12 @@
       });
       const total = rows.length || 1;
       const DIM_STAGES = new Set(['не отвечает', 'Закрыто и не реализовано/спам']);
-      const entries = Object.entries(byStage).sort((a, b) => b[1] - a[1]);
+
+      const known = STAGE_ORDER.filter(s => byStage[s]).map(s => [s, byStage[s]]);
+      const unknown = Object.entries(byStage)
+        .filter(([s]) => !STAGE_ORDER.includes(s))
+        .sort((a, b) => b[1] - a[1]);
+      const entries = [...known, ...unknown];
 
       if (!entries.length) {
         card.innerHTML = `<div class="empty">Нет данных за выбранный период</div>`;

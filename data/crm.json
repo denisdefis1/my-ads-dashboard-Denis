@@ -1,12 +1,12 @@
 {
-  "fetched_at": "01.08.2026, 20:42",
-  "total_leads": 1050,
+  "fetched_at": "02.08.2026, 20:45",
+  "total_leads": 1051,
   "matched_by_ad": 567,
   "matched_by_campaign": 2,
   "matched_bridge": 199,
   "matched_fuzzy": 102,
-  "unmatched": 180,
-  "match_rate": 82.9,
+  "unmatched": 181,
+  "match_rate": 82.8,
   "leads": [
     {
       "deal_id": "28416153",
@@ -12601,6 +12601,18 @@
       "created_at": "2026-05-19 22:08:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Украина",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28436111",
+      "created_at": "2026-08-02 16:36:00",
+      "stage": "новый лид",
+      "country": "Венгрия",
       "qualified": null,
       "ad_id": null,
       "campaign_id": null,

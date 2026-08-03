@@ -11,6 +11,7 @@ DAYS_IN_MONTH = 30
 PLAN_MONTHLY_BUDGET = PLAN_DAILY_BUDGET * DAYS_IN_MONTH
 TARGET_CPL = round(PLAN_MONTHLY_BUDGET / PLAN_MONTHLY_LEADS, 2)
 TARGET_CPQL = 200
+TARGET_QUAL_RATE = 30
 
 FETCH_SINCE = '2026-03-09'
 CHUNK_DAYS = 30
@@ -54,6 +55,9 @@ def api_get(path, params):
                 if resp.status_code >= 500:
                     time.sleep(2 ** attempt)
                     continue
+                if resp.status_code >= 400:
+                    print(f"Meta API вернул {resp.status_code} на {path}: {resp.text}")
+                    sys.exit(1)
                 resp.raise_for_status()
                 break
             except requests.exceptions.RequestException as e:
@@ -261,6 +265,7 @@ report_data = {
         "monthly_leads": PLAN_MONTHLY_LEADS,
         "target_cpl": TARGET_CPL,
         "target_cpql": TARGET_CPQL,
+        "target_qual_rate": TARGET_QUAL_RATE,
     },
     "account_daily": account_daily,
     "campaigns": campaigns,

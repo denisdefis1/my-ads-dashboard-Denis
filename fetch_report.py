@@ -14,7 +14,7 @@ TARGET_CPQL = 200
 TARGET_QUAL_RATE = 30
 
 FETCH_SINCE = '2026-03-09'
-CHUNK_DAYS = 60
+CHUNK_DAYS = 30
 API_VERSION = 'v25.0'
 LEAD_ACTION_TYPES = {'lead'}
 
@@ -57,7 +57,10 @@ def api_get(path, params):
                     continue
                 if resp.status_code >= 400:
                     print(f"Meta API вернул {resp.status_code} на {path}: {resp.text}")
-                    sys.exit(1)
+                    if attempt == 2:
+                        sys.exit(1)
+                    time.sleep(30 * (attempt + 1))
+                    continue
                 resp.raise_for_status()
                 break
             except requests.exceptions.RequestException as e:

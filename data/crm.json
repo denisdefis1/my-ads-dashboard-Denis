@@ -1,12 +1,12 @@
 {
-  "fetched_at": "02.08.2026, 20:45",
-  "total_leads": 1051,
+  "fetched_at": "03.08.2026, 12:46",
+  "total_leads": 1054,
   "matched_by_ad": 567,
   "matched_by_campaign": 2,
-  "matched_bridge": 199,
+  "matched_bridge": 200,
   "matched_fuzzy": 102,
-  "unmatched": 181,
-  "match_rate": 82.8,
+  "unmatched": 183,
+  "match_rate": 82.6,
   "leads": [
     {
       "deal_id": "28416153",
@@ -10502,11 +10502,11 @@
       "stage": "Отложено",
       "country": "Израиль",
       "qualified": true,
-      "ad_id": "120243662575560775",
-      "campaign_id": "120243662575600775",
-      "adset_id": "120243662575640775",
-      "match_type": "fuzzy",
-      "match_confidence": 1.0
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     },
     {
       "deal_id": "28239051",
@@ -12611,14 +12611,50 @@
     {
       "deal_id": "28436111",
       "created_at": "2026-08-02 16:36:00",
-      "stage": "новый лид",
+      "stage": "Отправлено предложение",
       "country": "Венгрия",
-      "qualified": null,
+      "qualified": true,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
       "match_type": null,
       "match_confidence": null
+    },
+    {
+      "deal_id": "28438163",
+      "created_at": "2026-08-03 11:18:00",
+      "stage": "Квалификация клиента",
+      "country": "Германия",
+      "qualified": true,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28438585",
+      "created_at": "2026-08-03 12:20:00",
+      "stage": "Закрыто и не реализовано/спам",
+      "country": "Россия / Казахстан",
+      "qualified": null,
+      "ad_id": "120245098371590775",
+      "campaign_id": "120245098371580775",
+      "adset_id": "120245098371610775",
+      "match_type": "bridge_phone",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28438925",
+      "created_at": "2026-08-03 13:13:00",
+      "stage": "Закрыто и не реализовано/спам",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120247931022990775",
+      "campaign_id": "120247931023030775",
+      "adset_id": "120247931023010775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     }
   ]
 }

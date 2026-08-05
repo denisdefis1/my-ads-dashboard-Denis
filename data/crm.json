@@ -1,5 +1,5 @@
 {
-  "fetched_at": "05.08.2026, 08:29",
+  "fetched_at": "05.08.2026, 13:56",
   "total_leads": 1061,
   "matched_by_ad": 567,
   "matched_by_campaign": 2,
@@ -107,7 +107,7 @@
     {
       "deal_id": "28400591",
       "created_at": "2026-07-23 00:19:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": false,
       "ad_id": null,

@@ -413,12 +413,9 @@
       selectPreset('30d', lastDate);
     }
 
-    function getQualAdjustment(since, until) {
+    function getQualAdjustment(presetKey) {
       if (!QUAL_CORRECTIONS.total_adjustment) return null;
-      if (since === REPORT.fetched_range.since && until === REPORT.fetched_range.until) {
-        return QUAL_CORRECTIONS.total_adjustment;
-      }
-      return null;
+      return presetKey === 'all' ? QUAL_CORRECTIONS.total_adjustment : null;
     }
 
     function renderQualityBar() {
@@ -738,7 +735,7 @@
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
       const crmStats = crmLeadsInRange(since, until, flowFilter);
-      const adjustment = flowFilter === 'all' ? getQualAdjustment(since, until) : null;
+      const adjustment = flowFilter === 'all' ? getQualAdjustment(presetKey) : null;
       if (adjustment) {
         crmStats.qualified += adjustment.amount;
       }
@@ -827,11 +824,12 @@
       const cpqlOverTarget = cpql !== null && cpql > p.target_cpql;
       const cpqlPct = cpql !== null ? Math.min(100, (cpql / (p.target_cpql * 2)) * 100) : 0;
 
-      const spendDelta = deltaBadge(deltaPct(t.spend, prevT.spend), true);
-      const leadsDelta = deltaBadge(deltaPct(t.leads, prevT.leads), false);
-      const cplDelta = deltaBadge(deltaPct(t.cpl, prevT.cpl), true);
-      const qualDelta = CRM ? deltaBadge(deltaPct(crmStats.qualified, prevCrm.qualified), false) : '';
-      const cpqlDelta = CRM ? deltaBadge(deltaPct(cpql, prevCpql), true) : '';
+      const isAllTime = currentPresetKey === 'all';
+      const spendDelta = isAllTime ? '' : deltaBadge(deltaPct(t.spend, prevT.spend), true);
+      const leadsDelta = isAllTime ? '' : deltaBadge(deltaPct(t.leads, prevT.leads), false);
+      const cplDelta = isAllTime ? '' : deltaBadge(deltaPct(t.cpl, prevT.cpl), true);
+      const qualDelta = (CRM && !isAllTime) ? deltaBadge(deltaPct(crmStats.qualified, prevCrm.qualified), false) : '';
+      const cpqlDelta = (CRM && !isAllTime) ? deltaBadge(deltaPct(cpql, prevCpql), true) : '';
 
       const spendNote = pacing
         ? `план ${fmtMoney(p.monthly_budget)} · по темпу выйдет ${fmtMoney(pacing.projectedSpend)} (${Math.round(pacing.projectedSpend / p.monthly_budget * 100)}%)`

@@ -386,14 +386,18 @@
     let countriesSortMode = 'leads';
     let countriesExpanded = false;
 
+    let QUAL_CORRECTIONS = {};
+
     async function loadAll() {
-      const [reportRes, crmRes] = await Promise.all([
+      const [reportRes, crmRes, correctionsRes] = await Promise.all([
         fetch('data/report.json?t=' + Date.now()),
         fetch('data/crm.json?t=' + Date.now()).catch(() => null),
+        fetch('qual_corrections.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!reportRes.ok) throw new Error('report.json недоступен (' + reportRes.status + ')');
       REPORT = await reportRes.json();
       CRM = (crmRes && crmRes.ok) ? await crmRes.json() : null;
+      QUAL_CORRECTIONS = (correctionsRes && correctionsRes.ok) ? await correctionsRes.json() : {};
 
       document.getElementById('updated').textContent = 'данные на ' + REPORT.last_updated +
         (CRM ? ' · CRM на ' + CRM.fetched_at : '');
@@ -407,6 +411,14 @@
 
       renderControls(lastDate);
       selectPreset('30d', lastDate);
+    }
+
+    function getQualAdjustment(since, until) {
+      if (!QUAL_CORRECTIONS.total_adjustment) return null;
+      if (since === REPORT.fetched_range.since && until === REPORT.fetched_range.until) {
+        return QUAL_CORRECTIONS.total_adjustment;
+      }
+      return null;
     }
 
     function renderQualityBar() {
@@ -726,6 +738,10 @@
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
       const crmStats = crmLeadsInRange(since, until, flowFilter);
+      const adjustment = flowFilter === 'all' ? getQualAdjustment(since, until) : null;
+      if (adjustment) {
+        crmStats.qualified += adjustment.amount;
+      }
       const cpql = crmStats.qualified ? Math.round(totals.spend / crmStats.qualified * 100) / 100 : null;
       const prev = previousRangeTotals(since, until);
       const prevCpql = prev.crm.qualified ? Math.round(prev.totals.spend / prev.crm.qualified * 100) / 100 : null;
@@ -747,7 +763,7 @@
       const flowLabel = flowFilter === 'all' ? '' : ` · поток ${flowFilter}`;
       document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}${flowLabel}`;
 
-      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing);
+      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing, adjustment);
       renderSecondaryCards(totals, reach);
       renderWeeklyComparison();
       renderDailyCharts(accDaily);
@@ -801,7 +817,7 @@
         </div>`;
     }
 
-    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing) {
+    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing, adjustment) {
       const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
@@ -827,7 +843,7 @@
       const qualRateBelowTarget = qualRate !== null && qualRate < p.target_qual_rate;
       const qualRatePct = qualRate !== null ? Math.min(100, (qualRate / p.target_qual_rate) * 100) : 0;
       const qualNote = CRM
-        ? `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
+        ? (adjustment ? `<span style="color:var(--accent-2)" title="${adjustment.note}">✓ +${adjustment.amount} вручную сверено</span> · ` : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
         : 'CRM не подключена';
 
       const cards = [

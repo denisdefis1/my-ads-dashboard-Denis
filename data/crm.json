@@ -1,10 +1,10 @@
 {
-  "fetched_at": "07.08.2026, 02:27",
-  "total_leads": 1062,
+  "fetched_at": "07.08.2026, 07:09",
+  "total_leads": 1063,
   "matched_by_ad": 567,
   "matched_by_campaign": 2,
   "matched_bridge": 201,
-  "matched_fuzzy": 105,
+  "matched_fuzzy": 106,
   "unmatched": 187,
   "match_rate": 82.4,
   "leads": [
@@ -12749,6 +12749,18 @@
       "ad_id": "120248029155300775",
       "campaign_id": "120248028835330775",
       "adset_id": "120248028835320775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28452173",
+      "created_at": "2026-08-07 06:32:00",
+      "stage": "новый лид",
+      "country": "Израиль",
+      "qualified": null,
+      "ad_id": "120248029242630775",
+      "campaign_id": "120248029242580775",
+      "adset_id": "120248029242590775",
       "match_type": "fuzzy",
       "match_confidence": 1.0
     }

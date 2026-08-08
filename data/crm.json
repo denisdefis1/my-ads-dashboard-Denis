@@ -1,12 +1,12 @@
 {
-  "fetched_at": "08.08.2026, 12:38",
-  "total_leads": 1066,
+  "fetched_at": "08.08.2026, 18:32",
+  "total_leads": 1069,
   "matched_by_ad": 569,
   "matched_by_campaign": 2,
-  "matched_bridge": 201,
+  "matched_bridge": 202,
   "matched_fuzzy": 106,
-  "unmatched": 188,
-  "match_rate": 82.4,
+  "unmatched": 190,
+  "match_rate": 82.2,
   "leads": [
     {
       "deal_id": "28416153",
@@ -10850,11 +10850,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Украина",
       "qualified": null,
-      "ad_id": "120243662655760775",
-      "campaign_id": "120243662655730775",
-      "adset_id": "120243662655570775",
-      "match_type": "fuzzy",
-      "match_confidence": 1.0
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     },
     {
       "deal_id": "28132805",
@@ -12798,6 +12798,42 @@
       "campaign_id": null,
       "adset_id": null,
       "match_type": "ad",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28457543",
+      "created_at": "2026-08-08 15:56:00",
+      "stage": "новый лид",
+      "country": "Испания",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28457715",
+      "created_at": "2026-08-08 16:46:00",
+      "stage": "новый лид",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120243662655760775",
+      "campaign_id": "120243662655730775",
+      "adset_id": "120243662655570775",
+      "match_type": "bridge_phone",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28457593",
+      "created_at": "2026-08-08 16:19:00",
+      "stage": "новый лид",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120247931022970775",
+      "campaign_id": "120247931023030775",
+      "adset_id": "120247931023010775",
+      "match_type": "fuzzy",
       "match_confidence": 1.0
     }
   ]

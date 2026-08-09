@@ -1,12 +1,12 @@
 {
-  "fetched_at": "09.08.2026, 12:41",
-  "total_leads": 1072,
+  "fetched_at": "09.08.2026, 18:35",
+  "total_leads": 1073,
   "matched_by_ad": 569,
   "matched_by_campaign": 2,
   "matched_bridge": 203,
   "matched_fuzzy": 106,
-  "unmatched": 192,
-  "match_rate": 82.1,
+  "unmatched": 193,
+  "match_rate": 82.0,
   "leads": [
     {
       "deal_id": "28416153",
@@ -12865,6 +12865,18 @@
       "created_at": "2026-08-09 13:02:00",
       "stage": "новый лид",
       "country": "Литва",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28460387",
+      "created_at": "2026-08-09 17:12:00",
+      "stage": "новый лид",
+      "country": "Швейцария",
       "qualified": null,
       "ad_id": null,
       "campaign_id": null,

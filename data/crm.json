@@ -1,12 +1,12 @@
 {
-  "fetched_at": "10.08.2026, 07:24",
-  "total_leads": 1076,
+  "fetched_at": "10.08.2026, 13:00",
+  "total_leads": 1079,
   "matched_by_ad": 569,
   "matched_by_campaign": 2,
   "matched_bridge": 203,
-  "matched_fuzzy": 106,
-  "unmatched": 196,
-  "match_rate": 81.8,
+  "matched_fuzzy": 108,
+  "unmatched": 197,
+  "match_rate": 81.7,
   "leads": [
     {
       "deal_id": "28416153",
@@ -455,7 +455,7 @@
     {
       "deal_id": "28415894",
       "created_at": "2026-07-28 00:26:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": false,
       "ad_id": "120245922691130775",
@@ -467,7 +467,7 @@
     {
       "deal_id": "28415500",
       "created_at": "2026-07-27 20:08:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": "120247703571160775",
@@ -551,7 +551,7 @@
     {
       "deal_id": "28411103",
       "created_at": "2026-07-26 14:22:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": "120245922981360775",
@@ -563,7 +563,7 @@
     {
       "deal_id": "28410447",
       "created_at": "2026-07-26 08:54:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": null,
@@ -575,7 +575,7 @@
     {
       "deal_id": "28410237",
       "created_at": "2026-07-25 23:35:00",
-      "stage": "не отвечает",
+      "stage": "Первый контакт",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": "120245922691130775",
@@ -923,7 +923,7 @@
     {
       "deal_id": "28408257",
       "created_at": "2026-07-25 09:09:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": null,
@@ -1127,7 +1127,7 @@
     {
       "deal_id": "28404403",
       "created_at": "2026-07-24 00:26:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": "120247703571320775",
@@ -1379,7 +1379,7 @@
     {
       "deal_id": "28399851",
       "created_at": "2026-07-22 18:02:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Болгария",
       "qualified": false,
       "ad_id": "120247703571180775",
@@ -2111,7 +2111,7 @@
     {
       "deal_id": "28388115",
       "created_at": "2026-07-19 22:35:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": null,
@@ -2435,7 +2435,7 @@
     {
       "deal_id": "28379809",
       "created_at": "2026-07-16 22:19:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": false,
       "ad_id": "120245922981340775",
@@ -12803,7 +12803,7 @@
     {
       "deal_id": "28457543",
       "created_at": "2026-08-08 15:56:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Испания",
       "qualified": null,
       "ad_id": null,
@@ -12827,9 +12827,9 @@
     {
       "deal_id": "28457593",
       "created_at": "2026-08-08 16:19:00",
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Беларусь",
-      "qualified": null,
+      "qualified": false,
       "ad_id": "120247931022970775",
       "campaign_id": "120247931023030775",
       "adset_id": "120247931023010775",
@@ -12839,7 +12839,7 @@
     {
       "deal_id": "28458435",
       "created_at": "2026-08-09 00:15:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": null,
       "ad_id": "120243662655760775",
@@ -12887,9 +12887,9 @@
     {
       "deal_id": "28460933",
       "created_at": "2026-08-09 21:15:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Россия",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -12911,14 +12911,50 @@
     {
       "deal_id": "28461613",
       "created_at": "2026-08-10 09:21:00",
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Литва",
+      "qualified": false,
+      "ad_id": "120248029155350775",
+      "campaign_id": "120248028835330775",
+      "adset_id": "120248028835320775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28462727",
+      "created_at": "2026-08-10 12:50:00",
+      "stage": "новый лид",
+      "country": "Люксембург",
       "qualified": null,
       "ad_id": "120248029155350775",
       "campaign_id": "120248028835330775",
       "adset_id": "120248028835320775",
       "match_type": "fuzzy",
       "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28462541",
+      "created_at": "2026-08-10 12:19:00",
+      "stage": "Закрыто и не реализовано/спам",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120248029102040775",
+      "campaign_id": "120248028835330775",
+      "adset_id": "120248028835410775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28462927",
+      "created_at": "2026-08-10 13:20:00",
+      "stage": "Отправлено предложение",
+      "country": "Беларусь",
+      "qualified": true,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     }
   ]
 }

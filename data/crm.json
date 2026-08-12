@@ -1,12 +1,12 @@
 {
-  "fetched_at": "11.08.2026, 18:58",
+  "fetched_at": "12.08.2026, 01:25",
   "total_leads": 1080,
   "matched_by_ad": 569,
   "matched_by_campaign": 2,
   "matched_bridge": 203,
-  "matched_fuzzy": 109,
-  "unmatched": 197,
-  "match_rate": 81.8,
+  "matched_fuzzy": 108,
+  "unmatched": 198,
+  "match_rate": 81.7,
   "leads": [
     {
       "deal_id": "28416153",
@@ -9530,11 +9530,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Израиль",
       "qualified": null,
-      "ad_id": "120243662575610775",
-      "campaign_id": "120243662575600775",
-      "adset_id": "120243662575590775",
-      "match_type": "fuzzy",
-      "match_confidence": 1.0
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     },
     {
       "deal_id": "27859649",

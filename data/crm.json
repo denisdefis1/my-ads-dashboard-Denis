@@ -1,5 +1,5 @@
 {
-  "fetched_at": "14.08.2026, 07:19",
+  "fetched_at": "14.08.2026, 12:56",
   "total_leads": 1127,
   "matched_by_ad": 571,
   "matched_by_campaign": 2,
@@ -287,7 +287,7 @@
     {
       "deal_id": "28400195",
       "created_at": "2026-07-22 19:54:00",
-      "stage": "Квалификация клиента",
+      "stage": "Отложено",
       "country": "Грузия",
       "qualified": true,
       "ad_id": "120245922691140775",
@@ -10727,7 +10727,7 @@
     {
       "deal_id": "28115689",
       "created_at": "2026-05-26 04:09:00",
-      "stage": "Квалификация клиента",
+      "stage": "Отложено",
       "country": "Великобритания",
       "qualified": true,
       "ad_id": "120245098371600775",
@@ -12887,7 +12887,7 @@
     {
       "deal_id": "28460933",
       "created_at": "2026-08-09 21:15:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Россия",
       "qualified": false,
       "ad_id": null,
@@ -13055,9 +13055,9 @@
     {
       "deal_id": "28477481",
       "created_at": "2026-08-13 16:58:00",
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Беларусь",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -13079,7 +13079,7 @@
     {
       "deal_id": "28477483",
       "created_at": "2026-08-13 16:58:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Испания",
       "qualified": null,
       "ad_id": null,
@@ -13103,7 +13103,7 @@
     {
       "deal_id": "28477447",
       "created_at": "2026-08-13 16:55:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Украина",
       "qualified": null,
       "ad_id": null,
@@ -13175,7 +13175,7 @@
     {
       "deal_id": "28477595",
       "created_at": "2026-08-13 17:09:00",
-      "stage": "Первый контакт",
+      "stage": "не отвечает",
       "country": "Чехия",
       "qualified": false,
       "ad_id": "120243662575610775",
@@ -13187,7 +13187,7 @@
     {
       "deal_id": "28477593",
       "created_at": "2026-08-13 17:09:00",
-      "stage": "Первый контакт",
+      "stage": "не отвечает",
       "country": "Австрия",
       "qualified": false,
       "ad_id": null,
@@ -13211,9 +13211,9 @@
     {
       "deal_id": "28477625",
       "created_at": "2026-08-13 17:10:00",
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Литва",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -13247,7 +13247,7 @@
     {
       "deal_id": "28477629",
       "created_at": "2026-08-13 17:10:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": null,
       "ad_id": null,
@@ -13271,7 +13271,7 @@
     {
       "deal_id": "28477627",
       "created_at": "2026-08-13 17:10:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": null,
       "ad_id": "120243662575610775",
@@ -13283,9 +13283,9 @@
     {
       "deal_id": "28477611",
       "created_at": null,
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Беларусь",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -13319,7 +13319,7 @@
     {
       "deal_id": "28477413",
       "created_at": null,
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
       "ad_id": null,
@@ -13463,7 +13463,7 @@
     {
       "deal_id": "28478557",
       "created_at": null,
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Хорватия",
       "qualified": null,
       "ad_id": null,
@@ -13499,9 +13499,9 @@
     {
       "deal_id": "28478791",
       "created_at": null,
-      "stage": "новый лид",
+      "stage": "Первый контакт",
       "country": "Италия",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,

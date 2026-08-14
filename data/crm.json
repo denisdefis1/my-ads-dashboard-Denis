@@ -1,12 +1,12 @@
 {
-  "fetched_at": "13.08.2026, 18:59",
-  "total_leads": 1120,
+  "fetched_at": "14.08.2026, 07:19",
+  "total_leads": 1127,
   "matched_by_ad": 571,
   "matched_by_campaign": 2,
-  "matched_bridge": 204,
-  "matched_fuzzy": 114,
-  "unmatched": 229,
-  "match_rate": 79.6,
+  "matched_bridge": 205,
+  "matched_fuzzy": 115,
+  "unmatched": 234,
+  "match_rate": 79.2,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13447,6 +13447,90 @@
       "adset_id": null,
       "match_type": null,
       "match_confidence": null
+    },
+    {
+      "deal_id": "28478585",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Ирландия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28478557",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Хорватия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28478765",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Испания",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28478749",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Германия",
+      "qualified": null,
+      "ad_id": "120243662366270775",
+      "campaign_id": "120243662366170775",
+      "adset_id": "120243662366300775",
+      "match_type": "bridge_phone",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28478791",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Италия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28478877",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Нидерланды",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28479305",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Германия",
+      "qualified": null,
+      "ad_id": "120243662366240775",
+      "campaign_id": "120243662366170775",
+      "adset_id": "120243662366310775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.86
     }
   ]
 }

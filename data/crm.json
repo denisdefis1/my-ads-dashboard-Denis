@@ -1,12 +1,12 @@
 {
-  "fetched_at": "16.08.2026, 01:03",
-  "total_leads": 1144,
+  "fetched_at": "16.08.2026, 06:33",
+  "total_leads": 1146,
   "matched_by_ad": 572,
   "matched_by_campaign": 2,
   "matched_bridge": 205,
   "matched_fuzzy": 117,
-  "unmatched": 248,
-  "match_rate": 78.3,
+  "unmatched": 250,
+  "match_rate": 78.2,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13729,6 +13729,30 @@
       "created_at": null,
       "stage": "новый лид",
       "country": "Испания",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28487513",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Греция",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28487705",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Эстония",
       "qualified": null,
       "ad_id": null,
       "campaign_id": null,

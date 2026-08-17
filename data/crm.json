@@ -1,12 +1,12 @@
 {
-  "fetched_at": "17.08.2026, 15:59",
-  "total_leads": 1157,
+  "fetched_at": "17.08.2026, 18:33",
+  "total_leads": 1160,
   "matched_by_ad": 572,
   "matched_by_campaign": 3,
   "matched_bridge": 205,
   "matched_fuzzy": 119,
-  "unmatched": 258,
-  "match_rate": 77.7,
+  "unmatched": 261,
+  "match_rate": 77.5,
   "leads": [
     {
       "deal_id": "28416153",
@@ -3047,7 +3047,7 @@
     {
       "deal_id": "28364103",
       "created_at": "2026-07-11 18:54:00",
-      "stage": "Отправлено предложение",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Грузия",
       "qualified": true,
       "ad_id": "120245922691130775",
@@ -10643,7 +10643,7 @@
     {
       "deal_id": "28108727",
       "created_at": "2026-05-24 13:51:00",
-      "stage": "Отправлено предложение",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "",
       "qualified": true,
       "ad_id": null,
@@ -12707,7 +12707,7 @@
     {
       "deal_id": "28441137",
       "created_at": "2026-08-04 00:24:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": false,
       "ad_id": null,
@@ -13499,7 +13499,7 @@
     {
       "deal_id": "28478791",
       "created_at": null,
-      "stage": "Первый контакт",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Италия",
       "qualified": false,
       "ad_id": null,
@@ -13787,9 +13787,9 @@
     {
       "deal_id": "28490267",
       "created_at": null,
-      "stage": "Первый контакт",
+      "stage": "Отправлено предложение",
       "country": "Италия",
-      "qualified": false,
+      "qualified": true,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -13891,6 +13891,42 @@
       "adset_id": "120249836745510776",
       "match_type": "campaign",
       "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28495253",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Италия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28495233",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Исландия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28495361",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Болгария",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     }
   ]
 }

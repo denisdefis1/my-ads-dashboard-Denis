@@ -121,6 +121,39 @@
   .badge { font-size: 10px; padding: 2px 7px; border-radius: 6px; background: #3a3220; color: var(--yellow); }
   .badge.qual { background: #1f3a2c; color: var(--green); }
 
+  .tree { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .tree-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    border-bottom: 1px solid var(--border); cursor: pointer; background: var(--card);
+    font-size: 13px; transition: background .15s;
+  }
+  .tree-row:last-child { border-bottom: none; }
+  .tree-row:hover { background: var(--card-2); }
+  .tree-row .chevron { width: 14px; color: var(--muted); transition: transform .15s; flex-shrink: 0; }
+  .tree-row.open .chevron { transform: rotate(90deg); }
+  .tree-row .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tree-row .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.ACTIVE { background: var(--green); }
+  .status-dot.other { background: var(--muted); }
+  .tree-row .metric { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .tree-row .metric b { color: var(--text); font-weight: 500; }
+  .tree-children { display: none; background: #0d101a; }
+  .tree-children.open { display: block; }
+  .tree-row.level-1 { padding-left: 40px; background: #0f1219; }
+  .tree-row.level-1:hover { background: #171b28; }
+  .creative-row-list { padding: 10px 16px 14px 64px; background: #0d101a; }
+  .creative-chip {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px 6px 6px;
+    margin: 3px 6px 3px 0; font-size: 12px; cursor: pointer; transition: border-color .15s;
+  }
+  .creative-chip:hover { border-color: var(--accent-2); }
+  .creative-chip img { width: 28px; height: 28px; object-fit: cover; border-radius: 3px; }
+  .creative-chip .no-thumb { width: 28px; height: 28px; background: var(--card-2); border-radius: 3px; }
+  .toggle-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .toggle-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+  .toggle-btn.active { background: linear-gradient(135deg, #4a3f8f, #2e2760); border-color: var(--accent); color: #fff; }
+
   .chart-card {
     background: linear-gradient(165deg, #141826 0%, #10131d 100%);
     border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 16px;
@@ -277,22 +310,17 @@
   </div>
 
   <h2 class="section-title">Рейтинг кампаний</h2>
-  <div class="section-sub">Квал-лиды и CPQL по каждой кампании</div>
-  <div class="sort-toggle" id="campaigns-sort"></div>
-  <div class="chart-card" style="padding:8px 12px;">
-    <table>
-      <thead><tr><th>Кампания</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
-      <tbody id="campaigns-body"></tbody>
-    </table>
-    <button class="show-more-btn" id="campaigns-more"></button>
-  </div>
+  <div class="section-sub" id="campaigns-sub">Раскрывай кампанию — увидишь аудитории, дальше креативы внутри каждой</div>
+  <div class="toggle-row" id="campaigns-status-toggle"></div>
+  <div class="tree" id="campaigns-tree"></div>
+  <button class="show-more-btn" id="campaigns-more"></button>
 
   <h2 class="section-title">Рейтинг аудиторий</h2>
   <div class="section-sub">По группам объявлений — квал-лиды и CPQL</div>
   <div class="sort-toggle" id="adsets-sort"></div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
-      <thead><tr><th>Аудитория</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
+      <thead><tr><th>Аудитория</th><th class="num">Расход</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">Продажи</th><th class="num">CTR</th></tr></thead>
       <tbody id="adsets-body"></tbody>
     </table>
     <button class="show-more-btn" id="adsets-more"></button>
@@ -373,7 +401,7 @@
     let REPORT = null;
     let CRM = null;
     let charts = {};
-    let campaignsSortMode = 'cpl';
+    let campaignsSortMode = 'sales';
     let campaignsExpanded = false;
     let adsetsSortMode = 'cpl';
     let adsetsExpanded = false;
@@ -381,7 +409,7 @@
     let demoExpanded = false;
     let devicesSortMode = 'cpl';
     let devicesExpanded = false;
-    let creativesSortMode = 'leads';
+    let creativesSortMode = 'qualified';
     let creativesExpanded = false;
     let countriesSortMode = 'leads';
     let countriesExpanded = false;
@@ -903,26 +931,44 @@
       return map;
     }
 
+    function crmCountByEntityAndStage(since, until, idField, stageName) {
+      const map = {};
+      if (!CRM) return map;
+      CRM.leads.forEach(l => {
+        if (!l.created_at || !l[idField]) return;
+        const d = l.created_at.slice(0, 10);
+        if (d < since || d > until) return;
+        if (l.stage !== stageName) return;
+        map[l[idField]] = (map[l[idField]] || 0) + 1;
+      });
+      return map;
+    }
+
     function buildEntityRows(entities, idField, since, until) {
       const qualMap = crmQualifiedByEntity(since, until, idField);
+      const salesMap = crmCountByEntityAndStage(since, until, idField, 'Успешно реализовано');
       return entities.map(e => {
         const t = sumDaily(filterDaily(e.daily, since, until));
         const qualified = qualMap[e.id] || 0;
+        const sales = salesMap[e.id] || 0;
         return {
           id: e.id,
           name: e.name,
           language: e.language,
+          status: e.status,
           thumbnail_url: e.thumbnail_url,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
           impressions: t.impressions, linkClicks: t.linkClicks, cpm: t.cpm, cpc: t.cpc,
           cpl: t.cpl,
           qualified,
           cpql: qualified ? Math.round(t.spend / qualified * 100) / 100 : null,
+          sales,
         };
       }).filter(r => r.spend > 0 || r.leads > 0 || r.clicks > 0);
     }
 
     const SORT_MODES = [
+      { key: 'sales', label: 'По продажам' },
       { key: 'qualified', label: 'По квалам' },
       { key: 'cpql', label: 'По CPQL' },
       { key: 'leads', label: 'По лидам' },
@@ -934,6 +980,8 @@
     function sortRows(rows, mode) {
       const arr = [...rows];
       switch (mode) {
+        case 'sales':
+          return arr.sort((a, b) => (b.sales || 0) - (a.sales || 0));
         case 'qualified':
           return arr.sort((a, b) => (b.qualified || 0) - (a.qualified || 0));
         case 'cpql': {
@@ -980,7 +1028,7 @@
       const moreBtn = document.getElementById(moreBtnId);
 
       if (!sorted.length) {
-        body.innerHTML = `<tr><td colspan="7" class="empty">Нет данных за выбранный период</td></tr>`;
+        body.innerHTML = `<tr><td colspan="8" class="empty">Нет данных за выбранный период</td></tr>`;
         moreBtn.style.display = 'none';
         return;
       }
@@ -997,6 +1045,7 @@
           <td class="num">${fmtMoney(r.cpl)}</td>
           <td class="num">${CRM ? fmtNum(r.qualified) : '—'}</td>
           <td class="num">${CRM ? fmtMoney(r.cpql) : '—'}</td>
+          <td class="num">${CRM ? fmtNum(r.sales) : '—'}</td>
           <td class="num">${fmtPct(r.ctr)}</td>
         </tr>`).join('');
 
@@ -1045,15 +1094,134 @@
         </tr>`).join('');
     }
 
+    let campaignsStatusFilter = 'all';
+    let openCampaigns = new Set();
+    let openAdsets = new Set();
+
+    function campaignRow(c) {
+      const rows = buildEntityRows([c], 'campaign_id', currentSince, currentUntil);
+      return rows[0] || { ...c, spend: 0, leads: 0, clicks: 0, ctr: 0, cpl: null, qualified: 0, cpql: null, sales: 0 };
+    }
+
     function renderCampaignsSection() {
-      const rows = buildEntityRows(campaignsForFlow(), 'campaign_id', currentSince, currentUntil);
-      renderSortToggle('campaigns-sort', campaignsSortMode, (key) => {
-        campaignsSortMode = key;
-        renderCampaignsSection();
+      const toggleEl = document.getElementById('campaigns-status-toggle');
+      toggleEl.innerHTML = `
+        <button class="toggle-btn ${campaignsStatusFilter === 'all' ? 'active' : ''}" data-f="all">Все</button>
+        <button class="toggle-btn ${campaignsStatusFilter === 'active' ? 'active' : ''}" data-f="active">Активные</button>`;
+      toggleEl.querySelectorAll('.toggle-btn').forEach(b => b.addEventListener('click', () => { campaignsStatusFilter = b.dataset.f; renderCampaignsSection(); }));
+
+      let rows = buildEntityRows(campaignsForFlow(), 'campaign_id', currentSince, currentUntil);
+      if (campaignsStatusFilter === 'active') rows = rows.filter(r => r.status === 'ACTIVE');
+      rows.sort((a, b) => b.spend - a.spend);
+
+      const visible = campaignsExpanded ? rows : rows.slice(0, 10);
+      const tree = document.getElementById('campaigns-tree');
+      const moreBtn = document.getElementById('campaigns-more');
+
+      if (!rows.length) {
+        tree.innerHTML = `<div class="empty">Нет кампаний за выбранный период</div>`;
+        moreBtn.style.display = 'none';
+        return;
+      }
+
+      tree.innerHTML = visible.map(c => {
+        const isOpen = openCampaigns.has(c.id);
+        return `
+          <div>
+            <div class="tree-row level-0 ${isOpen ? 'open' : ''}" data-campaign="${c.id}">
+              <span class="chevron">▶</span>
+              <span class="status-dot ${c.status === 'ACTIVE' ? 'ACTIVE' : 'other'}"></span>
+              <span class="lang-dot" style="background:${LANG_COLORS[c.language] || 'var(--muted)'}"></span>
+              <span class="name">${c.name}</span>
+              <span class="metric">${fmtMoney(c.spend)}</span>
+              <span class="metric"><b>${fmtNum(c.leads)}</b> лид.</span>
+              <span class="metric">${fmtMoney(c.cpl)}</span>
+              <span class="metric">${CRM ? fmtNum(c.qualified) + ' квал' : ''}</span>
+              <span class="metric">${CRM ? fmtNum(c.sales) + ' продаж' : ''}</span>
+            </div>
+            <div class="tree-children ${isOpen ? 'open' : ''}" id="children-${c.id}"></div>
+          </div>`;
+      }).join('');
+
+      tree.querySelectorAll('[data-campaign]').forEach(el => {
+        el.addEventListener('click', () => {
+          const id = el.dataset.campaign;
+          if (openCampaigns.has(id)) openCampaigns.delete(id); else openCampaigns.add(id);
+          renderCampaignsSection();
+        });
       });
-      renderRankedTable('campaigns-body', 'campaigns-more', rows, campaignsSortMode, campaignsExpanded, true, () => {
-        campaignsExpanded = !campaignsExpanded;
-        renderCampaignsSection();
+
+      visible.forEach(c => { if (openCampaigns.has(c.id)) renderAdsetsFor(c.id); });
+
+      if (rows.length > 10) {
+        moreBtn.style.display = 'block';
+        moreBtn.textContent = campaignsExpanded ? 'Свернуть' : `Показать ещё ${rows.length - 10}`;
+        moreBtn.onclick = () => { campaignsExpanded = !campaignsExpanded; renderCampaignsSection(); };
+      } else {
+        moreBtn.style.display = 'none';
+      }
+    }
+
+    function renderAdsetsFor(campaignId) {
+      const container = document.getElementById('children-' + campaignId);
+      if (!container) return;
+      const rows = buildEntityRows(REPORT.adsets.filter(a => a.campaign_id === campaignId), 'adset_id', currentSince, currentUntil)
+        .sort((a, b) => b.spend - a.spend);
+
+      if (!rows.length) {
+        container.innerHTML = `<div class="empty">Нет активности по аудиториям за период</div>`;
+        return;
+      }
+
+      container.innerHTML = rows.map(a => {
+        const isOpen = openAdsets.has(a.id);
+        return `
+          <div>
+            <div class="tree-row level-1 ${isOpen ? 'open' : ''}" data-adset="${a.id}">
+              <span class="chevron">▶</span>
+              <span class="name">${a.name}</span>
+              <span class="metric">${fmtMoney(a.spend)}</span>
+              <span class="metric"><b>${fmtNum(a.leads)}</b> лид.</span>
+              <span class="metric">${fmtMoney(a.cpl)}</span>
+              <span class="metric">${CRM ? fmtNum(a.qualified) + ' квал' : ''}</span>
+              <span class="metric">${CRM ? fmtNum(a.sales) + ' продаж' : ''}</span>
+            </div>
+            <div class="creative-row-list" id="creatives-${a.id}" style="display:${isOpen ? 'block' : 'none'}"></div>
+          </div>`;
+      }).join('');
+
+      container.querySelectorAll('[data-adset]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = el.dataset.adset;
+          if (openAdsets.has(id)) openAdsets.delete(id); else openAdsets.add(id);
+          renderAdsetsFor(campaignId);
+        });
+      });
+
+      rows.forEach(a => { if (openAdsets.has(a.id)) renderCreativesFor(a.id); });
+    }
+
+    function renderCreativesFor(adsetId) {
+      const container = document.getElementById('creatives-' + adsetId);
+      if (!container) return;
+      const rows = buildEntityRows(REPORT.creatives.filter(c => c.adset_id === adsetId), 'ad_id', currentSince, currentUntil)
+        .filter(r => r.leads > 0)
+        .sort((a, b) => b.leads - a.leads);
+
+      if (!rows.length) {
+        container.innerHTML = `<div class="empty" style="text-align:left;padding:6px 0;">Нет отработавших креативов в этой аудитории за период</div>`;
+        return;
+      }
+
+      container.innerHTML = rows.map((c, i) => `
+        <span class="creative-chip" data-idx="${i}">
+          ${c.thumbnail_url ? `<img src="${c.thumbnail_url}">` : `<span class="no-thumb"></span>`}
+          <span>${c.name} · <b>${fmtNum(c.leads)}</b> лид. · ${CRM ? fmtNum(c.qualified) + ' квал' : ''} · ${fmtMoney(c.cpl)}</span>
+        </span>`).join('');
+
+      container.querySelectorAll('.creative-chip').forEach(el => {
+        el.addEventListener('click', (e) => { e.stopPropagation(); openCreativeModal(rows[+el.dataset.idx]); });
       });
     }
 
@@ -1126,9 +1294,9 @@
     let creativesRowsCache = [];
 
     function renderCreativesSection() {
-      const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil);
+      const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil).filter(r => r.leads > 0);
       creativesRowsCache = sortRows(rows, creativesSortMode);
-      document.getElementById('creatives-sub').textContent = `${creativesRowsCache.length} объявлений за период · клик по карточке — детали`;
+      document.getElementById('creatives-sub').textContent = `${creativesRowsCache.length} отработавших объявлений (с лидами) за период · клик по карточке — детали`;
 
       renderSortToggle('creatives-sort', creativesSortMode, (key) => { creativesSortMode = key; renderCreativesSection(); });
 
@@ -1149,8 +1317,8 @@
             <div class="creative-name" title="${c.name}">${c.name}</div>
             <div class="creative-stats">
               <span class="leads">${fmtNum(c.leads)} лид.</span>
-              <span>${fmtMoney(c.cpl)}</span>
               <span>${CRM ? fmtNum(c.qualified) + ' квал' : ''}</span>
+              <span>${CRM && c.sales ? fmtNum(c.sales) + ' продаж' : ''}</span>
             </div>
           </div>
         </div>`).join('');
@@ -1186,6 +1354,7 @@
         { l: 'CPL', v: fmtMoney(c.cpl) },
         { l: 'Квал-лиды', v: CRM ? fmtNum(c.qualified) : '—' },
         { l: 'CPQL', v: CRM ? fmtMoney(c.cpql) : '—' },
+        { l: 'Продажи', v: CRM ? fmtNum(c.sales) : '—' },
       ];
       document.getElementById('modal-grid').innerHTML = stats.map(s => `
         <div class="modal-stat"><div class="l">${s.l}</div><div class="v">${s.v}</div></div>`).join('');
@@ -1252,9 +1421,21 @@
         const pct = Math.round(count / total * 1000) / 10;
         const widthPct = Math.max(2, Math.round(count / maxCount * 100));
         const dim = DIM_STAGES.has(stage);
+
+        let titleText = stage;
+        if (stage === 'Успешно реализовано') {
+          const salesLeads = rows.filter(l => l.stage === stage);
+          const lines = salesLeads.map(l => {
+            const campaign = REPORT.campaigns.find(x => x.id === l.campaign_id);
+            const creative = REPORT.creatives.find(x => x.id === l.ad_id);
+            return `${campaign ? campaign.name : 'кампания неизвестна'} — ${creative ? creative.name : 'креатив неизвестен'}`;
+          });
+          titleText = lines.length ? lines.join('\n') : 'Нет данных о привязке к кампании/креативу';
+        }
+
         return `
           <div class="stage-row">
-            <div class="stage-label ${dim ? 'dim' : ''}" title="${stage}">${stage}</div>
+            <div class="stage-label ${dim ? 'dim' : ''}" title="${titleText.replace(/"/g, '&quot;')}">${stage}</div>
             <div class="stage-bar-track">
               <div class="stage-bar-fill ${dim ? 'dim' : ''}" style="width:${widthPct}%"></div>
             </div>

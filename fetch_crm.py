@@ -33,6 +33,17 @@ LEAD_FORM_SHEETS = [
 MATCH_NAME_MIN_RATIO = 0.72
 
 
+INVISIBLE_CHARS_RE = re.compile(r'[\u200b\u200c\u200d\u200e\u200f\ufeff\xa0]')
+
+
+def clean_invisible(text):
+    """Убирает zero-width пробелы, BOM и неразрывный пробел — Google Sheets
+    иногда вставляет их незаметно для глаза, из-за чего точное сравнение строк
+    молча ломается (например, ячейка выглядит как "квал", а на самом деле
+    содержит "квал\u200b")."""
+    return INVISIBLE_CHARS_RE.sub('', text or '').strip()
+
+
 def clean_id(value):
     if not value:
         return None
@@ -106,6 +117,7 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
     sys.exit(1)
 
 leads = []
+suspicious_qual_values = set()
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
@@ -121,7 +133,9 @@ for row in rows[1:]:
     utm_content_col = row[9].strip()
     utm_id_col = row[11].strip()
     utm_term_col = row[12].strip()
-    qual_raw = row[14].strip().lower()
+    qual_raw = clean_invisible(row[14]).lower()
+    if qual_raw and 'квал' in qual_raw and qual_raw not in (QUAL_VALUE, NOT_QUAL_VALUE):
+        suspicious_qual_values.add(repr(row[14]))
 
     if qual_raw == QUAL_VALUE:
         qualified = True
@@ -312,3 +326,5 @@ with open('data/crm.json', 'w', encoding='utf-8') as f:
     json.dump(crm_data, f, ensure_ascii=False, indent=2)
 
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
+if suspicious_qual_values:
+    print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")

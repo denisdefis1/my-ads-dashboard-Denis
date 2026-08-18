@@ -68,11 +68,42 @@ def extract_ad_id_from_referer(referer):
     return clean_id(match.group(1))
 
 
+# Реально встречающиеся в CRM варианты даты/времени. Раньше поддерживался
+# только '%d.%m.%Y %H:%M:%S' — любое отклонение (без секунд, без времени
+# вообще, ISO-формат из другой локали и т.п.) молча превращало created_at
+# в None, из-за чего лид переставал попадать в любые разбивки по датам.
+CRM_DATE_FORMATS = [
+    '%d.%m.%Y %H:%M:%S',
+    '%d.%m.%Y %H:%M',
+    '%d.%m.%Y',
+    '%d.%m.%y %H:%M:%S',
+    '%d.%m.%y %H:%M',
+    '%d.%m.%y',
+    '%Y-%m-%d %H:%M:%S',
+    '%Y-%m-%dT%H:%M:%S',
+    '%Y-%m-%d %H:%M',
+    '%Y-%m-%d',
+    '%d/%m/%Y %H:%M:%S',
+    '%d/%m/%Y %H:%M',
+    '%d/%m/%Y',
+]
+
+
 def parse_crm_date(value):
-    try:
-        return datetime.strptime(value.strip(), '%d.%m.%Y %H:%M:%S')
-    except (ValueError, AttributeError):
+    value = clean_invisible(value)
+    if not value:
         return None
+    # ISO с 'Z' или смещением часового пояса — не покрывается strptime-форматами выше.
+    try:
+        return datetime.fromisoformat(value.replace('Z', '+00:00')).replace(tzinfo=None)
+    except ValueError:
+        pass
+    for fmt in CRM_DATE_FORMATS:
+        try:
+            return datetime.strptime(value, fmt)
+        except ValueError:
+            continue
+    return None
 
 
 def parse_lead_form_date(value):
@@ -116,8 +147,10 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
     print(f"Структура CRM-таблицы изменилась: ожидалось {EXPECTED_HEADER_LEN} колонок, получено {len(rows[0])}.")
     sys.exit(1)
 
-leads = []
+leads_by_deal_id = {}
 suspicious_qual_values = set()
+unparsed_date_samples = []
+duplicate_deal_ids = 0
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
@@ -126,7 +159,15 @@ for row in rows[1:]:
     if not deal_id:
         continue
 
+    if deal_id in leads_by_deal_id:
+        duplicate_deal_ids += 1
+
     created_at = parse_crm_date(row[0])
+    if created_at is None and clean_invisible(row[0]) and len(unparsed_date_samples) < 10:
+        # Лид не теряется (row[0] не участвует в фильтре ниже) — здесь только
+        # собираем сырые значения, которые не распознал ни один формат, чтобы
+        # при следующей проблеме сразу было видно, что за формат появился.
+        unparsed_date_samples.append(repr(row[0]))
     stage = row[5].strip()
     country = row[6].strip()
     referer = row[7].strip()
@@ -155,7 +196,11 @@ for row in rows[1:]:
     else:
         match_type = None
 
-    leads.append({
+    # deal_id — основной уникальный идентификатор CRM-лида. Если в выгрузке
+    # он повторяется (например, строка обновилась и Google Sheets/экспорт
+    # продублировал строку), сохраняем последнее по порядку появление, а не
+    # оба — иначе лид будет считаться дважды во всех разбивках ниже по стеку.
+    leads_by_deal_id[deal_id] = {
         "deal_id": deal_id,
         "created_at": created_at,
         "name_norm": normalize_name(row[4]),
@@ -167,7 +212,9 @@ for row in rows[1:]:
         "adset_id": adset_id,
         "match_type": match_type,
         "match_confidence": 1.0 if match_type else None,
-    })
+    }
+
+leads = list(leads_by_deal_id.values())
 
 lead_form_entries = []
 for sheet_id in LEAD_FORM_SHEETS:
@@ -309,6 +356,21 @@ for lead in leads:
     lead["created_at"] = lead["created_at"].strftime('%Y-%m-%d %H:%M:%S') if lead["created_at"] else None
     del lead["name_norm"]
 
+qualified_leads = [l for l in leads if l["qualified"] is True]
+data_quality = {
+    "total_leads": total,
+    "qualified": len(qualified_leads),
+    "not_qualified": sum(1 for l in leads if l["qualified"] is False),
+    "pending": sum(1 for l in leads if l["qualified"] is None),
+    "qualified_with_date": sum(1 for l in qualified_leads if l["created_at"]),
+    "qualified_without_date": sum(1 for l in qualified_leads if not l["created_at"]),
+    "qualified_matched": sum(1 for l in qualified_leads if l["match_type"]),
+    "qualified_unmatched": sum(1 for l in qualified_leads if not l["match_type"]),
+    "duplicate_deal_ids": duplicate_deal_ids,
+    "suspicious_qual_values": sorted(suspicious_qual_values),
+    "unparsed_date_samples": unparsed_date_samples,
+}
+
 crm_data = {
     "fetched_at": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "total_leads": total,
@@ -318,6 +380,7 @@ crm_data = {
     "matched_fuzzy": matched_fuzzy,
     "unmatched": unmatched,
     "match_rate": match_rate,
+    "data_quality": data_quality,
     "leads": leads,
 }
 
@@ -329,5 +392,14 @@ with open(crm_tmp_path, 'w', encoding='utf-8') as f:
 os.replace(crm_tmp_path, crm_path)
 
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
+print(
+    f"Квалы: {data_quality['qualified']} всего, "
+    f"{data_quality['qualified_without_date']} без даты, "
+    f"{data_quality['qualified_unmatched']} без привязки к рекламе."
+)
+if duplicate_deal_ids:
+    print(f"Обнаружены повторяющиеся deal_id: {duplicate_deal_ids} (оставлено последнее вхождение каждого).")
+if unparsed_date_samples:
+    print(f"Не распознан формат даты у {len(unparsed_date_samples)}+ строк, примеры сырых значений: {unparsed_date_samples}")
 if suspicious_qual_values:
     print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")

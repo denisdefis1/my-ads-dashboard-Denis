@@ -204,7 +204,9 @@
     border-color: var(--accent-2); transform: translateY(-3px);
     box-shadow: 0 10px 26px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,123,240,0.2);
   }
-  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
+  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; position: relative; overflow: hidden; }
+  .creative-thumb video, .creative-thumb img.thumb-media { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-badge { position: absolute; top: 6px; left: 6px; background: rgba(5,6,10,0.7); color: #fff; font-size: 10px; font-weight: 600; letter-spacing: .04em; padding: 3px 6px; border-radius: 4px; pointer-events: none; z-index: 1; }
   .creative-info { padding: 10px; }
   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
@@ -219,7 +221,8 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,123,240,0.15);
   }
   @media (max-width: 640px) { .modal-box { grid-template-columns: 1fr; } }
-  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; }
+  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .modal-img video { width: 100%; height: 100%; min-height: 260px; object-fit: cover; display: block; }
   .modal-content { padding: 24px; position: relative; }
   .modal-close { position: absolute; top: 14px; right: 14px; background: var(--card-2); border: 1px solid var(--border); color: var(--muted); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px; }
   .modal-title { font-size: 17px; margin: 0 0 4px; padding-right: 30px; }
@@ -416,6 +419,23 @@
 
     let QUAL_CORRECTIONS = {};
 
+    // Защитный дедуп на случай, если crm.json (сгенерирован старой версией
+    // fetch_crm.py или отредактирован вручную) содержит повторяющиеся
+    // deal_id — иначе один и тот же лид считался бы дважды во всех
+    // разбивках дальше по коду. deal_id — основной уникальный идентификатор.
+    function dedupeCrmLeads() {
+      const seen = new Map();
+      let duplicates = 0;
+      CRM.leads.forEach(l => {
+        if (seen.has(l.deal_id)) duplicates++;
+        seen.set(l.deal_id, l);
+      });
+      if (duplicates > 0) {
+        console.warn(`CRM: найдено ${duplicates} повторяющихся deal_id, оставлено последнее вхождение каждого.`);
+        CRM.leads = Array.from(seen.values());
+      }
+    }
+
     async function loadAll() {
       const [reportRes, crmRes, correctionsRes] = await Promise.all([
         fetch('data/report.json?t=' + Date.now()),
@@ -426,6 +446,7 @@
       REPORT = await reportRes.json();
       CRM = (crmRes && crmRes.ok) ? await crmRes.json() : null;
       QUAL_CORRECTIONS = (correctionsRes && correctionsRes.ok) ? await correctionsRes.json() : {};
+      if (CRM) dedupeCrmLeads();
 
       document.getElementById('updated').textContent = 'данные на ' + REPORT.last_updated +
         (CRM ? ' · CRM на ' + CRM.fetched_at : '');
@@ -453,6 +474,13 @@
         return;
       }
       const matched = CRM.matched_by_ad + CRM.matched_by_campaign + CRM.matched_bridge + CRM.matched_fuzzy;
+      const dq = crmDataQuality();
+      const qualDiagParts = [];
+      if (dq) {
+        if (dq.qualified_without_date > 0) qualDiagParts.push(`<b>${dq.qualified_without_date}</b> квал. без даты (не попадают в разбивку по периодам)`);
+        if (dq.qualified_unmatched > 0) qualDiagParts.push(`<b>${dq.qualified_unmatched}</b> квал. без привязки к рекламе (не попадают в кампании/аудитории/креативы)`);
+        if (dq.duplicate_deal_ids > 0) qualDiagParts.push(`<b>${dq.duplicate_deal_ids}</b> дублей deal_id (устранены)`);
+      }
       el.innerHTML = `
         <span class="quality-label">Сопоставлено с рекламой: <b>${matched} из ${CRM.total_leads}</b> CRM-лидов (${CRM.match_rate}%)</span>
         <div class="track">
@@ -460,6 +488,7 @@
           <div class="fill-unmatched" style="width:${100 - CRM.match_rate}%"></div>
         </div>
         <span class="quality-label">точно: ${CRM.matched_by_ad + CRM.matched_by_campaign} · мост: ${CRM.matched_bridge} · приближённо: ${CRM.matched_fuzzy} · не сматчено: ${CRM.unmatched}</span>
+        ${dq ? `<span class="quality-label">Квалов всего: <b>${dq.qualified}</b>${qualDiagParts.length ? ' · ' + qualDiagParts.join(' · ') : ' · все с датой и привязаны к рекламе'}</span>` : ''}
       `;
     }
 
@@ -715,8 +744,13 @@
       };
     }
 
+    // Лид без created_at физически нельзя поместить в конкретный диапазон
+    // дат — это не баг фильтра, а следствие отсутствующей даты в CRM.
+    // fetch_crm.py теперь распознаёт гораздо больше форматов дат, так что
+    // таких лидов должно остаться единицы; оставшиеся показываются отдельно
+    // через crmDataQuality(), а не молча теряются без объяснения.
     function crmLeadsInRange(since, until, flow) {
-      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0 };
+      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0, qualifiedUnmatched: 0 };
       const rows = CRM.leads.filter(l => {
         if (!l.created_at) return false;
         const d = l.created_at.slice(0, 10);
@@ -724,11 +758,40 @@
         if (flow && flow !== 'all') return campaignLangById[l.campaign_id] === flow;
         return true;
       });
+      const qualifiedRows = rows.filter(l => l.qualified === true);
       return {
         total: rows.length,
-        qualified: rows.filter(l => l.qualified === true).length,
+        qualified: qualifiedRows.length,
         notQualified: rows.filter(l => l.qualified === false).length,
         pending: rows.filter(l => l.qualified === null).length,
+        // Квалы, которые входят в общий счётчик выше, но не привязаны ни к
+        // одной кампании/аудитории/креативу — поэтому не появятся в разбивках.
+        qualifiedUnmatched: qualifiedRows.filter(l => !l.campaign_id && !l.adset_id && !l.ad_id).length,
+      };
+    }
+
+    // Единый снимок качества CRM-данных для панели диагностики. Не зависит
+    // от выбранного периода — показывает состояние всего data/crm.json.
+    function crmDataQuality() {
+      if (!CRM) return null;
+      if (CRM.data_quality) return CRM.data_quality;
+      // Фолбэк для crm.json, сгенерированного до добавления data_quality
+      // в fetch_crm.py — считаем то же самое на клиенте, чтобы панель не
+      // ломалась на старых данных.
+      const qualified = CRM.leads.filter(l => l.qualified === true);
+      const seen = new Set();
+      let duplicates = 0;
+      CRM.leads.forEach(l => { if (seen.has(l.deal_id)) duplicates++; seen.add(l.deal_id); });
+      return {
+        total_leads: CRM.leads.length,
+        qualified: qualified.length,
+        not_qualified: CRM.leads.filter(l => l.qualified === false).length,
+        pending: CRM.leads.filter(l => l.qualified === null).length,
+        qualified_with_date: qualified.filter(l => l.created_at).length,
+        qualified_without_date: qualified.filter(l => !l.created_at).length,
+        qualified_matched: qualified.filter(l => l.campaign_id || l.adset_id || l.ad_id).length,
+        qualified_unmatched: qualified.filter(l => !l.campaign_id && !l.adset_id && !l.ad_id).length,
+        duplicate_deal_ids: duplicates,
       };
     }
 
@@ -868,8 +931,11 @@
 
       const qualRateBelowTarget = qualRate !== null && qualRate < p.target_qual_rate;
       const qualRatePct = qualRate !== null ? Math.min(100, (qualRate / p.target_qual_rate) * 100) : 0;
+      const unmatchedNote = crmStats.qualifiedUnmatched > 0
+        ? ` · <span title="Квалы за период, которые не удалось привязать ни к одной кампании/аудитории/креативу — они учтены здесь, но не появятся в разбивках ниже">из них ${crmStats.qualifiedUnmatched} без привязки к рекламе</span>`
+        : '';
       const qualNote = CRM
-        ? (adjustment ? `<span style="color:var(--accent-2)" title="${adjustment.note}">✓ +${adjustment.amount} вручную сверено</span> · ` : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
+        ? (adjustment ? `<span style="color:var(--accent-2)" title="${adjustment.note}">✓ +${adjustment.amount} вручную сверено</span> · ` : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '') + unmatchedNote
         : 'CRM не подключена';
 
       const cards = [
@@ -957,6 +1023,9 @@
           language: e.language,
           status: e.status,
           thumbnail_url: e.thumbnail_url,
+          is_video: e.is_video,
+          video_url: e.video_url,
+          video_permalink_url: e.video_permalink_url,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
           impressions: t.impressions, linkClicks: t.linkClicks, cpm: t.cpm, cpc: t.cpc,
           cpl: t.cpl,
@@ -1293,6 +1362,24 @@
 
     let creativesRowsCache = [];
 
+    // Единая логика превью для карточки и модалки: если объявление VIDEO и
+    // Meta реально отдала playable source — <video muted controls>, poster
+    // = thumbnail. Если video-объявление, но source недоступен (нужны доп.
+    // права), показываем thumbnail с бейджем VIDEO — честно, без фиктивных
+    // URL. Если объявление не video — как раньше, просто thumbnail.
+    function creativeThumbMediaHtml(c, emptyLabel) {
+      const empty = c.thumbnail_url ? '' : (emptyLabel || `<span class="no-thumb"></span>`);
+      if (c.is_video && c.video_url) {
+        return `<video muted controls playsinline preload="metadata" ${c.thumbnail_url ? `poster="${c.thumbnail_url}"` : ''}>
+          <source src="${c.video_url}" type="video/mp4">
+        </video><span class="video-badge">VIDEO</span>`;
+      }
+      if (c.is_video) {
+        return (c.thumbnail_url ? `<img class="thumb-media" src="${c.thumbnail_url}">` : empty) + `<span class="video-badge">VIDEO</span>`;
+      }
+      return c.thumbnail_url ? `<img class="thumb-media" src="${c.thumbnail_url}">` : empty;
+    }
+
     function renderCreativesSection() {
       const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil).filter(r => r.leads > 0);
       creativesRowsCache = sortRows(rows, creativesSortMode);
@@ -1312,7 +1399,7 @@
 
       grid.innerHTML = visible.map((c, i) => `
         <div class="creative-card" data-idx="${i}">
-          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+          <div class="creative-thumb">${creativeThumbMediaHtml(c, 'нет превью')}</div>
           <div class="creative-info">
             <div class="creative-name" title="${c.name}">${c.name}</div>
             <div class="creative-stats">
@@ -1340,7 +1427,7 @@
       const campaign = REPORT.campaigns.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.campaign_id);
       const adset = REPORT.adsets.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.adset_id);
 
-      document.getElementById('modal-img').style.backgroundImage = c.thumbnail_url ? `url('${c.thumbnail_url}')` : '';
+      document.getElementById('modal-img').innerHTML = creativeThumbMediaHtml(c);
       document.getElementById('modal-title').textContent = c.name;
       document.getElementById('modal-sub').textContent = `Кампания: ${campaign ? campaign.name : '—'} · Аудитория: ${adset ? adset.name : '—'}`;
 

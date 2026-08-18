@@ -255,6 +255,35 @@ def safe_api_get(path, params, level, description, failed_sections, default):
         return default
 
 
+def fetch_video_sources(video_ids, failed_sections):
+    """Playable video source не всегда доступен через тот же токен, которым
+    читаются метрики/креативы (может требовать дополнительных прав на
+    видео/страницу). Если запрос упадёт — тихо возвращаем {}, и в интерфейсе
+    останется fallback на thumbnail + бейдж VIDEO, как и было раньше; ничего
+    в остальном pipeline не ломается."""
+    if not video_ids:
+        return {}
+    url = f"https://graph.facebook.com/{API_VERSION}/"
+    params = {'ids': ','.join(video_ids), 'fields': 'source,permalink_url', 'access_token': ACCESS_TOKEN}
+    try:
+        payload = _request_with_retry(url, params, 'videos(ids)', 'video_source')
+    except MetaAPIError as e:
+        print(f"[meta-api-section-failed] section=video_source endpoint=videos(ids) code={e.code} subcode={e.error_subcode}: {e}")
+        failed_sections.append({
+            "section": "video_source",
+            "endpoint": "videos(ids)",
+            "http_status": e.status_code,
+            "code": e.code,
+            "error_subcode": e.error_subcode,
+            "is_transient": e.is_transient,
+            "message": str(e),
+        })
+        return {}
+    if not isinstance(payload, dict) or 'error' in payload:
+        return {}
+    return payload
+
+
 def count_leads(actions):
     total = 0
     for action in actions or []:
@@ -370,12 +399,28 @@ ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
 creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name', parent_fields=['adset_id', 'campaign_id'])
 
 ads_meta_raw = safe_api_get(f"{ACCOUNT_ID}/ads", {
-    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url}',
+    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url,object_type,video_id}',
     'limit': 25,
 }, 'ads_meta', 'ads_meta', failed_sections, [])
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
+object_type_by_ad_id = {a['id']: a.get('creative', {}).get('object_type') for a in ads_meta_raw}
+video_id_by_ad_id = {a['id']: a.get('creative', {}).get('video_id') for a in ads_meta_raw}
+
+video_ids = sorted({vid for vid in video_id_by_ad_id.values() if vid})
+video_sources = fetch_video_sources(video_ids, failed_sections)
+
 for c in creatives:
     c["thumbnail_url"] = thumb_by_ad_id.get(c["id"])
+    object_type = object_type_by_ad_id.get(c["id"])
+    video_id = video_id_by_ad_id.get(c["id"])
+    is_video = object_type == 'VIDEO' or bool(video_id)
+    c["is_video"] = is_video
+    video_source = video_sources.get(video_id) if video_id else None
+    # Не подставляем фиктивные URL: video_url есть только если Meta реально
+    # отдала playable source для этого video_id, иначе остаётся None и
+    # интерфейс показывает thumbnail с индикатором VIDEO.
+    c["video_url"] = (video_source or {}).get('source') if video_source else None
+    c["video_permalink_url"] = (video_source or {}).get('permalink_url') if video_source else None
 
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,

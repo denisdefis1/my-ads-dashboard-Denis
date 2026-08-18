@@ -23,18 +23,31 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run fetch scripts
+      - name: Fetch Meta Ads report
+        id: fetch_report
+        continue-on-error: true
         env:
           FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
           FACEBOOK_ACT_ID: ${{ secrets.FACEBOOK_ACT_ID }}
-        run: |
-          python fetch_report.py
-          python fetch_crm.py
+        run: python fetch_report.py
+
+      - name: Fetch CRM data
+        id: fetch_crm
+        continue-on-error: true
+        run: python fetch_crm.py
 
       - name: Commit updated data
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/report.json data/crm.json
           git diff --quiet --cached || git commit -m "auto: update report $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
+
+      - name: Fail job if any fetch step failed
+        if: steps.fetch_report.outcome == 'failure' || steps.fetch_crm.outcome == 'failure'
+        run: |
+          echo "fetch_report outcome: ${{ steps.fetch_report.outcome }}"
+          echo "fetch_crm outcome: ${{ steps.fetch_crm.outcome }}"
+          exit 1

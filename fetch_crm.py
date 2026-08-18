@@ -322,8 +322,11 @@ crm_data = {
 }
 
 os.makedirs('data', exist_ok=True)
-with open('data/crm.json', 'w', encoding='utf-8') as f:
+crm_path = os.path.join('data', 'crm.json')
+crm_tmp_path = crm_path + '.tmp'
+with open(crm_tmp_path, 'w', encoding='utf-8') as f:
     json.dump(crm_data, f, ensure_ascii=False, indent=2)
+os.replace(crm_tmp_path, crm_path)
 
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
 if suspicious_qual_values:

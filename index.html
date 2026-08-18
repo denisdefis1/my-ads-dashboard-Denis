@@ -773,7 +773,7 @@
 
       let pacing = null;
       if (presetKey === 'month') {
-        const daysElapsed = accDaily.length;
+        const daysElapsed = Math.round((new Date(until + 'T00:00:00') - new Date(since + 'T00:00:00')) / 86400000) + 1;
         const monthDate = new Date(until + 'T00:00:00');
         const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
         if (daysElapsed > 0) {

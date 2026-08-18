@@ -1,12 +1,12 @@
 {
-  "fetched_at": "18.08.2026, 00:56",
-  "total_leads": 1161,
+  "fetched_at": "18.08.2026, 06:38",
+  "total_leads": 1162,
   "matched_by_ad": 572,
   "matched_by_campaign": 3,
-  "matched_bridge": 205,
+  "matched_bridge": 206,
   "matched_fuzzy": 119,
   "unmatched": 262,
-  "match_rate": 77.4,
+  "match_rate": 77.5,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13939,6 +13939,18 @@
       "adset_id": null,
       "match_type": null,
       "match_confidence": null
+    },
+    {
+      "deal_id": "28496005",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120240931220980775",
+      "campaign_id": "120240931220970775",
+      "adset_id": "120240931220960775",
+      "match_type": "bridge_phone",
+      "match_confidence": 1.0
     }
   ]
 }

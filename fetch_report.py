@@ -107,7 +107,7 @@ def parse_language(name):
             return 'EN'
         if upper in ('RU', 'RUS', 'RUSSIAN'):
             return 'RU'
-    return 'RU'
+    return 'unknown'
 
 
 def day_metrics(raw):
@@ -169,12 +169,20 @@ campaigns_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'limit': 500,
 }, start_date, end_date)
 campaigns = dedup_by_entity_date(campaigns_raw, 'campaign_id', 'campaign_name')
+
+campaigns_meta_raw = api_get(f"{ACCOUNT_ID}/campaigns", {
+    'fields': 'id,effective_status',
+    'limit': 500,
+})
+status_by_campaign_id = {c['id']: c.get('effective_status') for c in campaigns_meta_raw}
+
 for c in campaigns:
     c["language"] = parse_language(c["name"])
+    c["status"] = status_by_campaign_id.get(c["id"], 'UNKNOWN')
 
-print("Язык по кампаниям:")
+print("Язык и статус по кампаниям:")
 for c in campaigns:
-    print(f"  [{c['language']}] {c['name']}")
+    print(f"  [{c['language']}] [{c['status']}] {c['name']}")
 
 adsets_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,

@@ -1,0 +1,189 @@
+name: Diagnose CRM Qualified Leads
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download and analyze CRM Google Sheet
+        run: |
+          python3 <<'PY'
+          import csv
+          import io
+          import requests
+          from collections import Counter
+          from datetime import datetime
+
+          CSV_URL = "https://docs.google.com/spreadsheets/d/1gcHoNF5FMpnhwYyi0sOEr-ZSD6NQ3LZ2Xz5aYkPBlq4/export?format=csv&gid=0"
+
+          START = datetime(2026, 5, 25)
+          END = datetime(2026, 6, 21, 23, 59, 59)
+
+          print("=" * 80)
+          print("CRM QUALIFIED DIAGNOSTIC")
+          print("=" * 80)
+
+          print("\nDownloading Google Sheet...")
+
+          response = requests.get(CSV_URL, timeout=60)
+          response.raise_for_status()
+          response.encoding = "utf-8"
+
+          rows = list(csv.reader(io.StringIO(response.text)))
+
+          print(f"Total CSV rows: {len(rows)}")
+
+          if not rows:
+              raise RuntimeError("Google Sheet returned no rows")
+
+          header = rows[0]
+
+          print("\nHEADER:")
+          for i, value in enumerate(header):
+              print(f"  [{i}] {value!r}")
+
+          print(f"\nHeader length: {len(header)}")
+
+          if len(header) > 14:
+              print(f"Column [14] header: {header[14]!r}")
+          else:
+              print("ERROR: Column [14] does not exist")
+
+          print("\n" + "=" * 80)
+          print("VALUES IN COLUMN 14 FOR 25.05.2026 - 21.06.2026")
+          print("=" * 80)
+
+          period_rows = []
+          raw_counter = Counter()
+
+          for row_number, row in enumerate(rows[1:], start=2):
+
+              if len(row) < 16:
+                  continue
+
+              raw_date = row[0].strip()
+
+              created = None
+
+              date_formats = [
+                  "%d.%m.%Y %H:%M:%S",
+                  "%d.%m.%Y %H:%M",
+                  "%Y-%m-%d %H:%M:%S",
+                  "%Y-%m-%d %H:%M",
+              ]
+
+              for fmt in date_formats:
+                  try:
+                      created = datetime.strptime(raw_date, fmt)
+                      break
+                  except ValueError:
+                      pass
+
+              if created is None:
+                  continue
+
+              if not (START <= created <= END):
+                  continue
+
+              raw = row[14]
+
+              raw_counter[raw] += 1
+
+              period_rows.append({
+                  "row": row_number,
+                  "deal_id": row[1].strip(),
+                  "created_at": raw_date,
+                  "raw": raw,
+                  "repr": repr(raw),
+                  "len": len(raw),
+                  "codepoints": [f"U+{ord(c):04X}" for c in raw],
+              })
+
+          print(f"\nRows in requested period: {len(period_rows)}")
+
+          print("\nRAW VALUE DISTRIBUTION:")
+          for value, count in raw_counter.most_common():
+              print(f"\nCOUNT: {count}")
+              print(f"VALUE: {value!r}")
+              print(f"LEN: {len(value)}")
+              print(
+                  "CODEPOINTS:",
+                  [f"U+{ord(c):04X}" for c in value]
+              )
+
+          print("\n" + "=" * 80)
+          print("QUALIFIED-LIKE VALUES")
+          print("=" * 80)
+
+          qualified_like = []
+
+          for item in period_rows:
+              raw_lower = item["raw"].strip().lower()
+
+              if "квал" in raw_lower:
+                  qualified_like.append(item)
+
+          print(f"\nValues containing 'квал': {len(qualified_like)}")
+
+          for item in qualified_like:
+              print(
+                  f"row={item['row']} "
+                  f"deal_id={item['deal_id']} "
+                  f"created_at={item['created_at']} "
+                  f"raw={item['raw']!r} "
+                  f"repr={item['repr']} "
+                  f"codepoints={item['codepoints']}"
+              )
+
+          print("\n" + "=" * 80)
+          print("CLASSIFICATION TEST")
+          print("=" * 80)
+
+          exact_qual = 0
+          exact_not_qual = 0
+          other = 0
+          empty = 0
+
+          for item in period_rows:
+
+              raw = item["raw"]
+              cleaned = raw.replace("\xa0", " ").strip().lower()
+
+              if cleaned == "квал":
+                  exact_qual += 1
+              elif cleaned == "не квал":
+                  exact_not_qual += 1
+              elif cleaned == "":
+                  empty += 1
+              else:
+                  other += 1
+
+          print(f"\nExact 'квал':       {exact_qual}")
+          print(f"Exact 'не квал':    {exact_not_qual}")
+          print(f"Empty:              {empty}")
+          print(f"Other/unrecognized: {other}")
+          print(f"TOTAL:              {len(period_rows)}")
+
+          print("\n" + "=" * 80)
+          print("IMPORTANT")
+          print("=" * 80)
+
+          print("""
+          Expected qualified count for this period:
+          146
+
+          Current fetch_crm.py automatically detects:
+          25
+
+          This diagnostic is intended to determine exactly
+          what values exist in Google Sheets column [14].
+          """)
+
+          print("\nDiagnostic completed successfully.")
+          PY

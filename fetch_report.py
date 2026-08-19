@@ -255,6 +255,41 @@ def safe_api_get(path, params, level, description, failed_sections, default):
         return default
 
 
+def fetch_video_sources(video_ids, failed_sections):
+    """Ссылка на сам видеофайл не приходит вместе с креативом объявления —
+    только id видео-объекта (video_id). Чтобы получить реальный playable-URL
+    (source) для проигрывания в браузере, нужен отдельный запрос к самому
+    видео-объекту. Раньше это вообще не запрашивалось, поэтому дашборд умел
+    показывать только статичное превью — ни для фото, ни для видео разницы не
+    было. Используем групповой endpoint ?ids=... , чтобы не делать по
+    отдельному запросу на каждое видео."""
+    if not video_ids:
+        return {}
+    result = {}
+    ids_list = sorted(video_ids)
+    batch_size = 50
+    for i in range(0, len(ids_list), batch_size):
+        chunk = ids_list[i:i + batch_size]
+        params = {'ids': ','.join(chunk), 'fields': 'source', 'access_token': ACCESS_TOKEN}
+        try:
+            payload = _request_with_retry(f"https://graph.facebook.com/{API_VERSION}/", params, 'videos', 'videos')
+        except MetaAPIError as e:
+            print(f"[meta-api-section-failed] section=videos code={e.code} subcode={e.error_subcode}: {e}")
+            failed_sections.append({
+                "section": "videos", "endpoint": "/", "http_status": e.status_code,
+                "code": e.code, "error_subcode": e.error_subcode,
+                "is_transient": e.is_transient, "message": str(e),
+            })
+            continue
+        if not isinstance(payload, dict):
+            continue
+        for vid, obj in payload.items():
+            source = obj.get('source') if isinstance(obj, dict) else None
+            if source:
+                result[vid] = source
+    return result
+
+
 def count_leads(actions):
     total = 0
     for action in actions or []:
@@ -370,12 +405,42 @@ ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
 creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name', parent_fields=['adset_id', 'campaign_id'])
 
 ads_meta_raw = safe_api_get(f"{ACCOUNT_ID}/ads", {
-    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url}',
+    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url,object_story_spec,asset_feed_spec}',
     'limit': 25,
 }, 'ads_meta', 'ads_meta', failed_sections, [])
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
+
+
+def extract_video_id(creative):
+    """У видео-объявлений сама ссылка на файл не приходит вместе с
+    креативом — только id видео-объекта, отдельно резолвим ниже. Видео может
+    быть задано двумя способами: обычный object_story_spec.video_data (одно
+    видео на объявление) или asset_feed_spec.videos (Advantage+/динамический
+    креатив, берём первое видео как представительное)."""
+    story = (creative or {}).get('object_story_spec') or {}
+    video_id = ((story.get('video_data') or {}).get('video_id'))
+    if video_id:
+        return video_id
+    feed = (creative or {}).get('asset_feed_spec') or {}
+    videos = feed.get('videos') or []
+    if videos:
+        return videos[0].get('video_id')
+    return None
+
+
+video_id_by_ad_id = {}
+for a in ads_meta_raw:
+    vid = extract_video_id(a.get('creative'))
+    if vid:
+        video_id_by_ad_id[a['id']] = vid
+
+video_url_by_id = fetch_video_sources(set(video_id_by_ad_id.values()), failed_sections)
+
 for c in creatives:
     c["thumbnail_url"] = thumb_by_ad_id.get(c["id"])
+    video_id = video_id_by_ad_id.get(c["id"])
+    c["is_video"] = bool(video_id)
+    c["video_url"] = video_url_by_id.get(video_id) if video_id else None
 
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,

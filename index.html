@@ -204,8 +204,16 @@
     border-color: var(--accent-2); transform: translateY(-3px);
     box-shadow: 0 10px 26px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,123,240,0.2);
   }
+  .creative-thumb-wrap { position: relative; }
   .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; padding: 8px; }
   .creative-thumb.thumb-broken { color: var(--red); }
+  .video-badge {
+    position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(5,6,10,0.65); border: 1px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center; pointer-events: none;
+  }
+  .video-badge::after { content: ''; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent #fff; margin-left: 2px; }
+  .modal-video { width: 100%; height: 100%; min-height: 260px; display: block; background: #000; }
   .creative-info { padding: 10px; }
   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
@@ -418,6 +426,35 @@
 
     let QUAL_CORRECTIONS = {};
 
+    // В CRM-таблице у части сделок в столбце Referer есть utm_content (даёт
+    // ad_id), но нет отдельного utm_id/utm_term (дают campaign_id/adset_id) —
+    // это нормально, не все ссылки одинаково размечены. Из-за этого такие
+    // лиды (включая квал-лиды) были видны на уровне конкретного креатива
+    // (там matching идёт по ad_id), но пропадали из разбивки по кампаниям,
+    // по аудиториям и из фильтра "поток ENG/RU" (там matching шёл строго по
+    // campaign_id/adset_id, а он пустой). При этом у нас уже есть полная
+    // иерархия ad_id → adset_id/campaign_id из отчёта Meta (REPORT.creatives)
+    // — используем её, чтобы дозаполнить недостающие campaign_id/adset_id у
+    // CRM-лидов, у которых есть ad_id. Проверено на реальных данных: это
+    // возвращает кампании/аудитории и потоку ENG/RU 26 из 27 ранее невидимых
+    // квал-лидов.
+    function backfillCrmLeadParents() {
+      if (!CRM || !REPORT) return;
+      const parentsByAd = {};
+      REPORT.creatives.forEach(c => {
+        parentsByAd[c.id] = { adset_id: c.adset_id, campaign_id: c.campaign_id };
+      });
+      let filled = 0;
+      CRM.leads.forEach(l => {
+        if (!l.ad_id) return;
+        const parents = parentsByAd[l.ad_id];
+        if (!parents) return;
+        if (!l.campaign_id && parents.campaign_id) { l.campaign_id = parents.campaign_id; filled++; }
+        if (!l.adset_id && parents.adset_id) { l.adset_id = parents.adset_id; }
+      });
+      if (filled) console.log(`[backfillCrmLeadParents] дозаполнено campaign_id у ${filled} CRM-лидов по их ad_id`);
+    }
+
     async function loadAll() {
       const [reportRes, crmRes, correctionsRes] = await Promise.all([
         fetch('data/report.json?t=' + Date.now()),
@@ -428,6 +465,8 @@
       REPORT = await reportRes.json();
       CRM = (crmRes && crmRes.ok) ? await crmRes.json() : null;
       QUAL_CORRECTIONS = (correctionsRes && correctionsRes.ok) ? await correctionsRes.json() : {};
+
+      backfillCrmLeadParents();
 
       document.getElementById('updated').textContent = 'данные на ' + REPORT.last_updated +
         (CRM ? ' · CRM на ' + CRM.fetched_at : '');
@@ -988,6 +1027,8 @@
           language: e.language,
           status: e.status,
           thumbnail_url: e.thumbnail_url,
+          is_video: e.is_video,
+          video_url: e.video_url,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
           impressions: t.impressions, linkClicks: t.linkClicks, cpm: t.cpm, cpc: t.cpc,
           cpl: t.cpl,
@@ -1248,7 +1289,7 @@
       container.innerHTML = rows.map((c, i) => `
         <span class="creative-chip" data-idx="${i}">
           ${c.thumbnail_url ? `<img src="${c.thumbnail_url}" onerror="this.outerHTML='&lt;span class=&quot;no-thumb&quot; title=&quot;превью не загрузилось&quot;&gt;&lt;/span&gt;'">` : `<span class="no-thumb"></span>`}
-          <span>${c.name} · <b>${fmtNum(c.leads)}</b> лид. · ${CRM ? fmtNum(c.qualified) + ' квал' : ''} · ${fmtMoney(c.cpl)}</span>
+          <span>${c.is_video ? '▶ ' : ''}${c.name} · <b>${fmtNum(c.leads)}</b> лид. · ${CRM ? fmtNum(c.qualified) + ' квал' : ''} · ${fmtMoney(c.cpl)}</span>
         </span>`).join('');
 
       container.querySelectorAll('.creative-chip').forEach(el => {
@@ -1348,6 +1389,32 @@
       img.src = url;
     }
 
+    // Раньше в модалке всегда стояла статичная картинка-превью — даже для
+    // видео-креативов, реальный ролик было негде взять (fetch_report.py его
+    // просто не запрашивал). Теперь для роликов, у которых удалось получить
+    // ссылку на файл (c.video_url), показываем настоящий <video controls> —
+    // с постером-превью, чтобы не было чёрного экрана до нажатия play. Если
+    // это видео-креатив, но ссылку получить не удалось (например, не хватило
+    // прав токена на конкретное видео) — честно пишем об этом, а не
+    // притворяемся, что креатив фото.
+    function renderModalMedia(c) {
+      const el = document.getElementById('modal-img');
+      el.removeAttribute('title');
+      if (c.is_video && c.video_url) {
+        el.innerHTML = `<video class="modal-video" controls preload="metadata" ${c.thumbnail_url ? `poster="${c.thumbnail_url}"` : ''}>
+          <source src="${c.video_url}" type="video/mp4">
+        </video>`;
+        el.classList.remove('thumb-broken');
+        el.style.backgroundImage = '';
+        return;
+      }
+      el.innerHTML = '';
+      setThumb(el, c.thumbnail_url);
+      if (c.is_video && !c.video_url) {
+        el.title = 'Это видео-креатив, но ссылку на сам файл получить не удалось (не хватает прав доступа у токена или видео удалено в Meta) — показан только постер';
+      }
+    }
+
     function renderCreativesSection() {
       const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil).filter(r => r.leads > 0);
       creativesRowsCache = sortRows(rows, creativesSortMode);
@@ -1367,7 +1434,10 @@
 
       grid.innerHTML = visible.map((c, i) => `
         <div class="creative-card" data-idx="${i}">
-          <div class="creative-thumb" data-thumb="${c.thumbnail_url || ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+          <div class="creative-thumb-wrap">
+            <div class="creative-thumb" data-thumb="${c.thumbnail_url || ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+            ${c.is_video ? '<span class="video-badge" title="Видео-креатив — открой карточку, чтобы проиграть"></span>' : ''}
+          </div>
           <div class="creative-info">
             <div class="creative-name" title="${c.name}">${c.name}</div>
             <div class="creative-stats">
@@ -1396,7 +1466,7 @@
       const campaign = REPORT.campaigns.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.campaign_id);
       const adset = REPORT.adsets.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.adset_id);
 
-      setThumb(document.getElementById('modal-img'), c.thumbnail_url);
+      renderModalMedia(c);
       document.getElementById('modal-title').textContent = c.name;
       document.getElementById('modal-sub').textContent = `Кампания: ${campaign ? campaign.name : '—'} · Аудитория: ${adset ? adset.name : '—'}`;
 

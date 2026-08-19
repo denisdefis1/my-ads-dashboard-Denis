@@ -1,0 +1,154 @@
+diff --git a/fetch_crm.py b/fetch_crm.py
+index 3cc2c86..259dd42 100644
+--- a/fetch_crm.py
++++ b/fetch_crm.py
+@@ -133,14 +133,31 @@ for row in rows[1:]:
+     utm_content_col = row[9].strip()
+     utm_id_col = row[11].strip()
+     utm_term_col = row[12].strip()
+-    qual_raw = clean_invisible(row[14]).lower()
+-    if qual_raw and 'квал' in qual_raw and qual_raw not in (QUAL_VALUE, NOT_QUAL_VALUE):
++    # Раньше статус ставился только при точном совпадении со строкой "квал"/
++    # "не квал" — любая другая формулировка в этой колонке (пробел, точка,
++    # пометка в скобках, лишнее слово и т.п.) молча уходила в "неизвестно" и не
++    # попадала в подсчёт квал-лидов. Это и было причиной заниженного счётчика
++    # на дашборде: диагностика (.github/workflows/diagnose-crm.yml) на реальных
++    # данных нашла 146 фактических квалов против 25 распознанных точным
++    # сравнением. Теперь распознаём по вхождению "квал" в ячейке (со снятыми
++    # невидимыми символами и обрезанной пунктуацией по краям), а "не квал"/
++    # "нет квал" и т.п. по-прежнему считаем отрицательным статусом.
++    qual_raw = clean_invisible(row[14]).lower().strip(' .,!?:;-–—')
++
++    if qual_raw and qual_raw not in (QUAL_VALUE, NOT_QUAL_VALUE):
++        # Любое нестандартное непустое значение в колонке "Квал" — логируем,
++        # чтобы видеть в выводе экшена, какие ещё формулировки использует
++        # отдел продаж, и при необходимости расширять классификатор дальше.
+         suspicious_qual_values.add(repr(row[14]))
+ 
+-    if qual_raw == QUAL_VALUE:
+-        qualified = True
+-    elif qual_raw == NOT_QUAL_VALUE:
++    if not qual_raw:
++        qualified = None  # пустая ячейка — сделка ещё не размечена, это не баг
++    elif qual_raw in (QUAL_VALUE, NOT_QUAL_VALUE):
++        qualified = qual_raw == QUAL_VALUE
++    elif re.search(r'^(не|нет)\b.*квал', qual_raw) or re.search(r'\bне\s*квал', qual_raw):
+         qualified = False
++    elif 'квал' in qual_raw:
++        qualified = True
+     else:
+         qualified = None
+ 
+@@ -330,4 +347,4 @@ os.replace(crm_tmp_path, crm_path)
+ 
+ print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
+ if suspicious_qual_values:
+-    print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")
++    print(f"Нестандартные значения в колонке 'Квал' (не пустые и не равны точно 'квал'/'не квал', классифицированы по вхождению 'квал'/'не квал'): {sorted(suspicious_qual_values)}")
+diff --git a/index.html b/index.html
+index eb499fc..a3309b1 100644
+--- a/index.html
++++ b/index.html
+@@ -204,7 +204,8 @@
+     border-color: var(--accent-2); transform: translateY(-3px);
+     box-shadow: 0 10px 26px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,123,240,0.2);
+   }
+-  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
++  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; padding: 8px; }
++  .creative-thumb.thumb-broken { color: var(--red); }
+   .creative-info { padding: 10px; }
+   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
+@@ -219,7 +220,8 @@
+     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,123,240,0.15);
+   }
+   @media (max-width: 640px) { .modal-box { grid-template-columns: 1fr; } }
+-  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; }
++  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; padding: 8px; }
++  .modal-img.thumb-broken { color: var(--red); }
+   .modal-content { padding: 24px; position: relative; }
+   .modal-close { position: absolute; top: 14px; right: 14px; background: var(--card-2); border: 1px solid var(--border); color: var(--muted); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+   .modal-title { font-size: 17px; margin: 0 0 4px; padding-right: 30px; }
+@@ -442,8 +444,14 @@
+     }
+ 
+     function getQualAdjustment(presetKey) {
+-      if (!QUAL_CORRECTIONS.total_adjustment) return null;
+-      return presetKey === 'all' ? QUAL_CORRECTIONS.total_adjustment : null;
++      // Раньше здесь подмешивалась фиксированная ручная поправка (+159) к числу
++      // квал-лидов, но только когда период = "Всё время" и поток = "Все" — то
++      // есть почти никогда, и по устаревшему на момент правки числу. Реальная
++      // причина заниженного счётчика — в классификаторе fetch_crm.py (см. там),
++      // он теперь чинится в источнике, поэтому ручная поправка отключена, чтобы
++      // не задваивать/не путать цифры. qual_corrections.json оставлен в репо
++      // для истории, но больше не используется.
++      return null;
+     }
+ 
+     function renderQualityBar() {
+@@ -1216,7 +1224,7 @@
+ 
+       container.innerHTML = rows.map((c, i) => `
+         <span class="creative-chip" data-idx="${i}">
+-          ${c.thumbnail_url ? `<img src="${c.thumbnail_url}">` : `<span class="no-thumb"></span>`}
++          ${c.thumbnail_url ? `<img src="${c.thumbnail_url}" onerror="this.outerHTML='&lt;span class=&quot;no-thumb&quot; title=&quot;превью не загрузилось&quot;&gt;&lt;/span&gt;'">` : `<span class="no-thumb"></span>`}
+           <span>${c.name} · <b>${fmtNum(c.leads)}</b> лид. · ${CRM ? fmtNum(c.qualified) + ' квал' : ''} · ${fmtMoney(c.cpl)}</span>
+         </span>`).join('');
+ 
+@@ -1293,6 +1301,30 @@
+ 
+     let creativesRowsCache = [];
+ 
++    // Раньше картинка ставилась напрямую через CSS background-image: если ссылка
++    // на превью от Meta уже протухла (у thumbnail_url есть срок жизни — обычно
++    // несколько дней, дальше CDN отдаёт ошибку) или заблокирована блокировщиком
++    // рекламы/сетью (домены fbcdn.net часто попадают в такие списки), карточка
++    // молча оставалась пустой — было невозможно понять, это "картинки нет в
++    // данных" или "картинка есть, но не загрузилась". Теперь оба случая различимы.
++    function setThumb(el, url) {
++      el.classList.remove('thumb-broken');
++      if (!url) {
++        el.textContent = 'нет превью';
++        el.style.backgroundImage = '';
++        return;
++      }
++      el.textContent = '';
++      const img = new Image();
++      img.onload = () => { el.style.backgroundImage = `url('${url}')`; };
++      img.onerror = () => {
++        el.style.backgroundImage = '';
++        el.textContent = 'превью не загрузилось (заблокировано сетью/блокировщиком рекламы или ссылка устарела)';
++        el.classList.add('thumb-broken');
++      };
++      img.src = url;
++    }
++
+     function renderCreativesSection() {
+       const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil).filter(r => r.leads > 0);
+       creativesRowsCache = sortRows(rows, creativesSortMode);
+@@ -1312,7 +1344,7 @@
+ 
+       grid.innerHTML = visible.map((c, i) => `
+         <div class="creative-card" data-idx="${i}">
+-          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
++          <div class="creative-thumb" data-thumb="${c.thumbnail_url || ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+           <div class="creative-info">
+             <div class="creative-name" title="${c.name}">${c.name}</div>
+             <div class="creative-stats">
+@@ -1326,6 +1358,7 @@
+       grid.querySelectorAll('.creative-card').forEach(el => {
+         el.addEventListener('click', () => openCreativeModal(visible[+el.dataset.idx]));
+       });
++      grid.querySelectorAll('.creative-thumb').forEach(el => setThumb(el, el.dataset.thumb));
+ 
+       if (creativesRowsCache.length > 10) {
+         moreBtn.style.display = 'block';
+@@ -1340,7 +1373,7 @@
+       const campaign = REPORT.campaigns.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.campaign_id);
+       const adset = REPORT.adsets.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.adset_id);
+ 
+-      document.getElementById('modal-img').style.backgroundImage = c.thumbnail_url ? `url('${c.thumbnail_url}')` : '';
++      setThumb(document.getElementById('modal-img'), c.thumbnail_url);
+       document.getElementById('modal-title').textContent = c.name;
+       document.getElementById('modal-sub').textContent = `Кампания: ${campaign ? campaign.name : '—'} · Аудитория: ${adset ? adset.name : '—'}`;
+ 

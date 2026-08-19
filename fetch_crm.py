@@ -133,14 +133,31 @@ for row in rows[1:]:
     utm_content_col = row[9].strip()
     utm_id_col = row[11].strip()
     utm_term_col = row[12].strip()
-    qual_raw = clean_invisible(row[14]).lower()
-    if qual_raw and 'квал' in qual_raw and qual_raw not in (QUAL_VALUE, NOT_QUAL_VALUE):
+    # Раньше статус ставился только при точном совпадении со строкой "квал"/
+    # "не квал" — любая другая формулировка в этой колонке (пробел, точка,
+    # пометка в скобках, лишнее слово и т.п.) молча уходила в "неизвестно" и не
+    # попадала в подсчёт квал-лидов. Это и было причиной заниженного счётчика
+    # на дашборде: диагностика (.github/workflows/diagnose-crm.yml) на реальных
+    # данных нашла 146 фактических квалов против 25 распознанных точным
+    # сравнением. Теперь распознаём по вхождению "квал" в ячейке (со снятыми
+    # невидимыми символами и обрезанной пунктуацией по краям), а "не квал"/
+    # "нет квал" и т.п. по-прежнему считаем отрицательным статусом.
+    qual_raw = clean_invisible(row[14]).lower().strip(' .,!?:;-–—')
+
+    if qual_raw and qual_raw not in (QUAL_VALUE, NOT_QUAL_VALUE):
+        # Любое нестандартное непустое значение в колонке "Квал" — логируем,
+        # чтобы видеть в выводе экшена, какие ещё формулировки использует
+        # отдел продаж, и при необходимости расширять классификатор дальше.
         suspicious_qual_values.add(repr(row[14]))
 
-    if qual_raw == QUAL_VALUE:
-        qualified = True
-    elif qual_raw == NOT_QUAL_VALUE:
+    if not qual_raw:
+        qualified = None  # пустая ячейка — сделка ещё не размечена, это не баг
+    elif qual_raw in (QUAL_VALUE, NOT_QUAL_VALUE):
+        qualified = qual_raw == QUAL_VALUE
+    elif re.search(r'^(не|нет)\b.*квал', qual_raw) or re.search(r'\bне\s*квал', qual_raw):
         qualified = False
+    elif 'квал' in qual_raw:
+        qualified = True
     else:
         qualified = None
 
@@ -330,4 +347,4 @@ os.replace(crm_tmp_path, crm_path)
 
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
 if suspicious_qual_values:
-    print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")
+    print(f"Нестандартные значения в колонке 'Квал' (не пустые и не равны точно 'квал'/'не квал', классифицированы по вхождению 'квал'/'не квал'): {sorted(suspicious_qual_values)}")

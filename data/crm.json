@@ -1,12 +1,12 @@
 {
-  "fetched_at": "19.08.2026, 06:39",
-  "total_leads": 1175,
+  "fetched_at": "19.08.2026, 09:16",
+  "total_leads": 1177,
   "matched_by_ad": 572,
   "matched_by_campaign": 3,
   "matched_bridge": 206,
   "matched_fuzzy": 119,
-  "unmatched": 275,
-  "match_rate": 76.6,
+  "unmatched": 277,
+  "match_rate": 76.5,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13283,7 +13283,7 @@
     {
       "deal_id": "28477611",
       "created_at": null,
-      "stage": "Отправлено предложение",
+      "stage": "Отложено",
       "country": "Беларусь",
       "qualified": true,
       "ad_id": null,
@@ -14063,7 +14063,7 @@
     {
       "deal_id": "28501013",
       "created_at": null,
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
       "ad_id": null,
@@ -14098,6 +14098,30 @@
     },
     {
       "deal_id": "28501095",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Италия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28501087",
+      "created_at": null,
+      "stage": "новый лид",
+      "country": "Италия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28501737",
       "created_at": null,
       "stage": "новый лид",
       "country": "Италия",

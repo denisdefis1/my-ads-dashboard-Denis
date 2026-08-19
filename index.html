@@ -443,15 +443,38 @@
       selectPreset('30d', lastDate);
     }
 
-    function getQualAdjustment(presetKey) {
-      // Раньше здесь подмешивалась фиксированная ручная поправка (+159) к числу
-      // квал-лидов, но только когда период = "Всё время" и поток = "Все" — то
-      // есть почти никогда, и по устаревшему на момент правки числу. Реальная
-      // причина заниженного счётчика — в классификаторе fetch_crm.py (см. там),
-      // он теперь чинится в источнике, поэтому ручная поправка отключена, чтобы
-      // не задваивать/не путать цифры. qual_corrections.json оставлен в репо
-      // для истории, но больше не используется.
-      return null;
+    function getQualAdjustment(since, until, presetKey) {
+      // Часть квал-лидов маркетолог считает вручную (по памяти/комментариям в
+      // CRM), не отмечая их в столбце "Квал" — автоматика их физически не
+      // может увидеть, это не баг скрипта. qual_corrections.json хранит эти
+      // ручные поправки со своим периодом действия:
+      //  - если у поправки указаны конкретные since/until — она применяется,
+      //    когда ВЫБРАННЫЙ на дашборде период целиком включает эти даты (то
+      //    есть мы точно знаем, что все эти лиды попадают в текущий срез);
+      //  - если since/until не указаны — даты конкретных сделок неизвестны,
+      //    такую поправку добавляем только в режиме "Всё время", чтобы не
+      //    приписать её случайному короткому периоду.
+      // Поправка всегда только на итоговую цифру "Квал-лиды (CRM)" и CPQL —
+      // по кампаниям/креативам/аудиториям она не разложена, т.к. неизвестно,
+      // к каким именно объявлениям относятся эти вручную найденные лиды.
+      const list = QUAL_CORRECTIONS.adjustments;
+      if (!Array.isArray(list) || !list.length) return null;
+
+      let amount = 0;
+      const notes = [];
+      list.forEach(a => {
+        if (!a || !a.amount) return;
+        const scoped = a.since && a.until;
+        const applies = scoped
+          ? (since <= a.since && until >= a.until)
+          : (presetKey === 'all');
+        if (applies) {
+          amount += a.amount;
+          if (a.note) notes.push(a.note);
+        }
+      });
+
+      return amount ? { amount, note: notes.join(' · ') } : null;
     }
 
     function renderQualityBar() {
@@ -771,7 +794,7 @@
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
       const crmStats = crmLeadsInRange(since, until, flowFilter);
-      const adjustment = flowFilter === 'all' ? getQualAdjustment(presetKey) : null;
+      const adjustment = flowFilter === 'all' ? getQualAdjustment(since, until, presetKey) : null;
       if (adjustment) {
         crmStats.qualified += adjustment.amount;
       }

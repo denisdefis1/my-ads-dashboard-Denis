@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lagoon Resort — рекламный дашборд</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="qualified-core.js?v=2"></script>
 <style>
   :root {
     --bg: #08090e;
@@ -204,7 +205,9 @@
     border-color: var(--accent-2); transform: translateY(-3px);
     box-shadow: 0 10px 26px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,123,240,0.2);
   }
-  .creative-thumb { width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
+  .creative-thumb { position: relative; width: 100%; aspect-ratio: 4 / 3; background: var(--card-2) center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; }
+  .creative-thumb img, .creative-thumb video, .modal-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-badge { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; font-weight: 600; letter-spacing: .04em; padding: 2px 6px; border-radius: 4px; pointer-events: none; }
   .creative-info { padding: 10px; }
   .creative-name { font-size: 12px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .creative-stats { display: flex; justify-content: space-between; font-size: 12px; }
@@ -219,7 +222,7 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,123,240,0.15);
   }
   @media (max-width: 640px) { .modal-box { grid-template-columns: 1fr; } }
-  .modal-img { background: var(--card-2) center/cover no-repeat; min-height: 260px; }
+  .modal-img { position: relative; background: var(--card-2) center/cover no-repeat; min-height: 260px; }
   .modal-content { padding: 24px; position: relative; }
   .modal-close { position: absolute; top: 14px; right: 14px; background: var(--card-2); border: 1px solid var(--border); color: var(--muted); width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 16px; }
   .modal-title { font-size: 17px; margin: 0 0 4px; padding-right: 30px; }
@@ -441,9 +444,12 @@
       selectPreset('30d', lastDate);
     }
 
-    function getQualAdjustment(presetKey) {
-      if (!QUAL_CORRECTIONS.total_adjustment) return null;
-      return presetKey === 'all' ? QUAL_CORRECTIONS.total_adjustment : null;
+    // Тонкая обёртка над QualifiedCore (qualified-core.js) — единственной
+    // нормализованной реализацией Qualified для всего дашборда. Здесь только
+    // подставляются глобалы (CRM, QUAL_CORRECTIONS), сама логика в модуле,
+    // который также покрыт tests/qualified-core.test.js.
+    function applyQualCorrections(since, until, stats) {
+      return QualifiedCore.applyQualCorrections(CRM ? CRM.leads : [], QUAL_CORRECTIONS.corrections, since, until, stats);
     }
 
     function renderQualityBar() {
@@ -453,6 +459,10 @@
         return;
       }
       const matched = CRM.matched_by_ad + CRM.matched_by_campaign + CRM.matched_bridge + CRM.matched_fuzzy;
+      const dq = CRM.data_quality;
+      const dateWarning = (dq && dq.qualified_without_date)
+        ? `<span class="quality-label" style="color:var(--red)">⚠ ${dq.qualified_without_date} квал-лидов без распознанной даты создания — не попадают ни в один диапазон, см. data_quality в data/crm.json</span>`
+        : '';
       el.innerHTML = `
         <span class="quality-label">Сопоставлено с рекламой: <b>${matched} из ${CRM.total_leads}</b> CRM-лидов (${CRM.match_rate}%)</span>
         <div class="track">
@@ -460,6 +470,7 @@
           <div class="fill-unmatched" style="width:${100 - CRM.match_rate}%"></div>
         </div>
         <span class="quality-label">точно: ${CRM.matched_by_ad + CRM.matched_by_campaign} · мост: ${CRM.matched_bridge} · приближённо: ${CRM.matched_fuzzy} · не сматчено: ${CRM.unmatched}</span>
+        ${dateWarning}
       `;
     }
 
@@ -717,19 +728,7 @@
 
     function crmLeadsInRange(since, until, flow) {
       if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0 };
-      const rows = CRM.leads.filter(l => {
-        if (!l.created_at) return false;
-        const d = l.created_at.slice(0, 10);
-        if (d < since || d > until) return false;
-        if (flow && flow !== 'all') return campaignLangById[l.campaign_id] === flow;
-        return true;
-      });
-      return {
-        total: rows.length,
-        qualified: rows.filter(l => l.qualified === true).length,
-        notQualified: rows.filter(l => l.qualified === false).length,
-        pending: rows.filter(l => l.qualified === null).length,
-      };
+      return QualifiedCore.crmLeadsInRange(CRM.leads, since, until, { flow, campaignLangById });
     }
 
     function deltaPct(current, previous) {
@@ -752,7 +751,9 @@
       const days = Math.round((new Date(until + 'T00:00:00') - new Date(since + 'T00:00:00')) / 86400000) + 1;
       const prevUntil = addDays(since, -1);
       const prevSince = addDays(prevUntil, -(days - 1));
-      return { totals: sumDaily(accountDailyForFlow(prevSince, prevUntil)), crm: crmLeadsInRange(prevSince, prevUntil, flowFilter) };
+      const prevCrmRaw = crmLeadsInRange(prevSince, prevUntil, flowFilter);
+      const prevCrm = flowFilter === 'all' ? applyQualCorrections(prevSince, prevUntil, prevCrmRaw) : prevCrmRaw;
+      return { totals: sumDaily(accountDailyForFlow(prevSince, prevUntil)), crm: prevCrm };
     }
 
     function applyRange(since, until, presetKey) {
@@ -762,11 +763,8 @@
       const accDaily = accountDailyForFlow(since, until);
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
-      const crmStats = crmLeadsInRange(since, until, flowFilter);
-      const adjustment = flowFilter === 'all' ? getQualAdjustment(presetKey) : null;
-      if (adjustment) {
-        crmStats.qualified += adjustment.amount;
-      }
+      const crmStatsRaw = crmLeadsInRange(since, until, flowFilter);
+      const crmStats = flowFilter === 'all' ? applyQualCorrections(since, until, crmStatsRaw) : crmStatsRaw;
       const cpql = crmStats.qualified ? Math.round(totals.spend / crmStats.qualified * 100) / 100 : null;
       const prev = previousRangeTotals(since, until);
       const prevCpql = prev.crm.qualified ? Math.round(prev.totals.spend / prev.crm.qualified * 100) / 100 : null;
@@ -919,16 +917,8 @@
     function destroyCharts() { Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
     function crmQualifiedByEntity(since, until, idField) {
-      const map = {};
-      if (!CRM) return map;
-      CRM.leads.forEach(l => {
-        if (!l.created_at || !l[idField]) return;
-        const d = l.created_at.slice(0, 10);
-        if (d < since || d > until) return;
-        if (l.qualified !== true) return;
-        map[l[idField]] = (map[l[idField]] || 0) + 1;
-      });
-      return map;
+      if (!CRM) return {};
+      return QualifiedCore.crmQualifiedByEntity(CRM.leads, since, until, idField);
     }
 
     function crmCountByEntityAndStage(since, until, idField, stageName) {
@@ -957,6 +947,9 @@
           language: e.language,
           status: e.status,
           thumbnail_url: e.thumbnail_url,
+          object_type: e.object_type,
+          video_id: e.video_id,
+          video_source: e.video_source,
           spend: t.spend, leads: t.leads, clicks: t.clicks, ctr: t.ctr,
           impressions: t.impressions, linkClicks: t.linkClicks, cpm: t.cpm, cpc: t.cpc,
           cpl: t.cpl,
@@ -1202,6 +1195,15 @@
       rows.forEach(a => { if (openAdsets.has(a.id)) renderCreativesFor(a.id); });
     }
 
+    // Реальный video_source используется только если Meta его отдала явно —
+    // фейковый URL никогда не генерируется. Для мелких превью (сетка
+    // креативов, чипы) настоящее видео не проигрываем — плеер с controls
+    // перехватывает клик, которым открывается модалка, поэтому там только
+    // бейдж; сам <video> рендерится только в модалке (openCreativeModal).
+    function creativeVideoBadge(c) {
+      return (c.video_source || c.object_type === 'VIDEO') ? `<span class="video-badge">VIDEO</span>` : '';
+    }
+
     function renderCreativesFor(adsetId) {
       const container = document.getElementById('creatives-' + adsetId);
       if (!container) return;
@@ -1312,7 +1314,7 @@
 
       grid.innerHTML = visible.map((c, i) => `
         <div class="creative-card" data-idx="${i}">
-          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}</div>
+          <div class="creative-thumb" style="${c.thumbnail_url ? `background-image:url('${c.thumbnail_url}')` : ''}">${c.thumbnail_url ? '' : 'нет превью'}${creativeVideoBadge(c)}</div>
           <div class="creative-info">
             <div class="creative-name" title="${c.name}">${c.name}</div>
             <div class="creative-stats">
@@ -1340,7 +1342,14 @@
       const campaign = REPORT.campaigns.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.campaign_id);
       const adset = REPORT.adsets.find(x => x.id === REPORT.creatives.find(r => r.id === c.id)?.adset_id);
 
-      document.getElementById('modal-img').style.backgroundImage = c.thumbnail_url ? `url('${c.thumbnail_url}')` : '';
+      const modalImg = document.getElementById('modal-img');
+      if (c.video_source) {
+        modalImg.style.backgroundImage = '';
+        modalImg.innerHTML = `<video class="creative-video" muted controls playsinline preload="none" poster="${c.thumbnail_url || ''}" src="${c.video_source}"></video>`;
+      } else {
+        modalImg.style.backgroundImage = c.thumbnail_url ? `url('${c.thumbnail_url}')` : '';
+        modalImg.innerHTML = creativeVideoBadge(c);
+      }
       document.getElementById('modal-title').textContent = c.name;
       document.getElementById('modal-sub').textContent = `Кампания: ${campaign ? campaign.name : '—'} · Аудитория: ${adset ? adset.name : '—'}`;
 

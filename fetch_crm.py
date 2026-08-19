@@ -68,11 +68,40 @@ def extract_ad_id_from_referer(referer):
     return clean_id(match.group(1))
 
 
+# Раньше дата парсилась только одним жёстким форматом "%d.%m.%Y %H:%M:%S".
+# Оказалось, что часть строк в CRM-таблице (судя по всему — недавно
+# добавленные) записаны в столбце "Дата создания" чуть иначе: без секунд,
+# в ISO-формате, с двузначным годом и т.п. Раньше при несовпадении формата
+# parse_crm_date молча возвращала None, и такая сделка получала
+# created_at = null — а дашборд фильтрует лиды по датам (crmLeadsInRange),
+# поэтому лид с null-датой пропадал из АБСОЛЮТНО ЛЮБОГО периода на
+# дашборде (сегодня/7 дней/30 дней/всё время — везде), даже если он есть
+# в data/crm.json и даже если у него честно проставлен квал. Именно так
+# терялась часть свежих квал-лидов. Теперь пробуем несколько форматов.
+CRM_DATE_FORMATS = (
+    '%d.%m.%Y %H:%M:%S',
+    '%d.%m.%Y %H:%M',
+    '%Y-%m-%d %H:%M:%S',
+    '%Y-%m-%d %H:%M',
+    '%d.%m.%y %H:%M:%S',
+    '%d.%m.%y %H:%M',
+    '%m/%d/%Y %H:%M:%S',
+    '%m/%d/%Y %H:%M',
+    '%d/%m/%Y %H:%M:%S',
+    '%d/%m/%Y %H:%M',
+)
+
+
 def parse_crm_date(value):
-    try:
-        return datetime.strptime(value.strip(), '%d.%m.%Y %H:%M:%S')
-    except (ValueError, AttributeError):
+    value = clean_invisible(value)
+    if not value:
         return None
+    for fmt in CRM_DATE_FORMATS:
+        try:
+            return datetime.strptime(value, fmt)
+        except ValueError:
+            continue
+    return None
 
 
 def parse_lead_form_date(value):

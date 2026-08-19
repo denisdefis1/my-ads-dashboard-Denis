@@ -70,7 +70,7 @@ def extract_ad_id_from_referer(referer):
 
 def parse_crm_date(value):
     try:
-        return datetime.strptime(value.strip(), '%d.%m.%Y %H:%M:%S')
+        return datetime.strptime(clean_invisible(value), '%d.%m.%Y %H:%M:%S')
     except (ValueError, AttributeError):
         return None
 
@@ -103,10 +103,10 @@ def fetch_csv(url):
     resp = requests.get(url, timeout=60)
     resp.raise_for_status()
     resp.encoding = 'utf-8'
-    return list(csv.reader(io.StringIO(resp.text)))
+    return resp.status_code, list(csv.reader(io.StringIO(resp.text)))
 
 
-rows = fetch_csv(CSV_URL)
+crm_http_status, rows = fetch_csv(CSV_URL)
 
 if len(rows) < 2:
     print("CRM-таблица пустая или недоступна.")
@@ -118,15 +118,23 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
 
 leads = []
 suspicious_qual_values = set()
+rows_skipped_no_deal_id = 0
+rows_with_unparseable_date = 0
+qualified_rows_with_unparseable_date = 0
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
 
     deal_id = row[1].strip()
     if not deal_id:
+        rows_skipped_no_deal_id += 1
         continue
 
     created_at = parse_crm_date(row[0])
+    if created_at is None:
+        rows_with_unparseable_date += 1
+        if clean_invisible(row[14]).lower() == QUAL_VALUE:
+            qualified_rows_with_unparseable_date += 1
     stage = row[5].strip()
     country = row[6].strip()
     referer = row[7].strip()
@@ -173,7 +181,7 @@ lead_form_entries = []
 for sheet_id in LEAD_FORM_SHEETS:
     url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid=0'
     try:
-        sheet_rows = fetch_csv(url)
+        _, sheet_rows = fetch_csv(url)
     except requests.exceptions.RequestException as e:
         print(f"Не удалось прочитать lead-form таблицу {sheet_id}: {e}")
         continue
@@ -309,6 +317,9 @@ for lead in leads:
     lead["created_at"] = lead["created_at"].strftime('%Y-%m-%d %H:%M:%S') if lead["created_at"] else None
     del lead["name_norm"]
 
+created_dates = [lead["created_at"] for lead in leads if lead["created_at"]]
+qualified_dates = [lead["created_at"] for lead in leads if lead["created_at"] and lead["qualified"] is True]
+
 crm_data = {
     "fetched_at": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "total_leads": total,
@@ -318,6 +329,16 @@ crm_data = {
     "matched_fuzzy": matched_fuzzy,
     "unmatched": unmatched,
     "match_rate": match_rate,
+    "data_quality": {
+        "source_url": CSV_URL,
+        "http_status": crm_http_status,
+        "csv_row_count": len(rows) - 1,
+        "rows_skipped_no_deal_id": rows_skipped_no_deal_id,
+        "rows_with_unparseable_date": rows_with_unparseable_date,
+        "qualified_rows_with_unparseable_date": qualified_rows_with_unparseable_date,
+        "latest_source_created_at": max(created_dates) if created_dates else None,
+        "latest_qualified_created_at": max(qualified_dates) if qualified_dates else None,
+    },
     "leads": leads,
 }
 
@@ -331,3 +352,5 @@ os.replace(crm_tmp_path, crm_path)
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
 if suspicious_qual_values:
     print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")
+if rows_with_unparseable_date:
+    print(f"ВНИМАНИЕ: {rows_with_unparseable_date} строк с нераспознанной датой создания (row[0]), из них квалифицированных: {qualified_rows_with_unparseable_date}.")

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lagoon Resort — рекламный дашборд</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="qualified-core.js"></script>
 <style>
   :root {
     --bg: #08090e;
@@ -441,9 +442,8 @@
       selectPreset('30d', lastDate);
     }
 
-    function getQualAdjustment(presetKey) {
-      if (!QUAL_CORRECTIONS.total_adjustment) return null;
-      return presetKey === 'all' ? QUAL_CORRECTIONS.total_adjustment : null;
+    function historicalCorrections() {
+      return QUAL_CORRECTIONS.historical_corrections || [];
     }
 
     function renderQualityBar() {
@@ -716,20 +716,16 @@
     }
 
     function crmLeadsInRange(since, until, flow) {
-      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0 };
-      const rows = CRM.leads.filter(l => {
-        if (!l.created_at) return false;
-        const d = l.created_at.slice(0, 10);
-        if (d < since || d > until) return false;
-        if (flow && flow !== 'all') return campaignLangById[l.campaign_id] === flow;
-        return true;
+      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0, correctionsApplied: [], warning: null };
+      const flowActive = !!(flow && flow !== 'all');
+      const filterFn = flowActive ? (l => campaignLangById[l.campaign_id] === flow) : null;
+      // Verified historical corrections have no confirmed per-flow (RU/EN)
+      // attribution, so they only apply when no flow filter is active —
+      // same rule the entity-level breakdowns already follow.
+      return QualifiedCore.getQualifiedStats(CRM.leads, since, until, historicalCorrections(), {
+        filter: filterFn,
+        applyCorrections: !flowActive,
       });
-      return {
-        total: rows.length,
-        qualified: rows.filter(l => l.qualified === true).length,
-        notQualified: rows.filter(l => l.qualified === false).length,
-        pending: rows.filter(l => l.qualified === null).length,
-      };
     }
 
     function deltaPct(current, previous) {
@@ -763,10 +759,6 @@
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
       const crmStats = crmLeadsInRange(since, until, flowFilter);
-      const adjustment = flowFilter === 'all' ? getQualAdjustment(presetKey) : null;
-      if (adjustment) {
-        crmStats.qualified += adjustment.amount;
-      }
       const cpql = crmStats.qualified ? Math.round(totals.spend / crmStats.qualified * 100) / 100 : null;
       const prev = previousRangeTotals(since, until);
       const prevCpql = prev.crm.qualified ? Math.round(prev.totals.spend / prev.crm.qualified * 100) / 100 : null;
@@ -788,7 +780,7 @@
       const flowLabel = flowFilter === 'all' ? '' : ` · поток ${flowFilter}`;
       document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}${flowLabel}`;
 
-      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing, adjustment);
+      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing);
       renderSecondaryCards(totals, reach);
       renderWeeklyComparison();
       renderDailyCharts(accDaily);
@@ -842,7 +834,7 @@
         </div>`;
     }
 
-    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing, adjustment) {
+    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing) {
       const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
@@ -868,8 +860,15 @@
 
       const qualRateBelowTarget = qualRate !== null && qualRate < p.target_qual_rate;
       const qualRatePct = qualRate !== null ? Math.min(100, (qualRate / p.target_qual_rate) * 100) : 0;
+      const correctionNote = (crmStats.correctionsApplied || []).map(c =>
+        `<span style="color:var(--accent-2)" title="Верифицировано вручную за ${c.since} – ${c.until}: ${c.verifiedQualified} квалов">✓ верифицировано ${c.since}–${c.until}</span>`
+      ).join(' · ');
+      const warningNote = crmStats.warning
+        ? `<span style="color:var(--orange)" title="${crmStats.warning}">⚠ частичное пересечение с историческим периодом</span>`
+        : '';
+      const noteBadges = [correctionNote, warningNote].filter(Boolean).join(' · ');
       const qualNote = CRM
-        ? (adjustment ? `<span style="color:var(--accent-2)" title="${adjustment.note}">✓ +${adjustment.amount} вручную сверено</span> · ` : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
+        ? (noteBadges ? noteBadges + ' · ' : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
         : 'CRM не подключена';
 
       const cards = [

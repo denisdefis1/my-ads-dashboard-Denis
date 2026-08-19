@@ -1,0 +1,26 @@
+{
+  "periods": [
+    {
+      "start": "2026-05-25",
+      "end": "2026-06-21",
+      "qualified_total": 146,
+      "source": "manual_verified",
+      "crm_detected": 25,
+      "adjustment": 121,
+      "note": "Verified historical qualified lead count. CRM column [14] ('Квал') only classified 25 leads as qualified for this period, but the confirmed business result is 146. Adjustment = 146 - 25 = 121. Applies only to this exact period — never as a global add-on."
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "manual_crm_comments_38",
+      "start": null,
+      "end": null,
+      "qualified_total": null,
+      "adjustment": 38,
+      "source": "manual_found_in_crm_comments",
+      "status": "needs_period_confirmation",
+      "note": "Part of the original combined +159 correction (159 = 121 + 38). These 38 qualified leads were found manually by the marketer while reading CRM comments, but no confirmed date range was recorded for them. The normalization layer intentionally does NOT apply this adjustment to any period, because doing so without a confirmed range would mean guessing a distribution. Once the exact period is confirmed, add it as a proper entry under \"periods\" with start/end/qualified_total."
+    }
+  ],
+  "_migration_note": "Migrated from the old global-adjustment model (total_adjustment.amount = 159, note: '121 (146 факт минус 25 автоматически подхваченных за 25.05-21.06) + 38 найдено маркетологом вручную по комментариям CRM'). The 121 portion is now the verified period below; the 38 portion is preserved under \"unresolved\" until its date range is confirmed — see getNormalizedQualifiedData() in qualified-core.js for how periods are applied."
+}

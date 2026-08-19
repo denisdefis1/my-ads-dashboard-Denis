@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lagoon Resort — рекламный дашборд</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="qualified-core.js"></script>
 <style>
   :root {
     --bg: #08090e;
@@ -264,6 +265,7 @@
   <div id="flow-toggle-wrap" style="margin-bottom:20px;"></div>
 
   <div class="quality-bar" id="quality-bar"></div>
+  <div id="qual-detail" style="margin-bottom:20px;"></div>
 
   <div id="insights-wrap"></div>
 
@@ -301,7 +303,7 @@
   </div>
 
   <h2 class="section-title">Потоки ENG / RU</h2>
-  <div class="section-sub">Язык определяется по кампании — переключатель "Все / ENG / RU" наверху фильтрует все разделы ниже</div>
+  <div class="section-sub" id="flows-sub">Язык определяется по кампании — переключатель "Все / ENG / RU" наверху фильтрует все разделы ниже</div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
       <thead><tr><th>Поток</th><th class="num">Расход</th><th class="num">Доля</th><th class="num">Лиды</th><th class="num">CPL</th><th class="num">Квалы</th><th class="num">CPQL</th><th class="num">CTR</th></tr></thead>
@@ -316,7 +318,7 @@
   <button class="show-more-btn" id="campaigns-more"></button>
 
   <h2 class="section-title">Рейтинг аудиторий</h2>
-  <div class="section-sub">По группам объявлений — квал-лиды и CPQL</div>
+  <div class="section-sub" id="adsets-sub">По группам объявлений — квал-лиды и CPQL</div>
   <div class="sort-toggle" id="adsets-sort"></div>
   <div class="chart-card" style="padding:8px 12px;">
     <table>
@@ -415,17 +417,29 @@
     let countriesExpanded = false;
 
     let QUAL_CORRECTIONS = {};
+    let CRM_DUPLICATE_DEAL_IDS = [];
 
     async function loadAll() {
       const [reportRes, crmRes, correctionsRes] = await Promise.all([
         fetch('data/report.json?t=' + Date.now()),
         fetch('data/crm.json?t=' + Date.now()).catch(() => null),
-        fetch('qual_corrections.json?t=' + Date.now()).catch(() => null),
+        fetch('data/qual_corrections.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!reportRes.ok) throw new Error('report.json недоступен (' + reportRes.status + ')');
       REPORT = await reportRes.json();
       CRM = (crmRes && crmRes.ok) ? await crmRes.json() : null;
       QUAL_CORRECTIONS = (correctionsRes && correctionsRes.ok) ? await correctionsRes.json() : {};
+
+      if (CRM) {
+        // Defensive dedup on the client too — a deal_id must never be counted
+        // twice, even if a stale/manually-edited data/crm.json slips through.
+        const deduped = QualifiedCore.dedupeCrmLeads(CRM.leads);
+        CRM.leads = deduped.leads;
+        CRM_DUPLICATE_DEAL_IDS = Array.from(new Set([
+          ...deduped.duplicateDealIds,
+          ...((CRM.data_quality && CRM.data_quality.duplicate_deal_ids) || []),
+        ]));
+      }
 
       document.getElementById('updated').textContent = 'данные на ' + REPORT.last_updated +
         (CRM ? ' · CRM на ' + CRM.fetched_at : '');
@@ -439,11 +453,6 @@
 
       renderControls(lastDate);
       selectPreset('30d', lastDate);
-    }
-
-    function getQualAdjustment(presetKey) {
-      if (!QUAL_CORRECTIONS.total_adjustment) return null;
-      return presetKey === 'all' ? QUAL_CORRECTIONS.total_adjustment : null;
     }
 
     function renderQualityBar() {
@@ -460,7 +469,35 @@
           <div class="fill-unmatched" style="width:${100 - CRM.match_rate}%"></div>
         </div>
         <span class="quality-label">точно: ${CRM.matched_by_ad + CRM.matched_by_campaign} · мост: ${CRM.matched_bridge} · приближённо: ${CRM.matched_fuzzy} · не сматчено: ${CRM.unmatched}</span>
+        ${CRM_DUPLICATE_DEAL_IDS.length ? `<span class="quality-label" style="color:var(--orange)">повторяющихся deal_id учтено один раз: ${CRM_DUPLICATE_DEAL_IDS.length}</span>` : ''}
       `;
+    }
+
+    function renderQualDetail(crmStats) {
+      const el = document.getElementById('qual-detail');
+      if (!CRM || !crmStats) { el.innerHTML = ''; return; }
+
+      const warningsHtml = crmStats.warnings.length
+        ? `<div class="quality-bar" style="border-color:var(--orange);margin-bottom:10px;">
+            ${crmStats.warnings.map(w => `<span class="quality-label" style="color:var(--orange)">⚠ ${w}</span>`).join('<br>')}
+          </div>`
+        : '';
+
+      const coveredNote = crmStats.coveredPeriods.length
+        ? crmStats.coveredPeriods.map(p => `${p.start}–${p.end}: verified ${fmtNum(p.qualifiedTotal)} (CRM detected ${fmtNum(p.crmDetectedLive)}, adjustment +${fmtNum(p.adjustment)})`).join(' · ')
+        : null;
+
+      el.innerHTML = `
+        ${warningsHtml}
+        <div class="quality-bar">
+          <span class="quality-label" style="color:var(--muted)">Data quality за ${crmStats.since} – ${crmStats.until}${flowFilter !== 'all' ? ' (без фильтра потока — historical adjustment не делится между RU/EN)' : ''}:</span>
+          <span class="quality-label">CRM detected (raw): <b>${fmtNum(crmStats.crmDetected)}</b></span>
+          <span class="quality-label">Historical verified: <b>${fmtNum(crmStats.historicalVerified)}</b></span>
+          <span class="quality-label">Historical adjustment: <b>${crmStats.historicalAdjustment >= 0 ? '+' : ''}${fmtNum(crmStats.historicalAdjustment)}</b></span>
+          <span class="quality-label">Normalized qualified: <b style="color:var(--green)">${fmtNum(crmStats.normalizedQualified)}</b></span>
+          <span class="quality-label">Not qualified: ${fmtNum(crmStats.notQualified)} · Pending: ${fmtNum(crmStats.pending)}</span>
+          ${coveredNote ? `<span class="quality-label">${coveredNote}</span>` : ''}
+        </div>`;
     }
 
     function renderFlowToggle() {
@@ -715,20 +752,28 @@
       };
     }
 
+    // Single source of truth for "qualified" anywhere in the dashboard —
+    // main cards, All Time, custom ranges, weekly comparison, funnel, flows
+    // RU/EN, summary text. All of it goes through QualifiedCore so there is
+    // exactly one normalized number per (since, until, flow), never several
+    // independent ways of counting qualified leads.
     function crmLeadsInRange(since, until, flow) {
-      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0 };
-      const rows = CRM.leads.filter(l => {
-        if (!l.created_at) return false;
-        const d = l.created_at.slice(0, 10);
-        if (d < since || d > until) return false;
-        if (flow && flow !== 'all') return campaignLangById[l.campaign_id] === flow;
-        return true;
-      });
+      if (!CRM) return { total: 0, qualified: 0, notQualified: 0, pending: 0, crmDetected: 0, historicalVerified: 0, historicalAdjustment: 0, normalizedQualified: 0, coveredPeriods: [], partialPeriods: [], warnings: [] };
+      const normalized = QualifiedCore.getNormalizedQualifiedData(CRM.leads, QUAL_CORRECTIONS, since, until, flow, campaignLangById);
       return {
-        total: rows.length,
-        qualified: rows.filter(l => l.qualified === true).length,
-        notQualified: rows.filter(l => l.qualified === false).length,
-        pending: rows.filter(l => l.qualified === null).length,
+        since: normalized.since,
+        until: normalized.until,
+        total: normalized.crmTotal,
+        qualified: normalized.normalizedQualified,
+        notQualified: normalized.notQualified,
+        pending: normalized.pending,
+        crmDetected: normalized.crmDetected,
+        historicalVerified: normalized.historicalVerified,
+        historicalAdjustment: normalized.historicalAdjustment,
+        normalizedQualified: normalized.normalizedQualified,
+        coveredPeriods: normalized.coveredPeriods,
+        partialPeriods: normalized.partialPeriods,
+        warnings: normalized.warnings,
       };
     }
 
@@ -763,10 +808,6 @@
       const totals = sumDaily(accDaily);
       const reach = (presetKey && flowFilter === 'all') ? REPORT.reach_by_preset[presetKey] : null;
       const crmStats = crmLeadsInRange(since, until, flowFilter);
-      const adjustment = flowFilter === 'all' ? getQualAdjustment(presetKey) : null;
-      if (adjustment) {
-        crmStats.qualified += adjustment.amount;
-      }
       const cpql = crmStats.qualified ? Math.round(totals.spend / crmStats.qualified * 100) / 100 : null;
       const prev = previousRangeTotals(since, until);
       const prevCpql = prev.crm.qualified ? Math.round(prev.totals.spend / prev.crm.qualified * 100) / 100 : null;
@@ -788,7 +829,8 @@
       const flowLabel = flowFilter === 'all' ? '' : ` · поток ${flowFilter}`;
       document.getElementById('sub').textContent = `Facebook / Instagram · ${since} – ${until}${flowLabel}`;
 
-      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing, adjustment);
+      renderMainCards(totals, reach, crmStats, cpql, prev.totals, prev.crm, prevCpql, pacing);
+      renderQualDetail(flowFilter === 'all' ? crmStats : crmLeadsInRange(since, until, 'all'));
       renderSecondaryCards(totals, reach);
       renderWeeklyComparison();
       renderDailyCharts(accDaily);
@@ -842,7 +884,7 @@
         </div>`;
     }
 
-    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing, adjustment) {
+    function renderMainCards(t, lifetimeReach, crmStats, cpql, prevT, prevCrm, prevCpql, pacing) {
       const p = REPORT.plan;
       const budgetPct = Math.min(100, (t.spend / p.monthly_budget) * 100);
       const leadsPct = Math.min(100, (t.leads / p.monthly_leads) * 100);
@@ -868,8 +910,11 @@
 
       const qualRateBelowTarget = qualRate !== null && qualRate < p.target_qual_rate;
       const qualRatePct = qualRate !== null ? Math.min(100, (qualRate / p.target_qual_rate) * 100) : 0;
+      const historicalNote = crmStats.coveredPeriods && crmStats.coveredPeriods.length
+        ? `<span style="color:var(--accent-2)" title="${crmStats.coveredPeriods.map(cp => cp.note || '').join(' ').replace(/"/g, '&quot;')}">✓ +${fmtNum(crmStats.historicalAdjustment)} сверено по historical data (${crmStats.coveredPeriods.map(cp => cp.start + '–' + cp.end).join(', ')})</span> · `
+        : '';
       const qualNote = CRM
-        ? (adjustment ? `<span style="color:var(--accent-2)" title="${adjustment.note}">✓ +${adjustment.amount} вручную сверено</span> · ` : '') + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
+        ? historicalNote + `из ${fmtNum(t.leads)} лидов (Meta) · конверсия ${qualRate ?? '—'}%` + (qualRate !== null ? ` · цель ≥ ${p.target_qual_rate}%` + (qualRateBelowTarget ? ` · <span style="color:var(--orange)">ниже цели</span>` : ' · в цели') : '')
         : 'CRM не подключена';
 
       const cards = [
@@ -1092,6 +1137,15 @@
           <td class="num">${CRM ? fmtMoney(r.cpql) : '—'}</td>
           <td class="num">${fmtPct(r.ctr)}</td>
         </tr>`).join('');
+
+      const subEl = document.getElementById('flows-sub');
+      if (CRM) {
+        const allTotal = crmLeadsInRange(currentSince, currentUntil, 'all').qualified;
+        const sumByLang = rows.reduce((s, r) => s + r.qualified, 0);
+        const unmatched = Math.max(0, allTotal - sumByLang);
+        subEl.textContent = `Язык определяется по кампании — переключатель "Все / ENG / RU" наверху фильтрует все разделы ниже.`
+          + (unmatched ? ` Normalized qualified всего: ${allTotal}, распределено по RU/EN: ${sumByLang}, без привязки к языку/historical: ${unmatched}.` : '');
+      }
     }
 
     let campaignsStatusFilter = 'all';
@@ -1103,7 +1157,17 @@
       return rows[0] || { ...c, spend: 0, leads: 0, clicks: 0, ctr: 0, cpl: null, qualified: 0, cpql: null, sales: 0 };
     }
 
+    function renderQualifiedCoverageNote(elId, idField) {
+      const el = document.getElementById(elId);
+      if (!el || !CRM) return;
+      const b = QualifiedCore.qualifiedBreakdown(CRM.leads, QUAL_CORRECTIONS, currentSince, currentUntil, idField, campaignLangById);
+      if (!b.unmatched) return;
+      el.innerHTML += ` · normalized qualified: <b>${fmtNum(b.total)}</b>, с привязкой: <b>${fmtNum(b.matched)}</b>, без привязки/historical: <b>${fmtNum(b.unmatched)}</b>`;
+    }
+
     function renderCampaignsSection() {
+      document.getElementById('campaigns-sub').textContent = 'Раскрывай кампанию — увидишь аудитории, дальше креативы внутри каждой';
+      renderQualifiedCoverageNote('campaigns-sub', 'campaign_id');
       const toggleEl = document.getElementById('campaigns-status-toggle');
       toggleEl.innerHTML = `
         <button class="toggle-btn ${campaignsStatusFilter === 'all' ? 'active' : ''}" data-f="all">Все</button>
@@ -1226,6 +1290,8 @@
     }
 
     function renderAdsetsSection() {
+      document.getElementById('adsets-sub').textContent = 'По группам объявлений — квал-лиды и CPQL';
+      renderQualifiedCoverageNote('adsets-sub', 'adset_id');
       const rows = buildEntityRows(adsetsForFlow(), 'adset_id', currentSince, currentUntil);
       renderSortToggle('adsets-sort', adsetsSortMode, (key) => {
         adsetsSortMode = key;
@@ -1297,6 +1363,7 @@
       const rows = buildEntityRows(creativesForFlow(), 'ad_id', currentSince, currentUntil).filter(r => r.leads > 0);
       creativesRowsCache = sortRows(rows, creativesSortMode);
       document.getElementById('creatives-sub').textContent = `${creativesRowsCache.length} отработавших объявлений (с лидами) за период · клик по карточке — детали`;
+      renderQualifiedCoverageNote('creatives-sub', 'ad_id');
 
       renderSortToggle('creatives-sort', creativesSortMode, (key) => { creativesSortMode = key; renderCreativesSection(); });
 

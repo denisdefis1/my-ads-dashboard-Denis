@@ -118,6 +118,8 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
 
 leads = []
 suspicious_qual_values = set()
+seen_deal_ids = set()
+duplicate_deal_ids = set()
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
@@ -125,6 +127,14 @@ for row in rows[1:]:
     deal_id = row[1].strip()
     if not deal_id:
         continue
+
+    # Один и тот же deal_id не должен учитываться дважды — Google Sheets
+    # экспорт иногда содержит повторяющиеся строки. Первое вхождение
+    # выигрывает, остальные фиксируются в data_quality.duplicate_deal_ids.
+    if deal_id in seen_deal_ids:
+        duplicate_deal_ids.add(deal_id)
+        continue
+    seen_deal_ids.add(deal_id)
 
     created_at = parse_crm_date(row[0])
     stage = row[5].strip()
@@ -309,6 +319,23 @@ for lead in leads:
     lead["created_at"] = lead["created_at"].strftime('%Y-%m-%d %H:%M:%S') if lead["created_at"] else None
     del lead["name_norm"]
 
+qualified_count = sum(1 for l in leads if l["qualified"] is True)
+not_qualified_count = sum(1 for l in leads if l["qualified"] is False)
+pending_count = sum(1 for l in leads if l["qualified"] is None)
+qualified_with_date = sum(1 for l in leads if l["qualified"] is True and l["created_at"])
+qualified_without_date = qualified_count - qualified_with_date
+
+data_quality = {
+    "total_leads": total,
+    "qualified": qualified_count,
+    "not_qualified": not_qualified_count,
+    "pending": pending_count,
+    "qualified_with_date": qualified_with_date,
+    "qualified_without_date": qualified_without_date,
+    "duplicate_deal_ids": sorted(duplicate_deal_ids),
+    "duplicate_deal_id_count": len(duplicate_deal_ids),
+}
+
 crm_data = {
     "fetched_at": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "total_leads": total,
@@ -318,6 +345,7 @@ crm_data = {
     "matched_fuzzy": matched_fuzzy,
     "unmatched": unmatched,
     "match_rate": match_rate,
+    "data_quality": data_quality,
     "leads": leads,
 }
 
@@ -329,5 +357,7 @@ with open(crm_tmp_path, 'w', encoding='utf-8') as f:
 os.replace(crm_tmp_path, crm_path)
 
 print(f"CRM: {total} лидов, по ad_id {matched_ad}, по campaign_id {matched_campaign}, по телефонному мосту {matched_bridge}, приближённо {matched_fuzzy}, не сматчено {unmatched} ({match_rate}%).")
+if duplicate_deal_ids:
+    print(f"Повторяющиеся deal_id (учтены один раз): {len(duplicate_deal_ids)}.")
 if suspicious_qual_values:
     print(f"Подозрительные значения в колонке 'Квал' (содержат 'квал', но не равны точно 'квал'/'не квал'): {sorted(suspicious_qual_values)}")

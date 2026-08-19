@@ -255,6 +255,36 @@ def safe_api_get(path, params, level, description, failed_sections, default):
         return default
 
 
+def fetch_video_sources(video_ids, failed_sections):
+    """/{video_id}?fields=source для набора video_id разом через ?ids=...
+    Ответ Graph API для этого эндпойнта — словарь {id: {...}}, а не
+    список с paging, поэтому api_get() (заточенный под paged list) сюда не
+    подходит — запрашиваем напрямую через retry-обёртку. При сбое просто
+    остаёмся без video_url (см. is_video/no source -> thumbnail + бейдж на
+    фронтенде) — никогда не подставляем выдуманный URL."""
+    if not video_ids:
+        return {}
+    url = f"https://graph.facebook.com/{API_VERSION}/"
+    params = {'ids': ','.join(video_ids), 'fields': 'source', 'access_token': ACCESS_TOKEN}
+    try:
+        payload = _request_with_retry(url, params, 'videos_source', 'video')
+    except MetaAPIError as e:
+        print(f"[meta-api-section-failed] section=creative_videos endpoint=/ code={e.code} subcode={e.error_subcode}: {e}")
+        failed_sections.append({
+            "section": "creative_videos",
+            "endpoint": "/",
+            "http_status": e.status_code,
+            "code": e.code,
+            "error_subcode": e.error_subcode,
+            "is_transient": e.is_transient,
+            "message": str(e),
+        })
+        return {}
+    if not isinstance(payload, dict) or 'error' in payload:
+        return {}
+    return {vid: v.get('source') for vid, v in payload.items() if isinstance(v, dict)}
+
+
 def count_leads(actions):
     total = 0
     for action in actions or []:
@@ -374,8 +404,24 @@ ads_meta_raw = safe_api_get(f"{ACCOUNT_ID}/ads", {
     'limit': 25,
 }, 'ads_meta', 'ads_meta', failed_sections, [])
 thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
+
+# Отдельный запрос от thumbnail-запроса выше: если object_type/video_id
+# вдруг не примутся Meta API (например, изменится схема полей), это не
+# должно уронить thumbnail_url, который годами стабильно работает.
+ads_creative_type_raw = safe_api_get(f"{ACCOUNT_ID}/ads", {
+    'fields': 'id,creative{object_type,video_id}',
+    'limit': 25,
+}, 'ads_creative_type', 'ads_creative_type', failed_sections, [])
+type_by_ad_id = {a['id']: a.get('creative', {}).get('object_type') for a in ads_creative_type_raw}
+video_id_by_ad_id = {a['id']: a.get('creative', {}).get('video_id') for a in ads_creative_type_raw}
+video_ids = sorted({vid for vid in video_id_by_ad_id.values() if vid})
+video_source_by_id = fetch_video_sources(video_ids, failed_sections)
+
 for c in creatives:
     c["thumbnail_url"] = thumb_by_ad_id.get(c["id"])
+    c["creative_type"] = type_by_ad_id.get(c["id"])
+    video_id = video_id_by_ad_id.get(c["id"])
+    c["video_url"] = video_source_by_id.get(video_id) if video_id else None
 
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,

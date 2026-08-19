@@ -6,6 +6,7 @@ import sys
 import json
 import difflib
 import requests
+from collections import Counter
 from datetime import datetime, timezone
 
 SHEET_ID = '1gcHoNF5FMpnhwYyi0sOEr-ZSD6NQ3LZ2Xz5aYkPBlq4'
@@ -118,6 +119,8 @@ if len(rows[0]) < EXPECTED_HEADER_LEN:
 
 leads = []
 suspicious_qual_values = set()
+deal_id_counts = Counter()
+unparsed_date_samples = []
 for row in rows[1:]:
     if len(row) < EXPECTED_HEADER_LEN:
         row = row + [''] * (EXPECTED_HEADER_LEN - len(row))
@@ -125,8 +128,11 @@ for row in rows[1:]:
     deal_id = row[1].strip()
     if not deal_id:
         continue
+    deal_id_counts[deal_id] += 1
 
     created_at = parse_crm_date(row[0])
+    if row[0].strip() and created_at is None and len(unparsed_date_samples) < 10:
+        unparsed_date_samples.append({"deal_id": deal_id, "raw_value": row[0]})
     stage = row[5].strip()
     country = row[6].strip()
     referer = row[7].strip()
@@ -309,6 +315,22 @@ for lead in leads:
     lead["created_at"] = lead["created_at"].strftime('%Y-%m-%d %H:%M:%S') if lead["created_at"] else None
     del lead["name_norm"]
 
+# Данные для аудита качества CRM-выгрузки. Классификатор "квал"/"не квал"
+# (row[14]) здесь не трогаем — это диагностика, а не источник для попыток
+# искусственно приблизить raw-число к historical verified correction.
+duplicate_deal_ids = sorted(deal_id for deal_id, count in deal_id_counts.items() if count > 1)
+qualified_leads = [l for l in leads if l["qualified"] is True]
+data_quality = {
+    "duplicate_deal_ids": duplicate_deal_ids[:50],
+    "duplicate_deal_id_count": len(duplicate_deal_ids),
+    "unparsed_date_samples": unparsed_date_samples,
+    "suspicious_qual_values": sorted(suspicious_qual_values),
+    "qualified_with_date": sum(1 for l in qualified_leads if l["created_at"] is not None),
+    "qualified_without_date": sum(1 for l in qualified_leads if l["created_at"] is None),
+    "qualified_matched": sum(1 for l in qualified_leads if l["match_type"] is not None),
+    "qualified_unmatched": sum(1 for l in qualified_leads if l["match_type"] is None),
+}
+
 crm_data = {
     "fetched_at": datetime.now().strftime('%d.%m.%Y, %H:%M'),
     "total_leads": total,
@@ -318,6 +340,7 @@ crm_data = {
     "matched_fuzzy": matched_fuzzy,
     "unmatched": unmatched,
     "match_rate": match_rate,
+    "data_quality": data_quality,
     "leads": leads,
 }
 

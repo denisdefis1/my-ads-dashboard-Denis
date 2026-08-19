@@ -1,0 +1,19 @@
+{
+  "periods": [
+    {
+      "since": "2026-05-25",
+      "until": "2026-06-21",
+      "qualified_total": 146,
+      "raw_detected": 25,
+      "adjustment": 121,
+      "note": "CRM verified historical total. Raw parser correctly reads column [14] ('квал') and finds 25 - the remaining 121 were confirmed manually against CRM comments and are not attributable to individual campaigns/adsets/ads."
+    }
+  ],
+  "unresolved": [
+    {
+      "amount": 38,
+      "status": "needs_period_confirmation",
+      "note": "Found manually by the marketing team in CRM comments. Exact date period not yet confirmed - do not apply to any KPI until a period is set."
+    }
+  ]
+}

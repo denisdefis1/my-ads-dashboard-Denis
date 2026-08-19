@@ -1,6 +1,21 @@
 {
-  "total_adjustment": {
-    "amount": 159,
-    "note": "121 (146 факт минус 25 автоматически подхваченных за 25.05-21.06) + 38 найдено маркетологом вручную по комментариям CRM"
-  }
+  "corrections": [
+    {
+      "id": "2026-05-25_2026-06-21_verified_146",
+      "type": "override",
+      "period_since": "2026-05-25",
+      "period_until": "2026-06-21",
+      "verified_qualified": 146,
+      "note": "Raw CRM auto-detected only 25 qualified leads for this period because created_at was missing/unparseable for many rows before the fetch_crm.py date-parsing fix. Manually verified true count is 146. Applies whenever a query range fully contains 2026-05-25..2026-06-21 (e.g. that exact custom range, or 'Всё время')."
+    },
+    {
+      "id": "manual_verified_38_unresolved_period",
+      "type": "addend",
+      "amount": 38,
+      "scope": "all_time_only",
+      "period_since": null,
+      "period_until": null,
+      "note": "38 qualified leads manually verified by the marketer from CRM comments, in addition to the 121 already covered by the 2026-05-25..2026-06-21 correction above (121 + 38 = 159, the old flat total_adjustment this file used to carry). The exact historical period these 38 leads belong to is not recoverable from the repository (single-commit shallow history, no accessible issue tracker at the time this correction structure was rebuilt). Documented here as unresolved. Per business rule it must still be reflected in the 'Всё время' total, so it is applied only when a query range covers the full CRM history (see qualified-core.js isFullHistoryRange) — never to an arbitrary custom range or month, and never rendered as a standalone '+38' KPI line."
+    }
+  ]
 }

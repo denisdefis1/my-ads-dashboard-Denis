@@ -255,6 +255,43 @@ def safe_api_get(path, params, level, description, failed_sections, default):
         return default
 
 
+def fetch_video_sources(video_ids, failed_sections):
+    """Meta не отдаёт реальный playable source видео через /ads (только
+    thumbnail/object_type/video_id), поэтому для видео-креативов отдельно
+    батчим запрос к Video-узлу через ?ids=. Никогда не придумывает URL: если
+    источник недоступен (нет прав video_read / устаревший токен / видео
+    удалено), соответствующий id просто отсутствует в результате."""
+    sources = {}
+    unique_ids = sorted({v for v in video_ids if v})
+    if not unique_ids:
+        return sources
+
+    chunk_size = 50
+    for i in range(0, len(unique_ids), chunk_size):
+        chunk = unique_ids[i:i + chunk_size]
+        url = f"https://graph.facebook.com/{API_VERSION}/"
+        params = {'ids': ','.join(chunk), 'fields': 'source', 'access_token': ACCESS_TOKEN}
+        try:
+            payload = _request_with_retry(url, params, 'video_sources', 'video')
+        except MetaAPIError as e:
+            print(f"[meta-api-section-failed] section=video_sources endpoint=/ code={e.code} subcode={e.error_subcode}: {e}")
+            failed_sections.append({
+                "section": "video_sources",
+                "endpoint": "/",
+                "http_status": e.status_code,
+                "code": e.code,
+                "error_subcode": e.error_subcode,
+                "is_transient": e.is_transient,
+                "message": str(e),
+            })
+            continue
+        if isinstance(payload, dict):
+            for video_id, obj in payload.items():
+                if isinstance(obj, dict) and obj.get('source'):
+                    sources[video_id] = obj['source']
+    return sources
+
+
 def count_leads(actions):
     total = 0
     for action in actions or []:
@@ -370,12 +407,33 @@ ads_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
 creatives = dedup_by_entity_date(ads_raw, 'ad_id', 'ad_name', parent_fields=['adset_id', 'campaign_id'])
 
 ads_meta_raw = safe_api_get(f"{ACCOUNT_ID}/ads", {
-    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url}',
+    'fields': 'id,creative.thumbnail_width(720).thumbnail_height(720){thumbnail_url,object_type,video_id}',
     'limit': 25,
 }, 'ads_meta', 'ads_meta', failed_sections, [])
-thumb_by_ad_id = {a['id']: a.get('creative', {}).get('thumbnail_url') for a in ads_meta_raw}
+
+creative_meta_by_ad_id = {}
+video_ids_needed = []
+for a in ads_meta_raw:
+    creative = a.get('creative') or {}
+    video_id = creative.get('video_id')
+    creative_meta_by_ad_id[a['id']] = {
+        "thumbnail_url": creative.get('thumbnail_url'),
+        "object_type": creative.get('object_type'),
+        "video_id": video_id,
+    }
+    if video_id:
+        video_ids_needed.append(video_id)
+
+# Реальный source видео (playable URL) запрашивается отдельно у Video-узла —
+# /ads его не отдаёт. Никогда не подставляем сюда thumbnail или выдуманный URL.
+video_sources = fetch_video_sources(video_ids_needed, failed_sections)
+
 for c in creatives:
-    c["thumbnail_url"] = thumb_by_ad_id.get(c["id"])
+    meta = creative_meta_by_ad_id.get(c["id"], {})
+    c["thumbnail_url"] = meta.get("thumbnail_url")
+    c["object_type"] = meta.get("object_type")
+    c["video_id"] = meta.get("video_id")
+    c["video_source"] = video_sources.get(meta.get("video_id")) if meta.get("video_id") else None
 
 age_raw = api_get_chunked(f"{ACCOUNT_ID}/insights", {
     'time_increment': 1,

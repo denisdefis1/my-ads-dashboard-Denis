@@ -1,5 +1,5 @@
 {
-  "fetched_at": "19.08.2026, 12:49",
+  "fetched_at": "19.08.2026, 13:34",
   "total_leads": 1178,
   "matched_by_ad": 573,
   "matched_by_campaign": 3,
@@ -13126,7 +13126,7 @@
     },
     {
       "deal_id": "28477617",
-      "created_at": null,
+      "created_at": "2026-08-13 17:10:00",
       "stage": "не отвечает",
       "country": "Россия",
       "qualified": false,
@@ -13282,7 +13282,7 @@
     },
     {
       "deal_id": "28477611",
-      "created_at": null,
+      "created_at": "2026-08-13 17:10:00",
       "stage": "Отложено",
       "country": "Беларусь",
       "qualified": true,
@@ -13294,7 +13294,7 @@
     },
     {
       "deal_id": "28477521",
-      "created_at": null,
+      "created_at": "2026-08-13 17:01:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Россия",
       "qualified": null,
@@ -13306,7 +13306,7 @@
     },
     {
       "deal_id": "28477621",
-      "created_at": null,
+      "created_at": "2026-08-13 17:10:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Беларусь",
       "qualified": null,
@@ -13318,7 +13318,7 @@
     },
     {
       "deal_id": "28477413",
-      "created_at": null,
+      "created_at": "2026-08-13 16:52:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
@@ -13390,7 +13390,7 @@
     },
     {
       "deal_id": "28477583",
-      "created_at": null,
+      "created_at": "2026-08-13 17:07:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Литва",
       "qualified": null,
@@ -13402,7 +13402,7 @@
     },
     {
       "deal_id": "28477561",
-      "created_at": null,
+      "created_at": "2026-08-13 17:04:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "",
       "qualified": null,
@@ -13414,7 +13414,7 @@
     },
     {
       "deal_id": "28477509",
-      "created_at": null,
+      "created_at": "2026-08-13 17:01:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
@@ -13426,7 +13426,7 @@
     },
     {
       "deal_id": "28477519",
-      "created_at": null,
+      "created_at": "2026-08-13 17:01:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Испания",
       "qualified": null,
@@ -13450,7 +13450,7 @@
     },
     {
       "deal_id": "28478585",
-      "created_at": null,
+      "created_at": "2026-08-13 22:00:00",
       "stage": "не отвечает",
       "country": "Ирландия",
       "qualified": false,
@@ -13462,7 +13462,7 @@
     },
     {
       "deal_id": "28478557",
-      "created_at": null,
+      "created_at": "2026-08-13 21:41:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Хорватия",
       "qualified": null,
@@ -13474,7 +13474,7 @@
     },
     {
       "deal_id": "28478765",
-      "created_at": null,
+      "created_at": "2026-08-14 03:30:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Испания",
       "qualified": false,
@@ -13486,7 +13486,7 @@
     },
     {
       "deal_id": "28478749",
-      "created_at": null,
+      "created_at": "2026-08-14 03:04:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": null,
@@ -13498,7 +13498,7 @@
     },
     {
       "deal_id": "28478791",
-      "created_at": null,
+      "created_at": "2026-08-14 04:40:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Италия",
       "qualified": false,
@@ -13510,7 +13510,7 @@
     },
     {
       "deal_id": "28478877",
-      "created_at": null,
+      "created_at": "2026-08-14 07:11:00",
       "stage": "не отвечает",
       "country": "Нидерланды",
       "qualified": false,
@@ -13522,7 +13522,7 @@
     },
     {
       "deal_id": "28479305",
-      "created_at": null,
+      "created_at": "2026-08-14 09:39:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": false,
@@ -13534,7 +13534,7 @@
     },
     {
       "deal_id": "28482935",
-      "created_at": null,
+      "created_at": "2026-08-14 19:09:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Польша",
       "qualified": false,
@@ -13546,7 +13546,7 @@
     },
     {
       "deal_id": "28483625",
-      "created_at": null,
+      "created_at": "2026-08-14 22:07:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": false,
@@ -13558,7 +13558,7 @@
     },
     {
       "deal_id": "28483903",
-      "created_at": null,
+      "created_at": "2026-08-15 01:45:00",
       "stage": "Отложено",
       "country": "Греция",
       "qualified": true,
@@ -13570,7 +13570,7 @@
     },
     {
       "deal_id": "28483981",
-      "created_at": null,
+      "created_at": "2026-08-15 05:15:00",
       "stage": "Первый контакт",
       "country": "Португалия",
       "qualified": false,
@@ -13582,7 +13582,7 @@
     },
     {
       "deal_id": "28484371",
-      "created_at": null,
+      "created_at": "2026-08-15 09:01:00",
       "stage": "новый лид",
       "country": "Греция",
       "qualified": null,
@@ -13594,7 +13594,7 @@
     },
     {
       "deal_id": "28429349",
-      "created_at": null,
+      "created_at": "2026-07-31 12:36:00",
       "stage": "Первый контакт",
       "country": "Греция",
       "qualified": false,
@@ -13606,7 +13606,7 @@
     },
     {
       "deal_id": "28485593",
-      "created_at": null,
+      "created_at": "2026-08-15 14:28:00",
       "stage": "Первый контакт",
       "country": "",
       "qualified": false,
@@ -13618,7 +13618,7 @@
     },
     {
       "deal_id": "28485809",
-      "created_at": null,
+      "created_at": "2026-08-15 15:21:00",
       "stage": "не отвечает",
       "country": "Молдова",
       "qualified": false,
@@ -13630,7 +13630,7 @@
     },
     {
       "deal_id": "28485779",
-      "created_at": null,
+      "created_at": "2026-08-15 15:15:00",
       "stage": "Первый контакт",
       "country": "Великобритания",
       "qualified": false,
@@ -13642,7 +13642,7 @@
     },
     {
       "deal_id": "28485763",
-      "created_at": null,
+      "created_at": "2026-08-15 15:11:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Украина",
       "qualified": false,
@@ -13654,7 +13654,7 @@
     },
     {
       "deal_id": "28486363",
-      "created_at": null,
+      "created_at": "2026-08-15 18:18:00",
       "stage": "не отвечает",
       "country": "Дания",
       "qualified": false,
@@ -13666,7 +13666,7 @@
     },
     {
       "deal_id": "28486631",
-      "created_at": null,
+      "created_at": "2026-08-15 20:01:00",
       "stage": "не отвечает",
       "country": "Беларусь",
       "qualified": false,
@@ -13678,7 +13678,7 @@
     },
     {
       "deal_id": "28487227",
-      "created_at": null,
+      "created_at": "2026-08-15 23:44:00",
       "stage": "Первый контакт",
       "country": "Италия",
       "qualified": false,
@@ -13690,7 +13690,7 @@
     },
     {
       "deal_id": "28487193",
-      "created_at": null,
+      "created_at": "2026-08-15 23:17:00",
       "stage": "не отвечает",
       "country": "Румыния",
       "qualified": false,
@@ -13702,7 +13702,7 @@
     },
     {
       "deal_id": "28487273",
-      "created_at": null,
+      "created_at": "2026-08-16 00:37:00",
       "stage": "Первый контакт",
       "country": "Италия",
       "qualified": false,
@@ -13714,7 +13714,7 @@
     },
     {
       "deal_id": "28487293",
-      "created_at": null,
+      "created_at": "2026-08-16 01:33:00",
       "stage": "не отвечает",
       "country": "Украина",
       "qualified": false,
@@ -13726,7 +13726,7 @@
     },
     {
       "deal_id": "28487705",
-      "created_at": null,
+      "created_at": "2026-08-16 08:35:00",
       "stage": "не отвечает",
       "country": "Эстония",
       "qualified": false,
@@ -13738,7 +13738,7 @@
     },
     {
       "deal_id": "28488867",
-      "created_at": null,
+      "created_at": "2026-08-16 13:29:00",
       "stage": "Квалификация клиента",
       "country": "Румыния",
       "qualified": true,
@@ -13750,7 +13750,7 @@
     },
     {
       "deal_id": "28489577",
-      "created_at": null,
+      "created_at": "2026-08-16 15:53:00",
       "stage": "не отвечает",
       "country": "Франция",
       "qualified": false,
@@ -13762,7 +13762,7 @@
     },
     {
       "deal_id": "28489843",
-      "created_at": null,
+      "created_at": "2026-08-16 16:46:00",
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
@@ -13774,7 +13774,7 @@
     },
     {
       "deal_id": "28490125",
-      "created_at": null,
+      "created_at": "2026-08-16 18:10:00",
       "stage": "не отвечает",
       "country": "Великобритания",
       "qualified": false,
@@ -13786,7 +13786,7 @@
     },
     {
       "deal_id": "28490267",
-      "created_at": null,
+      "created_at": "2026-08-16 19:05:00",
       "stage": "Отправлено предложение",
       "country": "Италия",
       "qualified": true,
@@ -13798,7 +13798,7 @@
     },
     {
       "deal_id": "28489081",
-      "created_at": null,
+      "created_at": "2026-08-16 14:16:00",
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
@@ -13810,7 +13810,7 @@
     },
     {
       "deal_id": "28490761",
-      "created_at": null,
+      "created_at": "2026-08-16 22:19:00",
       "stage": "Первый контакт",
       "country": "Литва",
       "qualified": false,
@@ -13822,7 +13822,7 @@
     },
     {
       "deal_id": "28491179",
-      "created_at": null,
+      "created_at": "2026-08-17 08:16:00",
       "stage": "не отвечает",
       "country": "Болгария",
       "qualified": false,
@@ -13834,7 +13834,7 @@
     },
     {
       "deal_id": "28491519",
-      "created_at": null,
+      "created_at": "2026-08-17 09:49:00",
       "stage": "Отправлено предложение",
       "country": "Румыния",
       "qualified": true,
@@ -13846,7 +13846,7 @@
     },
     {
       "deal_id": "28491503",
-      "created_at": null,
+      "created_at": "2026-08-17 09:46:00",
       "stage": "не отвечает",
       "country": "Румыния",
       "qualified": false,
@@ -13858,7 +13858,7 @@
     },
     {
       "deal_id": "28492267",
-      "created_at": null,
+      "created_at": "2026-08-17 11:56:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": null,
@@ -13870,7 +13870,7 @@
     },
     {
       "deal_id": "28492775",
-      "created_at": null,
+      "created_at": "2026-08-17 12:56:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": null,
@@ -13882,7 +13882,7 @@
     },
     {
       "deal_id": "28493059",
-      "created_at": null,
+      "created_at": "2026-08-17 13:30:00",
       "stage": "не отвечает",
       "country": "Франция",
       "qualified": false,
@@ -13894,7 +13894,7 @@
     },
     {
       "deal_id": "28495253",
-      "created_at": null,
+      "created_at": "2026-08-17 18:38:00",
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
@@ -13906,7 +13906,7 @@
     },
     {
       "deal_id": "28495233",
-      "created_at": null,
+      "created_at": "2026-08-17 18:33:00",
       "stage": "не отвечает",
       "country": "Исландия",
       "qualified": false,
@@ -13918,7 +13918,7 @@
     },
     {
       "deal_id": "28495361",
-      "created_at": null,
+      "created_at": "2026-08-17 19:10:00",
       "stage": "не отвечает",
       "country": "Болгария",
       "qualified": false,
@@ -13930,7 +13930,7 @@
     },
     {
       "deal_id": "28495777",
-      "created_at": null,
+      "created_at": "2026-08-17 22:22:00",
       "stage": "Квалификация клиента",
       "country": "Греция",
       "qualified": true,
@@ -13942,7 +13942,7 @@
     },
     {
       "deal_id": "28496005",
-      "created_at": null,
+      "created_at": "2026-08-18 04:57:00",
       "stage": "не отвечает",
       "country": "Беларусь",
       "qualified": false,
@@ -13954,7 +13954,7 @@
     },
     {
       "deal_id": "28496915",
-      "created_at": null,
+      "created_at": "2026-08-18 10:48:00",
       "stage": "не отвечает",
       "country": "Беларусь",
       "qualified": false,
@@ -13966,7 +13966,7 @@
     },
     {
       "deal_id": "28497541",
-      "created_at": null,
+      "created_at": "2026-08-18 12:20:00",
       "stage": "не отвечает",
       "country": "Германия",
       "qualified": false,
@@ -13978,7 +13978,7 @@
     },
     {
       "deal_id": "28497459",
-      "created_at": null,
+      "created_at": "2026-08-18 12:06:00",
       "stage": "не отвечает",
       "country": "Украина",
       "qualified": false,
@@ -13990,7 +13990,7 @@
     },
     {
       "deal_id": "28498013",
-      "created_at": null,
+      "created_at": "2026-08-18 13:29:00",
       "stage": "не отвечает",
       "country": "Болгария",
       "qualified": false,
@@ -14002,7 +14002,7 @@
     },
     {
       "deal_id": "28499445",
-      "created_at": null,
+      "created_at": "2026-08-18 16:41:00",
       "stage": "не отвечает",
       "country": "Болгария",
       "qualified": false,
@@ -14014,7 +14014,7 @@
     },
     {
       "deal_id": "28500247",
-      "created_at": null,
+      "created_at": "2026-08-18 19:09:00",
       "stage": "Отложено",
       "country": "Испания",
       "qualified": true,
@@ -14026,7 +14026,7 @@
     },
     {
       "deal_id": "28500775",
-      "created_at": null,
+      "created_at": "2026-08-18 22:05:00",
       "stage": "не отвечает",
       "country": "Португалия",
       "qualified": false,
@@ -14038,7 +14038,7 @@
     },
     {
       "deal_id": "28500961",
-      "created_at": null,
+      "created_at": "2026-08-18 23:47:00",
       "stage": "не отвечает",
       "country": "Беларусь",
       "qualified": false,
@@ -14050,7 +14050,7 @@
     },
     {
       "deal_id": "28500929",
-      "created_at": null,
+      "created_at": "2026-08-18 23:26:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Израиль",
       "qualified": null,
@@ -14062,7 +14062,7 @@
     },
     {
       "deal_id": "28501013",
-      "created_at": null,
+      "created_at": "2026-08-19 00:59:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
@@ -14074,7 +14074,7 @@
     },
     {
       "deal_id": "28501045",
-      "created_at": null,
+      "created_at": "2026-08-19 02:24:00",
       "stage": "новый лид",
       "country": "Франция",
       "qualified": null,
@@ -14086,7 +14086,7 @@
     },
     {
       "deal_id": "28501023",
-      "created_at": null,
+      "created_at": "2026-08-19 01:19:00",
       "stage": "новый лид",
       "country": "Италия",
       "qualified": null,
@@ -14098,7 +14098,7 @@
     },
     {
       "deal_id": "28501095",
-      "created_at": null,
+      "created_at": "2026-08-19 05:02:00",
       "stage": "новый лид",
       "country": "Италия",
       "qualified": null,
@@ -14110,7 +14110,7 @@
     },
     {
       "deal_id": "28501087",
-      "created_at": null,
+      "created_at": "2026-08-19 04:56:00",
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
@@ -14122,7 +14122,7 @@
     },
     {
       "deal_id": "28501737",
-      "created_at": null,
+      "created_at": "2026-08-19 10:05:00",
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
@@ -14134,7 +14134,7 @@
     },
     {
       "deal_id": "28502393",
-      "created_at": null,
+      "created_at": "2026-08-19 12:11:00",
       "stage": "Закрыто и не реализовано/спам",
       "country": "Грузия",
       "qualified": null,

@@ -1,12 +1,12 @@
 {
-  "fetched_at": "20.08.2026, 06:40",
-  "total_leads": 1185,
+  "fetched_at": "20.08.2026, 12:41",
+  "total_leads": 1189,
   "matched_by_ad": 573,
   "matched_by_campaign": 3,
   "matched_bridge": 208,
-  "matched_fuzzy": 119,
-  "unmatched": 282,
-  "match_rate": 76.2,
+  "matched_fuzzy": 121,
+  "unmatched": 284,
+  "match_rate": 76.1,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13619,7 +13619,7 @@
     {
       "deal_id": "28485809",
       "created_at": "2026-08-15 15:21:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Молдова",
       "qualified": false,
       "ad_id": "120243662575560775",
@@ -13823,7 +13823,7 @@
     {
       "deal_id": "28491179",
       "created_at": "2026-08-17 08:16:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Болгария",
       "qualified": false,
       "ad_id": null,
@@ -14075,9 +14075,9 @@
     {
       "deal_id": "28501045",
       "created_at": "2026-08-19 02:24:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Франция",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -14171,9 +14171,9 @@
     {
       "deal_id": "28504917",
       "created_at": "2026-08-19 20:11:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Румыния",
-      "qualified": null,
+      "qualified": false,
       "ad_id": "120245098371600775",
       "campaign_id": "120245098371580775",
       "adset_id": "120245098371620775",
@@ -14183,9 +14183,9 @@
     {
       "deal_id": "28505127",
       "created_at": "2026-08-19 22:00:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Финляндия",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -14195,9 +14195,9 @@
     {
       "deal_id": "28505283",
       "created_at": "2026-08-19 23:49:00",
-      "stage": "новый лид",
+      "stage": "Отправлено предложение",
       "country": "Греция",
-      "qualified": null,
+      "qualified": true,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -14207,7 +14207,7 @@
     {
       "deal_id": "28505277",
       "created_at": "2026-08-19 23:46:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": null,
       "ad_id": null,
@@ -14219,7 +14219,7 @@
     {
       "deal_id": "28505741",
       "created_at": "2026-08-20 08:52:00",
-      "stage": "новый лид",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Украина",
       "qualified": null,
       "ad_id": null,
@@ -14227,6 +14227,54 @@
       "adset_id": null,
       "match_type": null,
       "match_confidence": null
+    },
+    {
+      "deal_id": "28504901",
+      "created_at": "2026-08-19 19:25:00",
+      "stage": "не отвечает",
+      "country": "Италия",
+      "qualified": false,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28506525",
+      "created_at": "2026-08-20 11:42:00",
+      "stage": "не отвечает",
+      "country": "Нидерланды",
+      "qualified": false,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28506305",
+      "created_at": "2026-08-20 11:05:00",
+      "stage": "не отвечает",
+      "country": "Испания",
+      "qualified": false,
+      "ad_id": "120243662655760775",
+      "campaign_id": "120243662655730775",
+      "adset_id": "120243662655570775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.77
+    },
+    {
+      "deal_id": "28506825",
+      "created_at": "2026-08-20 12:33:00",
+      "stage": "не отвечает",
+      "country": "Франция",
+      "qualified": false,
+      "ad_id": "120248029155350775",
+      "campaign_id": "120248028835330775",
+      "adset_id": "120248028835320775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     }
   ]
 }

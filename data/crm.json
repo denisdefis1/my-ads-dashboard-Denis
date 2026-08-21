@@ -1,12 +1,12 @@
 {
-  "fetched_at": "20.08.2026, 18:35",
-  "total_leads": 1189,
+  "fetched_at": "21.08.2026, 01:02",
+  "total_leads": 1192,
   "matched_by_ad": 573,
   "matched_by_campaign": 3,
   "matched_bridge": 208,
-  "matched_fuzzy": 121,
-  "unmatched": 284,
-  "match_rate": 76.1,
+  "matched_fuzzy": 122,
+  "unmatched": 286,
+  "match_rate": 76.0,
   "leads": [
     {
       "deal_id": "28416153",
@@ -14275,6 +14275,42 @@
       "adset_id": "120248028835320775",
       "match_type": "fuzzy",
       "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28509441",
+      "created_at": "2026-08-20 23:27:00",
+      "stage": "новый лид",
+      "country": "Италия",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
+    },
+    {
+      "deal_id": "28509559",
+      "created_at": "2026-08-21 02:17:00",
+      "stage": "новый лид",
+      "country": "Беларусь",
+      "qualified": null,
+      "ad_id": "120240932495400775",
+      "campaign_id": "120240931220970775",
+      "adset_id": "120240932495430775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.73
+    },
+    {
+      "deal_id": "28509557",
+      "created_at": "2026-08-21 02:14:00",
+      "stage": "новый лид",
+      "country": "Великобритания",
+      "qualified": null,
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     }
   ]
 }

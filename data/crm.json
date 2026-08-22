@@ -1,5 +1,5 @@
 {
-  "fetched_at": "22.08.2026, 06:35",
+  "fetched_at": "22.08.2026, 12:32",
   "total_leads": 1199,
   "matched_by_ad": 573,
   "matched_by_campaign": 3,
@@ -1559,7 +1559,7 @@
     {
       "deal_id": "28051385",
       "created_at": "2026-05-14 11:22:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Греция",
       "qualified": true,
       "ad_id": "120242555083470775",
@@ -14315,9 +14315,9 @@
     {
       "deal_id": "28510145",
       "created_at": "2026-08-21 09:55:00",
-      "stage": "Первый контакт",
+      "stage": "Квалификация клиента",
       "country": "Беларусь",
-      "qualified": false,
+      "qualified": true,
       "ad_id": "120245922981360775",
       "campaign_id": "120245922981320775",
       "adset_id": "120245922981380775",
@@ -14363,9 +14363,9 @@
     {
       "deal_id": "28513417",
       "created_at": "2026-08-21 22:51:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Италия",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -14375,9 +14375,9 @@
     {
       "deal_id": "28513415",
       "created_at": "2026-08-21 22:51:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Германия",
-      "qualified": null,
+      "qualified": false,
       "ad_id": null,
       "campaign_id": null,
       "adset_id": null,
@@ -14387,9 +14387,9 @@
     {
       "deal_id": "28513549",
       "created_at": "2026-08-22 02:58:00",
-      "stage": "новый лид",
+      "stage": "не отвечает",
       "country": "Литва",
-      "qualified": null,
+      "qualified": false,
       "ad_id": "120243662575610775",
       "campaign_id": "120243662575600775",
       "adset_id": "120243662575590775",

@@ -316,10 +316,29 @@ for lead in leads:
         matched_bridge += 1
         continue
 
+    # Короткие/распространённые имена (Alex, Victor, Артем и т.п.) с ростом
+    # числа lead-form таблиц стали встречаться в нескольких из них в разные
+    # месяцы — раньше это делало совпадение "неоднозначным" (ambiguous) и
+    # честный матч отбрасывался, хотя на самом деле это разные люди, просто
+    # с похожими именами. Дата почти всегда решает эту неоднозначность: сузим
+    # кандидатов до тех, что в пределах пары дней от даты сделки в CRM (запас
+    # на несогласованность часовых поясов между CRM и лидформами — см.
+    # комментарий у MATCH_NAME_MIN_RATIO), и только если в этом окне вообще
+    # никого нет — откатываемся к сравнению по всей истории, как раньше.
+    MATCH_DATE_WINDOW_DAYS = 2
+    candidates = lead_form_entries
+    if lead["created_at"]:
+        windowed = [
+            entry for entry in lead_form_entries
+            if entry["created_at"] and abs((entry["created_at"].replace(tzinfo=None) - lead["created_at"]).days) <= MATCH_DATE_WINDOW_DAYS
+        ]
+        if windowed:
+            candidates = windowed
+
     best = None
     best_score = 0.0
     second_score = 0.0
-    for entry in lead_form_entries:
+    for entry in candidates:
         if not (entry["ad_id"] or entry["campaign_id"]):
             continue
         score = name_similarity(lead["name_norm"], entry["name_norm"])

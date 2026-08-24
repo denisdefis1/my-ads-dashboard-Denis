@@ -21,6 +21,8 @@ LEAD_FORM_SHEETS = [
     '1lv4EFZxUkvE9N_0Rmhf63eo7LHbvjqIj1S4HwzPr97U',
     '1KfugmWce9tZw1NA2iMJqfFAZxeNwfektQirllqYC7u0',
     '1y6qYq5cl3BlSpIsUqPL1FcNEBmGlPS8sAQULM457Nps',
+    '1kZz8hsXcrRKUkGibIcJd-fhrVyD_TOD2gh5VEExGIjs',  # eng лиды lagoon
+    '1IgZLp169K4XvjmjZUpl_BeOjDUBuKacShitcgHMdSkk',  # лиды лагун 7
 ]
 
 # Предположение: "Дата создания" в CRM записана в тбилисском времени (UTC+4).

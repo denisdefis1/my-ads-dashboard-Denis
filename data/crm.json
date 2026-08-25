@@ -1,10 +1,10 @@
 {
-  "fetched_at": "24.08.2026, 19:48",
-  "total_leads": 1208,
+  "fetched_at": "25.08.2026, 01:01",
+  "total_leads": 1209,
   "matched_by_ad": 573,
   "matched_by_campaign": 4,
   "matched_bridge": 209,
-  "matched_fuzzy": 282,
+  "matched_fuzzy": 283,
   "unmatched": 140,
   "match_rate": 88.4,
   "leads": [
@@ -14497,6 +14497,18 @@
       "created_at": "2026-08-24 20:37:00",
       "stage": "новый лид",
       "country": "Хорватия",
+      "qualified": null,
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28523563",
+      "created_at": "2026-08-24 23:12:00",
+      "stage": "новый лид",
+      "country": "Греция",
       "qualified": null,
       "ad_id": "120248150262920775",
       "campaign_id": "120248150262810775",

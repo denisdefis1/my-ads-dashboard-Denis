@@ -1,12 +1,12 @@
 {
-  "fetched_at": "25.08.2026, 18:37",
+  "fetched_at": "26.08.2026, 01:03",
   "total_leads": 1211,
   "matched_by_ad": 573,
   "matched_by_campaign": 4,
   "matched_bridge": 209,
-  "matched_fuzzy": 227,
-  "unmatched": 198,
-  "match_rate": 83.6,
+  "matched_fuzzy": 285,
+  "unmatched": 140,
+  "match_rate": 88.4,
   "leads": [
     {
       "deal_id": "28416153",
@@ -314,11 +314,11 @@
       "stage": "Отложено",
       "country": "Молдова",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28304893",
@@ -13022,11 +13022,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Румыния",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28476153",
@@ -13046,11 +13046,11 @@
       "stage": "Отложено",
       "country": "Палестина",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28477481",
@@ -13118,11 +13118,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.75
     },
     {
       "deal_id": "28477617",
@@ -13166,11 +13166,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28477595",
@@ -13178,11 +13178,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28477593",
@@ -13190,11 +13190,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Австрия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28477619",
@@ -13226,11 +13226,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28477623",
@@ -13322,11 +13322,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.75
     },
     {
       "deal_id": "28477615",
@@ -13418,11 +13418,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.75
     },
     {
       "deal_id": "28477519",
@@ -13442,11 +13442,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 0.75
     },
     {
       "deal_id": "28478585",
@@ -13454,11 +13454,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Ирландия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28478557",
@@ -13466,11 +13466,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Хорватия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28478765",
@@ -13478,11 +13478,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Испания",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28478749",
@@ -13514,11 +13514,11 @@
       "stage": "не отвечает",
       "country": "Нидерланды",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28479305",
@@ -13574,11 +13574,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Португалия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28484371",
@@ -13586,11 +13586,11 @@
       "stage": "новый лид",
       "country": "Греция",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28429349",
@@ -13658,11 +13658,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Дания",
       "qualified": false,
-      "ad_id": "120243662575610775",
-      "campaign_id": "120243662575600775",
-      "adset_id": "120243662575590775",
-      "match_type": "fuzzy",
-      "match_confidence": 1.0
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     },
     {
       "deal_id": "28486631",
@@ -13682,11 +13682,11 @@
       "stage": "Отправлено предложение",
       "country": "Италия",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28487193",
@@ -13694,11 +13694,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Румыния",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28487273",
@@ -13706,11 +13706,11 @@
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
-      "ad_id": "120243662575610775",
-      "campaign_id": "120243662575600775",
-      "adset_id": "120243662575590775",
-      "match_type": "fuzzy",
-      "match_confidence": 1.0
+      "ad_id": null,
+      "campaign_id": null,
+      "adset_id": null,
+      "match_type": null,
+      "match_confidence": null
     },
     {
       "deal_id": "28487293",
@@ -13742,11 +13742,11 @@
       "stage": "Квалификация клиента",
       "country": "Румыния",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28489577",
@@ -13754,11 +13754,11 @@
       "stage": "не отвечает",
       "country": "Франция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28489843",
@@ -13790,11 +13790,11 @@
       "stage": "Отправлено предложение",
       "country": "Италия",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28489081",
@@ -13826,11 +13826,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Болгария",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28491519",
@@ -13838,11 +13838,11 @@
       "stage": "Отправлено предложение",
       "country": "Румыния",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28491503",
@@ -13850,11 +13850,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Румыния",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28492267",
@@ -13898,11 +13898,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28495233",
@@ -13910,11 +13910,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Исландия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28495361",
@@ -13934,11 +13934,11 @@
       "stage": "Квалификация клиента",
       "country": "Греция",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28496005",
@@ -13970,11 +13970,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28497459",
@@ -14006,11 +14006,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Болгария",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28500247",
@@ -14030,11 +14030,11 @@
       "stage": "не отвечает",
       "country": "Португалия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28500961",
@@ -14066,11 +14066,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Великобритания",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28501045",
@@ -14078,11 +14078,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Франция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28501023",
@@ -14090,11 +14090,11 @@
       "stage": "новый лид",
       "country": "Италия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28501095",
@@ -14102,11 +14102,11 @@
       "stage": "новый лид",
       "country": "Италия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28501087",
@@ -14114,11 +14114,11 @@
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28501737",
@@ -14126,11 +14126,11 @@
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28502393",
@@ -14162,11 +14162,11 @@
       "stage": "новый лид",
       "country": "Италия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28504917",
@@ -14186,11 +14186,11 @@
       "stage": "Первый контакт",
       "country": "Финляндия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28505283",
@@ -14198,11 +14198,11 @@
       "stage": "Отправлено предложение",
       "country": "Греция",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28505277",
@@ -14210,11 +14210,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Германия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28505741",
@@ -14234,11 +14234,11 @@
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28506525",
@@ -14258,11 +14258,11 @@
       "stage": "не отвечает",
       "country": "Испания",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28506825",
@@ -14270,11 +14270,11 @@
       "stage": "не отвечает",
       "country": "Франция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28509441",
@@ -14282,11 +14282,11 @@
       "stage": "Первый контакт",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28509559",
@@ -14342,11 +14342,11 @@
       "stage": "не отвечает",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28511677",
@@ -14354,11 +14354,11 @@
       "stage": "не отвечает",
       "country": "Бельгия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28513417",
@@ -14378,11 +14378,11 @@
       "stage": "не отвечает",
       "country": "Германия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28513549",
@@ -14390,11 +14390,11 @@
       "stage": "не отвечает",
       "country": "Литва",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28515427",
@@ -14402,11 +14402,11 @@
       "stage": "Закрыто и не реализовано/спам",
       "country": "Ирландия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28515701",
@@ -14414,11 +14414,11 @@
       "stage": "новый лид",
       "country": "Португалия",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28516355",
@@ -14426,11 +14426,11 @@
       "stage": "не отвечает",
       "country": "Германия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28516825",
@@ -14438,11 +14438,11 @@
       "stage": "Первый контакт",
       "country": "Греция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28518121",
@@ -14450,11 +14450,11 @@
       "stage": "не отвечает",
       "country": "Греция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28518515",
@@ -14462,11 +14462,11 @@
       "stage": "новый лид",
       "country": "Румыния",
       "qualified": null,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28513319",
@@ -14486,11 +14486,11 @@
       "stage": "Первый контакт",
       "country": "Италия",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28523303",
@@ -14498,11 +14498,11 @@
       "stage": "Отправлено предложение",
       "country": "Хорватия",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28523563",
@@ -14510,11 +14510,11 @@
       "stage": "Отправлено предложение",
       "country": "Греция",
       "qualified": true,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28523737",
@@ -14522,11 +14522,11 @@
       "stage": "не отвечает",
       "country": "Греция",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     },
     {
       "deal_id": "28523759",
@@ -14534,11 +14534,11 @@
       "stage": "не отвечает",
       "country": "Великобритания",
       "qualified": false,
-      "ad_id": null,
-      "campaign_id": null,
-      "adset_id": null,
-      "match_type": null,
-      "match_confidence": null
+      "ad_id": "120248150262920775",
+      "campaign_id": "120248150262810775",
+      "adset_id": "120248150262950775",
+      "match_type": "fuzzy",
+      "match_confidence": 1.0
     }
   ]
 }

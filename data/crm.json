@@ -1,8 +1,8 @@
 {
-  "fetched_at": "26.08.2026, 19:46",
-  "total_leads": 1211,
+  "fetched_at": "27.08.2026, 21:40",
+  "total_leads": 1212,
   "matched_by_ad": 573,
-  "matched_by_campaign": 4,
+  "matched_by_campaign": 5,
   "matched_bridge": 209,
   "matched_fuzzy": 285,
   "unmatched": 140,
@@ -14341,7 +14341,7 @@
       "created_at": "2026-08-21 11:38:00",
       "stage": "Отправлено предложение",
       "country": "Италия",
-      "qualified": true,
+      "qualified": false,
       "ad_id": "120248150262920775",
       "campaign_id": "120248150262810775",
       "adset_id": "120248150262950775",
@@ -14538,6 +14538,18 @@
       "campaign_id": "120248150262810775",
       "adset_id": "120248150262950775",
       "match_type": "fuzzy",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28532077",
+      "created_at": "2026-08-26 18:21:00",
+      "stage": "не отвечает",
+      "country": "Испания",
+      "qualified": false,
+      "ad_id": null,
+      "campaign_id": "120250823728140776",
+      "adset_id": "120250823728100776",
+      "match_type": "campaign",
       "match_confidence": 1.0
     }
   ]

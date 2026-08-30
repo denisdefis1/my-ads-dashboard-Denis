@@ -1,5 +1,5 @@
 {
-  "fetched_at": "30.08.2026, 11:08",
+  "fetched_at": "30.08.2026, 15:58",
   "total_leads": 1212,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -14435,9 +14435,9 @@
     {
       "deal_id": "28516825",
       "created_at": "2026-08-23 10:40:00",
-      "stage": "Первый контакт",
+      "stage": "Отправлено предложение",
       "country": "Греция",
-      "qualified": false,
+      "qualified": true,
       "ad_id": "120248150262920775",
       "campaign_id": "120248150262810775",
       "adset_id": "120248150262950775",

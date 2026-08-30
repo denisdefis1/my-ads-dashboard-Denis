@@ -1,12 +1,12 @@
 {
-  "fetched_at": "30.08.2026, 15:58",
-  "total_leads": 1212,
+  "fetched_at": "30.08.2026, 20:28",
+  "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
-  "matched_bridge": 209,
+  "matched_bridge": 210,
   "matched_fuzzy": 285,
   "unmatched": 140,
-  "match_rate": 88.4,
+  "match_rate": 88.5,
   "leads": [
     {
       "deal_id": "28416153",
@@ -13751,7 +13751,7 @@
     {
       "deal_id": "28489577",
       "created_at": "2026-08-16 15:53:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Франция",
       "qualified": false,
       "ad_id": "120248150262920775",
@@ -13799,7 +13799,7 @@
     {
       "deal_id": "28489081",
       "created_at": "2026-08-16 14:16:00",
-      "stage": "не отвечает",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Италия",
       "qualified": false,
       "ad_id": "120247703571280775",
@@ -14550,6 +14550,18 @@
       "campaign_id": "120250823728140776",
       "adset_id": "120250823728100776",
       "match_type": "campaign",
+      "match_confidence": 1.0
+    },
+    {
+      "deal_id": "28544625",
+      "created_at": "2026-08-30 17:42:00",
+      "stage": "новый лид",
+      "country": "Испания",
+      "qualified": null,
+      "ad_id": "120245922981360775",
+      "campaign_id": "120245922981320775",
+      "adset_id": "120245922981380775",
+      "match_type": "bridge_phone",
       "match_confidence": 1.0
     }
   ]

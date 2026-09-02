@@ -1,5 +1,5 @@
 {
-  "fetched_at": "02.09.2026, 15:54",
+  "fetched_at": "02.09.2026, 20:30",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -119,7 +119,7 @@
     {
       "deal_id": "27954325",
       "created_at": "2026-05-01 14:56:00",
-      "stage": "Квалификация клиента",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Чехия",
       "qualified": true,
       "ad_id": "120241669574010775",

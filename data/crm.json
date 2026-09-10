@@ -1,5 +1,5 @@
 {
-  "fetched_at": "10.09.2026, 10:30",
+  "fetched_at": "10.09.2026, 15:46",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -2063,7 +2063,7 @@
     {
       "deal_id": "28338773",
       "created_at": "2026-07-03 17:53:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Израиль",
       "qualified": true,
       "ad_id": "120241669574010775",
@@ -13681,7 +13681,7 @@
       "created_at": "2026-08-15 23:44:00",
       "stage": "Отправлено предложение",
       "country": "Италия",
-      "qualified": true,
+      "qualified": false,
       "ad_id": "120248150262920775",
       "campaign_id": "120248150262810775",
       "adset_id": "120248150262950775",

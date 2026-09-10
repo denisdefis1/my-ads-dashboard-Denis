@@ -1,5 +1,5 @@
 {
-  "fetched_at": "10.09.2026, 02:43",
+  "fetched_at": "10.09.2026, 10:30",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -2891,7 +2891,7 @@
     {
       "deal_id": "28373393",
       "created_at": "2026-07-14 23:40:00",
-      "stage": "Первый контакт",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Израиль",
       "qualified": false,
       "ad_id": "120245503848920775",

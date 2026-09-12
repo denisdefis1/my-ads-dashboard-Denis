@@ -1,5 +1,5 @@
 {
-  "fetched_at": "12.09.2026, 02:46",
+  "fetched_at": "12.09.2026, 10:00",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -491,7 +491,7 @@
     {
       "deal_id": "28336005",
       "created_at": "2026-07-02 23:52:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Греция",
       "qualified": true,
       "ad_id": "120242555246180775",

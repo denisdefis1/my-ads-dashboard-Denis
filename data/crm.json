@@ -1,5 +1,5 @@
 {
-  "fetched_at": "19.09.2026, 10:14",
+  "fetched_at": "19.09.2026, 15:16",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -1391,7 +1391,7 @@
     {
       "deal_id": "28340271",
       "created_at": "2026-07-04 13:33:00",
-      "stage": "Переговоры/Онлайн/офлайн показ",
+      "stage": "Отложено",
       "country": "Албания",
       "qualified": true,
       "ad_id": "120241669574010775",

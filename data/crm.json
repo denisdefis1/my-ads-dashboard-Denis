@@ -1,5 +1,5 @@
 {
-  "fetched_at": "16.10.2026, 02:44",
+  "fetched_at": "16.10.2026, 10:29",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -2039,7 +2039,7 @@
     {
       "deal_id": "28316761",
       "created_at": "2026-07-01 09:44:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Польша",
       "qualified": true,
       "ad_id": null,
@@ -2843,7 +2843,7 @@
     {
       "deal_id": "28306329",
       "created_at": "2026-06-27 16:17:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Литва",
       "qualified": true,
       "ad_id": null,

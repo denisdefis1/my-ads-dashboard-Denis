@@ -1,5 +1,5 @@
 {
-  "fetched_at": "20.10.2026, 10:48",
+  "fetched_at": "20.10.2026, 16:11",
   "total_leads": 1213,
   "matched_by_ad": 573,
   "matched_by_campaign": 5,
@@ -791,7 +791,7 @@
     {
       "deal_id": "28305137",
       "created_at": "2026-06-27 09:53:00",
-      "stage": "Отложено",
+      "stage": "Закрыто и не реализовано/спам",
       "country": "Россия",
       "qualified": true,
       "ad_id": null,
